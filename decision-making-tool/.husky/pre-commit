@@ -1,0 +1,2 @@
+cd decision-making-tool
+npx lint-staged

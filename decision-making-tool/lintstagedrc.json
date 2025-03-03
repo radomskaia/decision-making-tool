@@ -1,5 +1,0 @@
-{
-  "*": ["prettier --write --ignore-unknown"],
-   "**/*.{css,scss}": "stylelint",
-  "*.{js,mjs,ts,jsx,tsx}": ["eslint --max-warnings 0"]
-}
