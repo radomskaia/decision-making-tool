@@ -1,4 +1,4 @@
-import type { ElementOptions } from "@/type";
+import type { ElementOptions, TypeGuard } from "@/type";
 import { LS_PREFIX } from "@/constants.ts";
 
 /**
@@ -24,28 +24,39 @@ export function createDOMElement<T extends keyof HTMLElementTagNameMap>({
     element.textContent = textContent;
   }
   if (attributes) {
-    Object.entries(attributes).forEach(([key, value]) =>
-      element.setAttribute(key, value),
-    );
+    for (const [key, value] of Object.entries(attributes)) {
+      element.setAttribute(key, value);
+    }
   }
 
   return element;
 }
 
-export function saveToStorage(key: string, value: string): void {
+export function saveToStorage(key: string, value: object): void {
   const storageKey = LS_PREFIX + key;
-  window.localStorage.setItem(storageKey, JSON.stringify(value));
+  globalThis.localStorage.setItem(storageKey, JSON.stringify(value));
 }
 
-export function loadFromStorage(key: string): unknown {
+export function loadFromStorage<T>(
+  key: string,
+  typeGuard: TypeGuard<T>,
+): T | null {
   const storageKey = LS_PREFIX + key;
-  const value = window.localStorage.getItem(storageKey);
+  const value = globalThis.localStorage.getItem(storageKey);
   if (!value) {
     return null;
   }
-  return JSON.parse(value);
+  try {
+    const result = JSON.parse(value);
+    return typeGuard(result) ? result : null;
+  } catch {
+    return null;
+  }
 }
 
-export function isEmptyLocalStorage(key: string): boolean {
-  return !loadFromStorage(key);
+export function isEmptyLocalStorage<T>(
+  key: string,
+  typeGuard: TypeGuard<T>,
+): boolean {
+  return loadFromStorage<T>(key, typeGuard) === null;
 }

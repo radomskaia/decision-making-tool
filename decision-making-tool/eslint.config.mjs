@@ -31,6 +31,7 @@ export default [
       ...pluginJs.configs.recommended.rules,
       ...tseslint.configs.strict.rules,
       ...tseslint.configs.stylistic.rules,
+      ...unicorn.configs["flat/recommended"].rules,
       curly: ["error", "all"],
       "max-lines-per-function": [
         "error",
@@ -44,6 +45,7 @@ export default [
       "@typescript-eslint/consistent-type-imports": "error",
       "import/order": ["error", { "newlines-between": "always" }],
       "unicorn/better-regex": "error",
+      "unicorn/no-null": "off",
       "@typescript-eslint/no-misused-promises": [
         "error",
         {

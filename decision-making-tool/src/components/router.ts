@@ -3,9 +3,9 @@ import type { Callback } from "@/type";
 export class Router {
   private routers = new Map<string, Callback>();
   private currentPath = "";
-  private readonly baseUrl: string = window.location.href.split("#")[0];
+  private readonly baseUrl: string = globalThis.location.href.split("#")[0];
   constructor() {
-    window.addEventListener("hashchange", () => this.routerChange());
+    globalThis.addEventListener("hashchange", () => this.routerChange());
     this.routerChange();
   }
   public add(route: string, handler: Callback): void {
@@ -18,8 +18,8 @@ export class Router {
     if (this.routers.has(path)) {
       const handler = this.routers.get(path);
       this.currentPath = path;
-      window.history.pushState(null, "", `#${path}`);
-      window.history.replaceState(null, "", `${this.baseUrl}#${path}`);
+      globalThis.history.pushState(null, "", `#${path}`);
+      globalThis.history.replaceState(null, "", `${this.baseUrl}#${path}`);
 
       if (handler) {
         handler();
@@ -30,7 +30,7 @@ export class Router {
   }
 
   private routerChange(): void {
-    const hash: string = window.location.hash.slice(1) || "/";
+    const hash: string = globalThis.location.hash.slice(1) || "/";
     this.navigateTo(hash);
   }
 }
