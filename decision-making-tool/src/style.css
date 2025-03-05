@@ -1,0 +1,42 @@
+@import "styles/variables.css";
+
+/* base */
+*,
+*::before,
+*::after {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:not(dialog),
+*::before,
+*::after {
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  color: var(--dark);
+  background-image:
+    linear-gradient(
+      rgba(var(--content-background-alpha50)),
+      rgba(var(--content-background-alpha50))
+    ),
+    url("../bg.webp");
+}

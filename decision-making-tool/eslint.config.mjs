@@ -37,7 +37,10 @@ export default [
         "error",
         { max: 40, skipBlankLines: true, skipComments: true },
       ],
-
+      "no-magic-numbers": [
+        "error",
+        { ignore: [0, 1, -1], detectObjects: true },
+      ],
       "@typescript-eslint/no-inferrable-types": "error",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
