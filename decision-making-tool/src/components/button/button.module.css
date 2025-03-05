@@ -1,0 +1,78 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: inherit;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.actionButton {
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 10px 20px;
+  box-shadow: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 2rem;
+  text-transform: uppercase;
+  color: inherit;
+  background-color: var(--static-green);
+  transform: translateY(0);
+}
+
+.iconButton {
+  filter: invert(0) brightness(1);
+  transform: scale(1);
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.settings {
+  width: 40px;
+}
+
+.actions {
+  width: 50px;
+}
+
+.button:disabled .iconButton {
+  filter: invert(0.2) brightness(1);
+  transform: scale(0.9);
+}
+
+[data-theme] {
+  .iconButton {
+    filter: invert(1) brightness(1);
+  }
+
+  .button:disabled .iconButton {
+    filter: invert(1) brightness(0.5);
+    transform: scale(0.9);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .actionButton:hover {
+    background-color: var(--static-green-alpha);
+  }
+
+  .iconButton:hover {
+    transform: scale(1.1);
+  }
+
+  .iconButton:active {
+    transform: scale(1.05);
+  }
+
+  button:disabled .iconButton:hover {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+
+  button:disabled .iconButton:active {
+    transform: scale(0.9);
+    cursor: auto;
+  }
+}
