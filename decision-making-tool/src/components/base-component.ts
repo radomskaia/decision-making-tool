@@ -4,8 +4,8 @@ export abstract class BaseComponent<
   T extends HTMLElement = HTMLElement,
   O = void,
 > {
-  protected readonly element: T;
-  constructor(options?: O) {
+  protected element: T;
+  protected constructor(options?: O) {
     this.element = this.createView(options);
   }
 

@@ -1,27 +1,30 @@
 import { Button } from "@/components/button/button.ts";
 import type { ButtonOptions } from "@/type";
 import styles from "@/components/button/button.module.css";
+import type { SettingsAction } from "@/components/settings-action.ts";
 
-export class ButtonSettings extends Button {
-  constructor(
-    options: ButtonOptions,
-    private readonly pathOn: string,
-    private readonly pathOff: string,
-  ) {
+export abstract class ButtonSettings extends Button {
+  protected abstract pathOff: string;
+  protected abstract pathOn: string;
+  protected abstract title: string;
+
+  protected constructor(options: ButtonOptions) {
     super(options);
-    console.log("ButtonSettings", this.useSVGIcon);
-    this.pathOff = pathOff;
-    this.pathOn = pathOn;
     this.addClassList(this.element, [styles.settings]);
   }
 
   public togglePath(isOn: boolean): void {
     const path = isOn ? this.pathOff : this.pathOn;
-    console.log(path, this.useSVGIcon);
     this.useSVGIcon?.setAttributeNS(
       "http://www.w3.org/1999/xlink",
       "xlink:href",
       path,
     );
+  }
+
+  public addToggleListener(action: SettingsAction): void {
+    this.element.addEventListener("click", () => {
+      action.toggle();
+    });
   }
 }

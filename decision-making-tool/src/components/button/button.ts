@@ -6,12 +6,21 @@ import { BaseComponent } from "@/components/base-component.ts";
 
 export class Button extends BaseComponent<HTMLButtonElement, ButtonOptions> {
   protected useSVGIcon: SVGUseElement | undefined;
-  // protected svgIcon: SVGSVGElement | undefined;
-  protected createView({ title, path }: ButtonOptions): HTMLButtonElement {
-    const button = createDOMElement({
+
+  constructor(options: ButtonOptions) {
+    super(options);
+    this.appendSVGIcon(options);
+  }
+
+  protected createView(): HTMLButtonElement {
+    return createDOMElement({
       tagName: "button",
       classList: [styles.button],
     });
+  }
+
+  private appendSVGIcon(options: ButtonOptions): void {
+    const { path, title } = options;
     if (path) {
       const img = this.createSVGIcon({
         path: path,
@@ -21,10 +30,8 @@ export class Button extends BaseComponent<HTMLButtonElement, ButtonOptions> {
           "aria-label": title,
         },
       });
-      button.append(img);
+      this.element.append(img);
     }
-
-    return button;
   }
 
   private createSVGIcon({

@@ -2,31 +2,17 @@ import { createDOMElement } from "@/utils";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
-import type { HeaderSetting } from "@/type";
-import { ButtonSettings } from "@/components/header/button-settings.ts";
-import { ThemeToggle } from "@/components/theme-toggle.ts";
+import type { settingsButtons } from "@/type";
 
 const APP_NAME = "Decision Making Tool";
-export const ICONS_PATH = {
-  soundOn: "#sound-on",
-  soundOff: "#sound-off",
-  themeLight: "#theme-light",
-  themeDark: "#theme-dark",
-};
-const settings: Record<string, Required<HeaderSetting>> = {
-  volume: {
-    path: ICONS_PATH.soundOn,
-    pathOff: ICONS_PATH.soundOff,
-    title: "Volume",
-  },
-  changeTheme: {
-    path: ICONS_PATH.themeLight,
-    pathOff: ICONS_PATH.themeDark,
-    title: "Change theme",
-  },
-};
 
 export class Header extends BaseComponent<HTMLElement> {
+  constructor(private readonly settings: settingsButtons[]) {
+    super();
+    this.settings = settings;
+    const buttonWrapper = this.createButtons();
+    this.element.append(buttonWrapper);
+  }
   protected createView(): HTMLElement {
     const header = createDOMElement({
       tagName: "header",
@@ -45,6 +31,11 @@ export class Header extends BaseComponent<HTMLElement> {
       classList: [styles.headerPrimary],
     });
 
+    header.append(headerPrimary);
+    return header;
+  }
+
+  private createButtons(): HTMLDivElement {
     const buttonWrapper = createDOMElement({
       tagName: "div",
       classList: [
@@ -54,32 +45,10 @@ export class Header extends BaseComponent<HTMLElement> {
       ],
     });
 
-    for (const value of Object.values(settings)) {
-      const button = this.createSettingsButton(value);
-      buttonWrapper.append(button);
+    for (const { button, action } of this.settings) {
+      button.addToggleListener(action);
+      buttonWrapper.append(button.getElement());
     }
-
-    header.append(headerPrimary, buttonWrapper);
-    return header;
-  }
-
-  private createSettingsButton(
-    value: Required<HeaderSetting>,
-  ): HTMLButtonElement {
-    const { path, title, pathOff } = value;
-    const button = new ButtonSettings(
-      {
-        path,
-        title,
-      },
-      path,
-      pathOff,
-    );
-    const theme = new ThemeToggle(button);
-    button.getElement().addEventListener("click", () => {
-      theme.toggle();
-    });
-
-    return button.getElement();
+    return buttonWrapper;
   }
 }

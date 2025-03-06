@@ -1,25 +1,26 @@
-import type { ButtonSettings } from "@/components/header/button-settings.ts";
+import type { ButtonSettings } from "@/components/button/button-settings.ts";
+import { SettingsAction } from "@/components/settings-action.ts";
 
-export class ThemeToggle {
+export class ThemeToggle extends SettingsAction {
   private mediaQueryList: MediaQueryList;
-  private isDark: boolean;
-  private themeButton: ButtonSettings;
+  protected isOff: boolean;
   constructor(themeButton: ButtonSettings) {
-    this.themeButton = themeButton;
+    super(themeButton);
     this.mediaQueryList = globalThis.matchMedia("(prefers-color-scheme: dark)");
-    this.isDark = this.mediaQueryList.matches;
+    this.isOff = this.mediaQueryList.matches;
+    this.changeTheme(this.isOff);
     this.mediaQueryList.addEventListener("change", (event) => {
       this.changeTheme(event.matches);
     });
   }
 
   public changeTheme(isDark: boolean): void {
-    this.themeButton.togglePath(isDark);
+    this.button.togglePath(isDark);
     document.body.toggleAttribute("data-theme", isDark);
   }
 
   public toggle(): void {
-    this.isDark = !this.isDark;
-    this.changeTheme(this.isDark);
+    this.isOff = !this.isOff;
+    this.changeTheme(this.isOff);
   }
 }
