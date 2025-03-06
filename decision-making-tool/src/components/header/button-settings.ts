@@ -9,6 +9,7 @@ export class ButtonSettings extends Button {
     private readonly pathOff: string,
   ) {
     super(options);
+    console.log("ButtonSettings", this.useSVGIcon);
     this.pathOff = pathOff;
     this.pathOn = pathOn;
     this.addClassList(this.element, [styles.settings]);
@@ -16,7 +17,7 @@ export class ButtonSettings extends Button {
 
   public togglePath(isOn: boolean): void {
     const path = isOn ? this.pathOff : this.pathOn;
-    console.log(path);
+    console.log(path, this.useSVGIcon);
     this.useSVGIcon?.setAttributeNS(
       "http://www.w3.org/1999/xlink",
       "xlink:href",

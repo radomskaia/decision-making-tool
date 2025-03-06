@@ -28,9 +28,6 @@ export default defineConfig({
   plugins: [
     createSvgSpritePlugin({
       svgFolder: SVG_FOLDER_PATH,
-      outputDir: "public/icons",
-      spriteFilename: "sprite.svg",
-      symbolId: "[name]",
     }),
     ViteImageOptimizer({
       jpg: {

@@ -23,6 +23,7 @@
 }
 
 .iconButton {
+  height: 100%;
   filter: invert(0) brightness(1);
   transform: scale(1);
   transition: 0.3s ease-in-out;
@@ -31,10 +32,12 @@
 
 .settings {
   width: 40px;
+  height: 40px;
 }
 
 .actions {
   width: 50px;
+  height: 50px;
 }
 
 .button:disabled .iconButton {

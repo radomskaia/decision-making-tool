@@ -13,9 +13,8 @@ export class Button extends BaseComponent<HTMLButtonElement, ButtonOptions> {
       classList: [styles.button],
     });
     if (path) {
-      const iconPath = this.ICON_PATH + path;
       const img = this.createSVGIcon({
-        path: iconPath,
+        path: path,
         classList: [styles.iconButton],
         attributes: {
           title: title,

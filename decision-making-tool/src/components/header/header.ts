@@ -8,10 +8,10 @@ import { ThemeToggle } from "@/components/theme-toggle.ts";
 
 const APP_NAME = "Decision Making Tool";
 export const ICONS_PATH = {
-  soundOn: "sound-on",
-  soundOff: "sound-off",
-  themeLight: "theme-light",
-  themeDark: "theme-dark",
+  soundOn: "#sound-on",
+  soundOff: "#sound-off",
+  themeLight: "#theme-light",
+  themeDark: "#theme-dark",
 };
 const settings: Record<string, Required<HeaderSetting>> = {
   volume: {

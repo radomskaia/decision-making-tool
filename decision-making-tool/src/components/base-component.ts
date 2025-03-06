@@ -5,7 +5,6 @@ export abstract class BaseComponent<
   O = void,
 > {
   protected readonly element: T;
-  protected readonly ICON_PATH = "/icons/sprite.svg#";
   constructor(options?: O) {
     this.element = this.createView(options);
   }
