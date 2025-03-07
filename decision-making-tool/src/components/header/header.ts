@@ -2,25 +2,40 @@ import { createDOMElement } from "@/utils";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
-import type { settingsButtons } from "@/type";
+import { SoundButton } from "@/components/button/sound-button.ts";
+import { AudioElement } from "@/components/audio.ts";
+import { ThemeButton } from "@/components/button/theme-button.ts";
+import { ThemeToggle } from "@/components/theme-toggle.ts";
 
 const APP_NAME = "Decision Making Tool";
 
 export class Header extends BaseComponent<HTMLElement> {
-  constructor(private readonly settings: settingsButtons[]) {
+  private readonly settingsButton = {
+    sound: {
+      button: SoundButton,
+      action: AudioElement,
+    },
+    theme: {
+      button: ThemeButton,
+      action: ThemeToggle,
+    },
+  };
+  private readonly buttonWrapper: HTMLDivElement;
+  constructor() {
     super();
-    this.settings = settings;
-    const buttonWrapper = this.createButtons();
-    this.element.append(buttonWrapper);
+    this.buttonWrapper = this.createButtonWrapper();
+    this.element.append(this.buttonWrapper);
   }
+
   protected createView(): HTMLElement {
     const header = createDOMElement({
       tagName: "header",
       classList: [
         styles.header,
+        utilitiesStyles.container,
         utilitiesStyles.flex,
-        utilitiesStyles.center,
-        utilitiesStyles.justifyAround,
+        utilitiesStyles.alignCenter,
+        utilitiesStyles.justifyBetween,
         utilitiesStyles.widthFull,
       ],
     });
@@ -35,8 +50,8 @@ export class Header extends BaseComponent<HTMLElement> {
     return header;
   }
 
-  private createButtons(): HTMLDivElement {
-    const buttonWrapper = createDOMElement({
+  private createButtonWrapper(): HTMLDivElement {
+    return createDOMElement({
       tagName: "div",
       classList: [
         utilitiesStyles.flex,
@@ -44,11 +59,13 @@ export class Header extends BaseComponent<HTMLElement> {
         utilitiesStyles.gap30,
       ],
     });
+  }
 
-    for (const { button, action } of this.settings) {
-      button.addToggleListener(action);
-      buttonWrapper.append(button.getElement());
-    }
-    return buttonWrapper;
+  public addSoundButton(buttonName: keyof typeof this.settingsButton): this {
+    const button = new this.settingsButton[buttonName].button();
+    const action = new this.settingsButton[buttonName].action(button);
+    button.addToggleListener(action);
+    this.buttonWrapper.append(button.getElement());
+    return this;
   }
 }

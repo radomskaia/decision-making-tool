@@ -5,6 +5,7 @@ declare const styles: {
   alignCenter: string;
   center: string;
   justifyAround: string;
+  justifyBetween: string;
   flexWrap: string;
   gap30: string;
   gap20: string;
