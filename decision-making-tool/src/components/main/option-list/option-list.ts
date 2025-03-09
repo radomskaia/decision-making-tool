@@ -24,7 +24,8 @@ export class OptionList extends BaseComponent<"ul"> {
   public addOption(optionsValue?: OptionItemValue): void {
     const optionItem = new OptionItem(optionsValue);
     this.appendElement(optionItem.getElement());
-    const id = idElement.getId();
+    const lastId = idElement.getId();
+    const id = `#${lastId}`;
     optionItem.addListener("button", () => {
       const list = this.optionListValue.list;
       const index = this.getOptionIndex(id);
@@ -44,7 +45,7 @@ export class OptionList extends BaseComponent<"ul"> {
       return;
     }
     this.optionListValue.list.push(optionItem.getValue());
-    this.optionListValue.lastId = id;
+    this.optionListValue.lastId = lastId;
   }
 
   public getList(): OptionListValue {
@@ -68,15 +69,68 @@ export class OptionList extends BaseComponent<"ul"> {
     this.clearElement();
   }
 
-  private getOptionIndex(id: number): number {
-    const index = this.optionListValue.list.findIndex((item) => item.id === id);
+  public isOptionListValue(value: unknown): value is OptionListValue {
+    if (typeof value !== "object" || value === null) {
+      return false;
+    }
+    if (!("lastId" in value && "list" in value)) {
+      return false;
+    }
+    if (typeof value.lastId !== "number" || value.lastId < 0) {
+      return false;
+    }
+    if (!Array.isArray(value.list)) {
+      return false;
+    }
+    for (const option of value.list) {
+      if (!this.isOptionItemValue(option, value.lastId)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private isOptionItemValue(
+    value: unknown,
+    lastId: number,
+  ): value is OptionItemValue {
+    if (typeof value !== "object" || value === null) {
+      return false;
+    }
+    if (!("id" in value && "title" in value && "weight" in value)) {
+      return false;
+    }
+    if (typeof value.id !== "string" || value.id[0] !== "#") {
+      return false;
+    }
+    let id = Number(value.id.slice(1));
+    if (Number.isNaN(id) || id < 0 || id > lastId) {
+      return false;
+    }
+    const weight = value.weight === "" ? value.weight : Number(value.weight);
+
+    if (typeof weight === "number" && Number.isNaN(weight) && weight <= 0) {
+      return false;
+    }
+    const title = value.title;
+    if (typeof title !== "string") {
+      return false;
+    }
+    return true;
+  }
+
+  private getOptionIndex(id: string): number {
+    const index = this.optionListValue.list.findIndex((item) => {
+      return item.id === id;
+    });
     if (index === -1) {
       throw new Error("Can't update input value. Didn't find ID in the List");
     }
     return index;
   }
 
-  private inputHandler(type: InputType, id: number, event: Event): void {
+  private inputHandler(type: InputType, id: string, event: Event): void {
     const list = this.optionListValue.list;
     const index = this.getOptionIndex(id);
     if (event.target instanceof HTMLInputElement) {

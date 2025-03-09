@@ -14,11 +14,11 @@ export class idElement extends BaseComponent<"div"> {
   public static setId(id: number): void {
     idElement.id = id;
   }
-  private _id: number;
-  constructor(value?: number) {
+  private readonly _id: string;
+  constructor(value?: string) {
     super();
-    this._id = value || idElement.getId();
-    this.element.textContent = "#" + this._id.toString();
+    this._id = value || `#${idElement.getId()}`;
+    this.element.textContent = this._id;
   }
 
   protected createView(): HTMLDivElement {
@@ -29,7 +29,7 @@ export class idElement extends BaseComponent<"div"> {
     });
   }
 
-  public get id(): number {
+  public get id(): string {
     return this._id;
   }
 }

@@ -22,7 +22,7 @@ export interface CreateSVGIconOptions extends Options {
 }
 
 export interface OptionItemValue {
-  id?: number;
+  id?: string;
   title: string;
   weight: string;
 }

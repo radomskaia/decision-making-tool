@@ -24,22 +24,73 @@ export class Main extends BaseComponent<"main"> {
         utilitiesStyles.alignCenter,
       ],
     });
-    const ul = this.addOptionList();
+    const optionList = this.addOptionList();
     const addOptionButton = this.createButton("Add Option", () => {
-      ul.addOption();
+      optionList.addOption();
     });
-    const pasteModal = PasteModal.getInstance(ul);
+    const pasteModal = PasteModal.getInstance(optionList);
     const pasteButton = this.createButton("Paste List", () => {
       pasteModal.showModal();
     });
 
     const clearButton = this.createButton("Clear List", () => {
-      ul.reset();
+      optionList.reset();
     });
 
-    main.append(ul.getElement(), addOptionButton, clearButton, pasteButton);
+    const saveButton = this.createButton("Save List to File", () => {
+      this.saveListHandler(optionList);
+    });
+
+    const loadButton = this.createButton("Load List from File", () => {
+      this.loadListHandler(optionList);
+    });
+
+    main.append(
+      optionList.getElement(),
+      addOptionButton,
+      clearButton,
+      pasteButton,
+      saveButton,
+      loadButton,
+    );
 
     return main;
+  }
+
+  private loadListHandler(optionList: OptionList): void {
+    console.log("load");
+    const input = this.createDOMElement({
+      tagName: "input",
+      attributes: { type: "file", accept: ".json" },
+    });
+    input.addEventListener("change", () => {
+      const file = input.files;
+      if (!file) {
+        throw new Error("Invalid file");
+      }
+      file[0].text().then((text) => {
+        const data = JSON.parse(text);
+        if (!optionList.isOptionListValue(data)) {
+          throw new Error("Invalid option list");
+        }
+        optionList.setList(data);
+      });
+    });
+    input.click();
+  }
+
+  private saveListHandler(optionList: OptionList): void {
+    let blob = new Blob([JSON.stringify(optionList.getList())], {
+      type: "application/json",
+    });
+    let url = URL.createObjectURL(blob);
+    let a = this.createDOMElement({
+      tagName: "a",
+      attributes: { href: url, download: "option-list.json" },
+    });
+    a.click();
+    console.log(url);
+    URL.revokeObjectURL(url);
   }
 
   private createButton(text: string, callback: Callback): HTMLButtonElement {

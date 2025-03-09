@@ -9,7 +9,7 @@ import type { Button } from "@/components/button/button.ts";
 // import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
-  private readonly id: number;
+  private readonly id: string;
   private title: TitleInput;
   private weight: WeightInput;
   private button: Button;
@@ -38,7 +38,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
     });
   }
 
-  private addID(value?: number): number {
+  private addID(value?: string): string {
     const id = new idElement(value);
     this.appendElement(id.getElement());
     return id.id;
