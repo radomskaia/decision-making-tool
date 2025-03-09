@@ -1,17 +1,17 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/main/option-list/option.module.css";
-import type { OptionsList, OptionsValue } from "@/type";
+import type { OptionListValue, OptionItemValue } from "@/type";
 import { InputType } from "@/type";
 import { OptionItem } from "@/components/main/option-list/option-item.ts";
 import { idElement } from "@/components/main/option-list/id-element.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
-  private _list: OptionsList = { lastId: 0, list: [] };
+  private optionListValue: OptionListValue = { lastId: 0, list: [] };
   private inputTypes: InputType[] = [InputType.Title, InputType.Weight];
-  constructor(list?: OptionsList) {
+  constructor(list?: OptionListValue) {
     super();
     if (list) {
-      this._list = list;
+      this.optionListValue = list;
     }
   }
   protected createView(): HTMLElementTagNameMap["ul"] {
@@ -21,12 +21,12 @@ export class OptionList extends BaseComponent<"ul"> {
     });
   }
 
-  public addOption(optionsValue?: OptionsValue): void {
+  public addOption(optionsValue?: OptionItemValue): void {
     const optionItem = new OptionItem(optionsValue);
     this.appendElement(optionItem.getElement());
     const id = idElement.getId();
     optionItem.addListener("button", () => {
-      const list = this._list.list;
+      const list = this.optionListValue.list;
       const index = this.getOptionIndex(id);
       list.splice(index, 1);
       optionItem.getElement().remove();
@@ -40,21 +40,21 @@ export class OptionList extends BaseComponent<"ul"> {
       });
     }
 
-    if (optionsValue) {
+    if (optionsValue?.id) {
       return;
     }
-    this._list.list.push(optionItem.getValue());
-    this._list.lastId = id;
+    this.optionListValue.list.push(optionItem.getValue());
+    this.optionListValue.lastId = id;
   }
 
-  public get list(): OptionsList {
-    return structuredClone(this._list);
+  public getList(): OptionListValue {
+    return structuredClone(this.optionListValue);
   }
 
-  public set list(value: OptionsList) {
+  public setList(value: OptionListValue): void {
     if (value.lastId) {
       this.reset();
-      this._list = value;
+      this.optionListValue = value;
     }
 
     for (const option of value.list) {
@@ -63,13 +63,13 @@ export class OptionList extends BaseComponent<"ul"> {
   }
 
   public reset(): void {
-    this._list = { lastId: 0, list: [] };
+    this.optionListValue = { lastId: 0, list: [] };
     idElement.resetId();
     this.clearElement();
   }
 
   private getOptionIndex(id: number): number {
-    const index = this._list.list.findIndex((item) => item.id === id);
+    const index = this.optionListValue.list.findIndex((item) => item.id === id);
     if (index === -1) {
       throw new Error("Can't update input value. Didn't find ID in the List");
     }
@@ -77,7 +77,7 @@ export class OptionList extends BaseComponent<"ul"> {
   }
 
   private inputHandler(type: InputType, id: number, event: Event): void {
-    const list = this._list.list;
+    const list = this.optionListValue.list;
     const index = this.getOptionIndex(id);
     if (event.target instanceof HTMLInputElement) {
       list[index][type] = event.target.value;

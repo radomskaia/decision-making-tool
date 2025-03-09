@@ -21,15 +21,15 @@ export interface CreateSVGIconOptions extends Options {
   path: string;
 }
 
-export interface OptionsValue {
+export interface OptionItemValue {
   id?: number;
   title: string;
   weight: string;
 }
 
-export interface OptionsList {
+export interface OptionListValue {
   lastId?: number;
-  list: OptionsValue[];
+  list: OptionItemValue[];
 }
 
 export enum InputType {

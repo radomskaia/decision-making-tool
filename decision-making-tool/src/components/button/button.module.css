@@ -17,7 +17,7 @@
   font-weight: 700;
   font-size: 2rem;
   text-transform: uppercase;
-  color: inherit;
+  color: var(--dark);
   background-color: var(--static-green);
   transform: translateY(0);
 }
