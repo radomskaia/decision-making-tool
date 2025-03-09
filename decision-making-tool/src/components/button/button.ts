@@ -1,17 +1,10 @@
 import styles from "./button.module.css";
 
-import type { ButtonOptions, CreateSVGIconOptions } from "@/type";
+import type { ButtonOptions, Callback } from "@/type";
 import { createDOMElement } from "@/utils";
 import { BaseComponent } from "@/components/base-component.ts";
 
-export class Button extends BaseComponent<HTMLButtonElement, ButtonOptions> {
-  protected useSVGIcon: SVGUseElement | undefined;
-
-  constructor(options: ButtonOptions) {
-    super(options);
-    this.appendSVGIcon(options);
-  }
-
+export class Button extends BaseComponent<"button", ButtonOptions> {
   protected createView(): HTMLButtonElement {
     return createDOMElement({
       tagName: "button",
@@ -19,37 +12,11 @@ export class Button extends BaseComponent<HTMLButtonElement, ButtonOptions> {
     });
   }
 
-  private appendSVGIcon(options: ButtonOptions): void {
-    const { path, title } = options;
-    if (path) {
-      const img = this.createSVGIcon({
-        path: path,
-        classList: [styles.iconButton],
-        attributes: {
-          title: title,
-          "aria-label": title,
-        },
-      });
-      this.element.append(img);
-    }
-  }
-
-  private createSVGIcon({
-    path,
-    classList,
-    attributes,
-  }: CreateSVGIconOptions): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    this.addClassList(svg, classList);
-    this.addAttributes(svg, { ...attributes, role: "img" });
-    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", path);
-    this.useSVGIcon = use;
-    svg.append(use);
-    return svg;
-  }
-
   public buttonDisabled(isDisabled: boolean): void {
     this.element.disabled = isDisabled;
+  }
+
+  public addListener(callback: Callback): void {
+    this.element.addEventListener("click", callback);
   }
 }

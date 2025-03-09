@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle.ts";
 
 const APP_NAME = "Decision Making Tool";
 
-export class Header extends BaseComponent<HTMLElement> {
+export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {
     sound: {
       button: SoundButton,
@@ -24,7 +24,7 @@ export class Header extends BaseComponent<HTMLElement> {
   constructor() {
     super();
     this.buttonWrapper = this.createButtonWrapper();
-    this.element.append(this.buttonWrapper);
+    this.appendElement(this.buttonWrapper);
   }
 
   protected createView(): HTMLElement {

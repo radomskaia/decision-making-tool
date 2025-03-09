@@ -1,10 +1,10 @@
 import type { ElementOptions } from "@/type";
 
 export abstract class BaseComponent<
-  T extends HTMLElement = HTMLElement,
+  T extends keyof HTMLElementTagNameMap,
   O = void,
 > {
-  protected element: T;
+  protected element: HTMLElementTagNameMap[T];
   protected constructor(options?: O) {
     this.element = this.createView(options);
   }
@@ -23,17 +23,14 @@ export abstract class BaseComponent<
     return element;
   }
 
-  protected addClassList(
-    element: HTMLElement | SVGSVGElement,
-    classList?: string[],
-  ): void {
+  protected addClassList(element: Element, classList?: string[]): void {
     if (classList) {
       element.classList.add(...classList);
     }
   }
 
   protected addAttributes(
-    element: HTMLElement | SVGSVGElement,
+    element: Element,
     attributes?: Record<string, string>,
   ): void {
     if (attributes) {
@@ -43,15 +40,15 @@ export abstract class BaseComponent<
     }
   }
 
-  protected addTextContent(element: HTMLElement, textContent?: string): void {
+  protected addTextContent(element: Element, textContent?: string): void {
     if (textContent) {
       element.textContent = textContent;
     }
   }
 
-  protected abstract createView(options?: O): T;
+  protected abstract createView(options?: O): HTMLElementTagNameMap[T];
 
-  public getElement(): T {
+  public getElement(): HTMLElementTagNameMap[T] {
     return this.element;
   }
 
@@ -59,11 +56,11 @@ export abstract class BaseComponent<
     this.element.classList.toggle(className, isAdd);
   }
 
-  public appendChild(child: HTMLElement): void {
+  public appendElement(child: Element): void {
     this.element.append(child);
   }
 
-  public remove(): void {
-    this.element.remove();
+  public clearElement(): void {
+    this.element.replaceChildren();
   }
 }

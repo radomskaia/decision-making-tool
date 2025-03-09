@@ -1,9 +1,9 @@
-import { Button } from "@/components/button/button.ts";
 import type { ButtonOptions } from "@/type";
 import styles from "@/components/button/button.module.css";
 import type { SettingsAction } from "@/components/settings-action.ts";
+import { IconButton } from "@/components/button/icon-button.ts";
 
-export abstract class ButtonSettings extends Button {
+export abstract class ButtonSettings extends IconButton {
   protected abstract pathOff: string;
   protected abstract pathOn: string;
   protected abstract title: string;
@@ -23,7 +23,7 @@ export abstract class ButtonSettings extends Button {
   }
 
   public addToggleListener(action: SettingsAction): void {
-    this.element.addEventListener("click", () => {
+    this.addListener(() => {
       action.toggle();
     });
   }

@@ -1,4 +1,4 @@
-declare const styles: {
+declare const utilitiesStyles: {
   container: string;
   flex: string;
   flexColumn: string;
@@ -18,4 +18,4 @@ declare const styles: {
   centerMargin: string;
   width80: string;
 };
-export default styles;
+export default utilitiesStyles;
