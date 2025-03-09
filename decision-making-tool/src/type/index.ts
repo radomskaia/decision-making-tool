@@ -1,7 +1,4 @@
-import type { ButtonSettings } from "@/components/button/button-settings.ts";
-import type { SettingsAction } from "@/components/settings-action.ts";
-
-export type Callback = () => void;
+export type Callback = (event?: Event) => void;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
@@ -24,7 +21,18 @@ export interface CreateSVGIconOptions extends Options {
   path: string;
 }
 
-export interface settingsButtons {
-  button: ButtonSettings;
-  action: SettingsAction;
+export interface OptionsValue {
+  id?: number;
+  title: string;
+  weight: string;
+}
+
+export interface OptionsList {
+  lastId?: number;
+  list: OptionsValue[];
+}
+
+export enum InputType {
+  Title = "title",
+  Weight = "weight",
 }

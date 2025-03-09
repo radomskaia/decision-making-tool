@@ -1,0 +1,64 @@
+import { BaseComponent } from "@/components/base-component.ts";
+import { idElement } from "@/components/main/option-list/id-element.ts";
+import { TitleInput } from "@/components/main/option-list/title-input.ts";
+import { WeightInput } from "@/components/main/option-list/weight-input.ts";
+import type { Callback, InputType, OptionsValue } from "@/type";
+import { TextButton } from "@/components/button/text-button.ts";
+import type { Button } from "@/components/button/button.ts";
+
+// import utilitiesStyles from "@/styles/utilities.module.css";
+
+export class OptionItem extends BaseComponent<"li", OptionsValue> {
+  private readonly id: number;
+  private title: TitleInput;
+  private weight: WeightInput;
+  private button: Button;
+  constructor(value?: OptionsValue) {
+    super();
+    this.id = this.addID(value?.id);
+    this.title = this.addTitleInput(value?.title);
+    this.weight = this.addWeightInput(value?.weight);
+    this.button = this.addDeleteButton();
+  }
+  public getValue(): OptionsValue {
+    return {
+      id: this.id,
+      title: this.title.value,
+      weight: this.weight.value,
+    };
+  }
+
+  public addListener(type: "button" | InputType, callback: Callback): void {
+    this[type].addListener(callback);
+  }
+
+  protected createView(): HTMLElementTagNameMap["li"] {
+    return this.createDOMElement({
+      tagName: "li",
+    });
+  }
+
+  private addID(value?: number): number {
+    const id = new idElement(value);
+    this.appendElement(id.getElement());
+    return id.id;
+  }
+
+  private addTitleInput(value?: string): TitleInput {
+    const title = new TitleInput(value);
+    this.appendElement(title.getElement());
+    return title;
+  }
+
+  private addWeightInput(value?: string): WeightInput {
+    const weight = new WeightInput(value);
+    this.appendElement(weight.getElement());
+    return weight;
+  }
+
+  private addDeleteButton(): Button {
+    const button = new TextButton("Delete");
+    this.appendElement(button.getElement());
+    return button;
+  }
+}

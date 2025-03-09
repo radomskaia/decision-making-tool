@@ -1,0 +1,37 @@
+.optionsList {
+  display: table;
+  border-collapse: separate;
+  width: 100%;
+  max-width: 1000px;
+
+  /* border-spacing: 10px; */
+  white-space: nowrap;
+}
+
+.optionsList > li {
+  display: table-row;
+  padding: 15px;
+  background-color: var(--content-background);
+}
+
+.optionsList > li > * {
+  display: table-cell;
+  padding: 5px;
+  white-space: nowrap;
+}
+
+.optionsList > li > *:first-child {
+  width: 1px;
+}
+
+.optionsList > li > *:nth-child(2) {
+  overflow: hidden;
+  width: 80%;
+  min-width: 200px;
+  text-overflow: ellipsis;
+}
+
+.optionsList > li > *:nth-child(3) {
+  width: 10%;
+  min-width: 70px;
+}

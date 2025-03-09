@@ -56,8 +56,8 @@ export abstract class BaseComponent<
     this.element.classList.toggle(className, isAdd);
   }
 
-  public appendElement(child: Element): void {
-    this.element.append(child);
+  public appendElement(...child: Element[]): void {
+    this.element.append(...child);
   }
 
   public clearElement(): void {
