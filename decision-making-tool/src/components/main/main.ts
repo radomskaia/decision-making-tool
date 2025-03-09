@@ -4,14 +4,17 @@ import { OptionList } from "@/components/main/option-list/option-list.ts";
 import { TextButton } from "@/components/button/text-button.ts";
 import { PasteModal } from "@/components/modal/paste-modal.ts";
 import type { Callback } from "@/type";
+import { Router } from "@/components/router.ts";
 export class Main extends BaseComponent<"main"> {
-  public get check(): boolean {
-    return this._check;
-  }
-  private readonly _check: boolean;
-  constructor() {
+  private static instance: Main | undefined;
+  private constructor() {
     super();
-    this._check = true;
+  }
+  public static getInstance(): Main {
+    if (!Main.instance) {
+      Main.instance = new Main();
+    }
+    return Main.instance;
   }
   protected createView(): HTMLElement {
     const main = this.createDOMElement({
@@ -25,40 +28,33 @@ export class Main extends BaseComponent<"main"> {
       ],
     });
     const optionList = this.addOptionList();
-    const addOptionButton = this.createButton("Add Option", () => {
-      optionList.addOption();
-    });
-    const pasteModal = PasteModal.getInstance(optionList);
-    const pasteButton = this.createButton("Paste List", () => {
-      pasteModal.showModal();
-    });
+    const buttons = this.createButtons(optionList);
 
-    const clearButton = this.createButton("Clear List", () => {
-      optionList.reset();
-    });
-
-    const saveButton = this.createButton("Save List to File", () => {
-      this.saveListHandler(optionList);
-    });
-
-    const loadButton = this.createButton("Load List from File", () => {
-      this.loadListHandler(optionList);
-    });
-
-    main.append(
-      optionList.getElement(),
-      addOptionButton,
-      clearButton,
-      pasteButton,
-      saveButton,
-      loadButton,
-    );
+    main.append(optionList.getElement(), ...buttons);
 
     return main;
   }
 
+  private createButtons(optionList: OptionList): HTMLButtonElement[] {
+    const pasteModal = PasteModal.getInstance(optionList);
+
+    return [
+      this.createButton("Add Option", () => optionList.addOption()),
+      this.createButton("Clear List", () => optionList.reset()),
+      this.createButton("Paste List", () => pasteModal.showModal()),
+      this.createButton("Save List to File", () =>
+        this.saveListHandler(optionList),
+      ),
+      this.createButton("Load List from File", () =>
+        this.loadListHandler(optionList),
+      ),
+      this.createButton("Start", () =>
+        Router.getInstance().navigateTo("/decision-picker"),
+      ),
+    ];
+  }
+
   private loadListHandler(optionList: OptionList): void {
-    console.log("load");
     const input = this.createDOMElement({
       tagName: "input",
       attributes: { type: "file", accept: ".json" },
