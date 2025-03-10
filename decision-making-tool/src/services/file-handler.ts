@@ -1,6 +1,6 @@
-import type { OptionList } from "@/components/main/option-list/option-list.ts";
-import { Validator } from "@/components/validator.ts";
-import { ERROR_MESSAGES, FILE_CONFIG } from "@/constants.ts";
+import type { OptionList } from "@/components/options/option-list/option-list.ts";
+import { Validator } from "@/services/validator.ts";
+import { ERROR_MESSAGES, FILE_CONFIG } from "@/constants/constants.ts";
 
 export class FileHandler {
   private static instance: FileHandler | undefined;

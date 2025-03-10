@@ -1,5 +1,5 @@
+import type { Callback } from "src/types";
 import { BaseComponent } from "@/components/base-component.ts";
-import type { Callback } from "@/type";
 
 export class BaseInput extends BaseComponent<"input"> {
   constructor(value?: string) {

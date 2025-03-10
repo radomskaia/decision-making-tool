@@ -1,6 +1,6 @@
-import type { ButtonSettings } from "@/components/button/button-settings.ts";
-import { SettingsAction } from "@/components/settings-action.ts";
-import { ERROR_MESSAGES } from "@/constants.ts";
+import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
+import { SettingsAction } from "@/components/settings/settings-action.ts";
+import { ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export class AudioElement extends SettingsAction {
   private audio: HTMLAudioElement;

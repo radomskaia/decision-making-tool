@@ -1,5 +1,5 @@
-import type { ElementOptions, TypeGuard } from "@/type";
-import { LS_PREFIX } from "@/constants.ts";
+import type { ElementOptions, TypeGuard } from "src/types";
+import { LS_PREFIX } from "@/constants/constants.ts";
 
 /**
  * Creates and returns a new DOM element with the specified properties.

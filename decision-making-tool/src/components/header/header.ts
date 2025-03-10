@@ -2,11 +2,11 @@ import { createDOMElement } from "@/utils";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
-import { SoundButton } from "@/components/button/sound-button.ts";
-import { AudioElement } from "@/components/audio.ts";
-import { ThemeButton } from "@/components/button/theme-button.ts";
-import { ThemeToggle } from "@/components/theme-toggle.ts";
-import { APP_NAME } from "@/constants.ts";
+import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
+import { AudioElement } from "@/components/settings/audio.ts";
+import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
+import { ThemeToggle } from "@/components/settings/theme-toggle.ts";
+import { APP_NAME } from "@/constants/constants.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {

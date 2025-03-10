@@ -1,5 +1,5 @@
-import { ButtonSettings } from "@/components/button/button-settings.ts";
-import { BUTTON_TITLE } from "@/constants.ts";
+import { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
+import { BUTTON_TITLE } from "@/constants/constants.ts";
 
 export class ThemeButton extends ButtonSettings {
   protected readonly pathOn: string;

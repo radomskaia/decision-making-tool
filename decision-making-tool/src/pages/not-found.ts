@@ -1,7 +1,7 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import { TextButton } from "@/components/button/text-button.ts";
-import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants.ts";
+import { TextButton } from "@/components/buttons/text-button.ts";
+import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants/constants.ts";
 
 export class NotFound extends BaseComponent<"div"> {
   private static instance: NotFound | undefined;

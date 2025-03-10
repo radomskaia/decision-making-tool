@@ -1,10 +1,10 @@
 import styles from "./button.module.css";
 
-import type { ButtonOptions, Callback } from "@/type";
+import type { ButtonOptions, Callback } from "@/types";
 import { createDOMElement } from "@/utils";
 import { BaseComponent } from "@/components/base-component.ts";
 
-export class Button extends BaseComponent<"button", ButtonOptions> {
+export class BaseButton extends BaseComponent<"button", ButtonOptions> {
   constructor(callback?: Callback) {
     super();
     if (callback) {

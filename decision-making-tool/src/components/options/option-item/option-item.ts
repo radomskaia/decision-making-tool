@@ -1,16 +1,16 @@
-import { BaseComponent } from "@/components/base-component.ts";
-import { idElement } from "@/components/main/option-list/id-element.ts";
-import { TitleInput } from "@/components/main/option-list/title-input.ts";
-import { WeightInput } from "@/components/main/option-list/weight-input.ts";
 import type {
   Callback,
   CallbackEvent,
   InputType,
   OptionItemValue,
-} from "@/type";
-import { TextButton } from "@/components/button/text-button.ts";
-import type { BaseButton } from "@/components/button/base-button.ts";
-import { BUTTON_TEXT } from "@/constants.ts";
+} from "@/types";
+import { BaseComponent } from "@/components/base-component.ts";
+import { idElement } from "@/components/options/id/id-element.ts";
+import { TitleInput } from "@/components/options/input/title-input.ts";
+import { WeightInput } from "@/components/options/input/weight-input.ts";
+import { TextButton } from "@/components/buttons/text-button.ts";
+import type { BaseButton } from "@/components/buttons/base/base-button.ts";
+import { BUTTON_TEXT } from "@/constants/constants.ts";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;

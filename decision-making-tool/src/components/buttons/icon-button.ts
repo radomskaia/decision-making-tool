@@ -1,10 +1,10 @@
-import styles from "./button.module.css";
+import styles from "./base/button.module.css";
 
-import { Button } from "@/components/button/button.ts";
-import type { ButtonOptions, CreateSVGIconOptions } from "@/type";
-import { SVG_CONFIG } from "@/constants.ts";
+import type { ButtonOptions, CreateSVGIconOptions } from "src/types";
+import { BaseButton } from "@/components/buttons/base/base-button.ts";
+import { SVG_CONFIG } from "@/constants/constants.ts";
 
-export class IconButton extends Button {
+export class IconButton extends BaseButton {
   protected useSVGIcon: SVGUseElement | undefined;
 
   constructor(options: ButtonOptions) {

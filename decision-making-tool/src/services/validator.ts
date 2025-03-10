@@ -1,5 +1,9 @@
-import type { OptionItemValue, OptionListValue } from "@/type";
-import { ID_PREFIX, OPTION_KEYS, OPTION_LIST_KEYS } from "@/constants.ts";
+import type { OptionItemValue, OptionListValue } from "@/types";
+import {
+  ID_PREFIX,
+  OPTION_KEYS,
+  OPTION_LIST_KEYS,
+} from "@/constants/constants.ts";
 
 export class Validator {
   private static instance: Validator | undefined;

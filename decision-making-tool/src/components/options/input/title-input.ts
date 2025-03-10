@@ -1,5 +1,5 @@
-import { BaseInput } from "@/components/main/option-list/base-input.ts";
-import { PLACEHOLDER } from "@/constants.ts";
+import { BaseInput } from "@/components/options/input/base-input.ts";
+import { PLACEHOLDER } from "@/constants/constants.ts";
 
 export class TitleInput extends BaseInput {
   constructor(value?: string) {

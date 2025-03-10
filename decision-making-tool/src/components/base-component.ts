@@ -1,4 +1,4 @@
-import type { ElementOptions } from "@/type";
+import type { ElementOptions } from "src/types";
 
 export abstract class BaseComponent<
   T extends keyof HTMLElementTagNameMap,

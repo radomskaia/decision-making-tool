@@ -1,6 +1,9 @@
-import type { ButtonSettings } from "@/components/button/button-settings.ts";
-import { SettingsAction } from "@/components/settings-action.ts";
-import { DARK_THEME_ATTRIBUTE, DARK_THEME_MEDIA_QUERY } from "@/constants.ts";
+import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
+import { SettingsAction } from "@/components/settings/settings-action.ts";
+import {
+  DARK_THEME_ATTRIBUTE,
+  DARK_THEME_MEDIA_QUERY,
+} from "@/constants/constants.ts";
 
 export class ThemeToggle extends SettingsAction {
   private mediaQueryList: MediaQueryList;

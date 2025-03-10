@@ -1,24 +1,24 @@
+import type { Callback } from "src/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import { OptionList } from "@/components/main/option-list/option-list.ts";
-import { TextButton } from "@/components/button/text-button.ts";
+import { OptionList } from "@/components/options/option-list/option-list.ts";
+import { TextButton } from "@/components/buttons/text-button.ts";
 import { PasteModal } from "@/components/modal/paste-modal.ts";
-import type { Callback } from "@/type";
-import { Router } from "@/components/router.ts";
-import { FileHandler } from "@/components/file-handler.ts";
-import { BUTTON_TEXT, PAGE_PATH } from "@/constants.ts";
+import { Router } from "@/services/router.ts";
+import { FileHandler } from "@/services/file-handler.ts";
+import { BUTTON_TEXT, PAGE_PATH } from "@/constants/constants.ts";
 import { ValidModal } from "@/components/modal/valid-modal.ts";
 
-export class Main extends BaseComponent<"main"> {
-  private static instance: Main | undefined;
+export class Home extends BaseComponent<"main"> {
+  private static instance: Home | undefined;
   private constructor() {
     super();
   }
-  public static getInstance(): Main {
-    if (!Main.instance) {
-      Main.instance = new Main();
+  public static getInstance(): Home {
+    if (!Home.instance) {
+      Home.instance = new Home();
     }
-    return Main.instance;
+    return Home.instance;
   }
   protected createView(): HTMLElement {
     const main = this.createDOMElement({

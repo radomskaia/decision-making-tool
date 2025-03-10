@@ -1,9 +1,9 @@
-import { BaseModal } from "@/components/modal/base-modal.ts";
-import { TextButton } from "@/components/button/text-button.ts";
-import styles from "@/components/modal/modal.module.css";
+import { BaseModal } from "@/components/modal/base/base-modal.ts";
+import { TextButton } from "@/components/buttons/text-button.ts";
+import styles from "@/components/modal/base/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import type { Callback, OptionListValue } from "@/type";
-import type { OptionList } from "@/components/main/option-list/option-list.ts";
+import type { Callback, OptionListValue } from "src/types";
+import type { OptionList } from "@/components/options/option-list/option-list.ts";
 import {
   BUTTON_TEXT,
   ERROR_MESSAGES,
@@ -11,7 +11,7 @@ import {
   PASTE_SEPARATOR,
   TEXTAREA_COLS,
   TEXTAREA_ROWS,
-} from "@/constants.ts";
+} from "@/constants/constants.ts";
 
 export class PasteModal extends BaseModal {
   private static instance: PasteModal | undefined;

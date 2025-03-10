@@ -1,6 +1,6 @@
-import { BaseModal } from "@/components/modal/base-modal.ts";
-import { TextButton } from "@/components/button/text-button.ts";
-import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants.ts";
+import { BaseModal } from "@/components/modal/base/base-modal.ts";
+import { TextButton } from "@/components/buttons/text-button.ts";
+import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants/constants.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class ValidModal extends BaseModal {

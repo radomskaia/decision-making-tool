@@ -1,15 +1,15 @@
+import type { OptionItemValue, OptionListValue } from "@/types";
+import { InputType } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
-import styles from "@/components/main/option-list/option.module.css";
-import type { OptionItemValue, OptionListValue } from "@/type";
-import { InputType } from "@/type";
-import { OptionItem } from "@/components/main/option-list/option-item.ts";
-import { idElement } from "@/components/main/option-list/id-element.ts";
+import styles from "@/components/options/option.module.css";
+import { OptionItem } from "@/components/options/option-item/option-item.ts";
+import { idElement } from "@/components/options/id/id-element.ts";
 import {
   ERROR_MESSAGES,
   ID_PREFIX,
   INITIATION_ID,
   MINIMUM_OPTIONS_COUNT,
-} from "@/constants.ts";
+} from "@/constants/constants.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {

@@ -1,7 +1,7 @@
-import type { CallbackRouter, OptionItemValue } from "@/type";
-import { Main } from "@/components/main/main.ts";
-import { NotFound } from "@/components/not-found.ts";
-import { PAGE_PATH } from "@/constants.ts";
+import type { CallbackRouter, OptionItemValue } from "src/types";
+import { Home } from "@/pages/home.ts";
+import { NotFound } from "@/pages/not-found.ts";
+import { PAGE_PATH } from "@/constants/constants.ts";
 export class Router {
   private static instance: Router | undefined;
   private routers = new Map<string, CallbackRouter>();
@@ -29,7 +29,7 @@ export class Router {
 
   public init(): void {
     this.add(PAGE_PATH.HOME, (): void => {
-      document.body.append(Main.getInstance().getElement());
+      document.body.append(Home.getInstance().getElement());
     });
     const notFound = NotFound.getInstance();
     notFound.addHomeButtonListener(() => {
@@ -46,7 +46,7 @@ export class Router {
       "",
       `${this.baseUrl}${this.hashSymbol}${path}`,
     );
-    Main.getInstance().getElement().remove();
+    Home.getInstance().getElement().remove();
 
     if (this.routers.has(path)) {
       NotFound.getInstance().getElement().remove();

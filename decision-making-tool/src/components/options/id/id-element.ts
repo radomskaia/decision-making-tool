@@ -1,5 +1,9 @@
 import { BaseComponent } from "@/components/base-component.ts";
-import { BUTTON_TITLE, ID_PREFIX, INITIATION_ID } from "@/constants.ts";
+import {
+  BUTTON_TITLE,
+  ID_PREFIX,
+  INITIATION_ID,
+} from "@/constants/constants.ts";
 
 export class idElement extends BaseComponent<"div"> {
   protected static id = INITIATION_ID;
