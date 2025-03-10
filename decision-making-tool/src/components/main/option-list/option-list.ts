@@ -69,57 +69,6 @@ export class OptionList extends BaseComponent<"ul"> {
     this.clearElement();
   }
 
-  public isOptionListValue(value: unknown): value is OptionListValue {
-    if (typeof value !== "object" || value === null) {
-      return false;
-    }
-    if (!("lastId" in value && "list" in value)) {
-      return false;
-    }
-    if (typeof value.lastId !== "number" || value.lastId < 0) {
-      return false;
-    }
-    if (!Array.isArray(value.list)) {
-      return false;
-    }
-    for (const option of value.list) {
-      if (!this.isOptionItemValue(option, value.lastId)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private isOptionItemValue(
-    value: unknown,
-    lastId: number,
-  ): value is OptionItemValue {
-    if (typeof value !== "object" || value === null) {
-      return false;
-    }
-    if (!("id" in value && "title" in value && "weight" in value)) {
-      return false;
-    }
-    if (typeof value.id !== "string" || value.id[0] !== "#") {
-      return false;
-    }
-    let id = Number(value.id.slice(1));
-    if (Number.isNaN(id) || id < 0 || id > lastId) {
-      return false;
-    }
-    const weight = value.weight === "" ? value.weight : Number(value.weight);
-
-    if (typeof weight === "number" && Number.isNaN(weight)) {
-      return false;
-    }
-    const title = value.title;
-    if (typeof title !== "string") {
-      return false;
-    }
-    return true;
-  }
-
   private getOptionIndex(id: string): number {
     const index = this.optionListValue.list.findIndex((item) => {
       return item.id === id;
