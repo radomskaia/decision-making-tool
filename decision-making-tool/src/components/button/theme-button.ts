@@ -1,4 +1,5 @@
 import { ButtonSettings } from "@/components/button/button-settings.ts";
+import { BUTTON_TITLE } from "@/constants.ts";
 
 export class ThemeButton extends ButtonSettings {
   protected readonly pathOn: string;
@@ -7,7 +8,7 @@ export class ThemeButton extends ButtonSettings {
 
   constructor() {
     const path = "#theme-light";
-    const title = "Change theme";
+    const title = BUTTON_TITLE.THEME;
     super({
       path,
       title,

@@ -2,6 +2,7 @@ import styles from "./button.module.css";
 
 import { Button } from "@/components/button/button.ts";
 import type { ButtonOptions, CreateSVGIconOptions } from "@/type";
+import { SVG_CONFIG } from "@/constants.ts";
 
 export class IconButton extends Button {
   protected useSVGIcon: SVGUseElement | undefined;
@@ -31,11 +32,15 @@ export class IconButton extends Button {
     classList,
     attributes,
   }: CreateSVGIconOptions): SVGSVGElement {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const svg = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "svg");
     this.addClassList(svg, classList);
     this.addAttributes(svg, { ...attributes, role: "img" });
-    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", path);
+    const use = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "use");
+    use.setAttributeNS(
+      SVG_CONFIG.NAMESPACE_XLINK,
+      SVG_CONFIG.QUALIFIED_NAME,
+      path,
+    );
     this.useSVGIcon = use;
     svg.append(use);
     return svg;

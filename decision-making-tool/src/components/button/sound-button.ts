@@ -1,4 +1,5 @@
 import { ButtonSettings } from "@/components/button/button-settings.ts";
+import { BUTTON_TITLE } from "@/constants.ts";
 
 export class SoundButton extends ButtonSettings {
   protected readonly pathOn: string;
@@ -7,7 +8,7 @@ export class SoundButton extends ButtonSettings {
 
   constructor() {
     const path = "#sound-on";
-    const title = "Volume";
+    const title = BUTTON_TITLE.VOLUME;
     super({
       path,
       title,

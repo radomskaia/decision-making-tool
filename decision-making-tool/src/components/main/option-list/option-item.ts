@@ -5,8 +5,7 @@ import { WeightInput } from "@/components/main/option-list/weight-input.ts";
 import type { Callback, InputType, OptionItemValue } from "@/type";
 import { TextButton } from "@/components/button/text-button.ts";
 import type { Button } from "@/components/button/button.ts";
-
-// import utilitiesStyles from "@/styles/utilities.module.css";
+import { BUTTON_TEXT } from "@/constants.ts";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;
@@ -57,7 +56,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   }
 
   private addDeleteButton(): Button {
-    const button = new TextButton("Delete");
+    const button = new TextButton(BUTTON_TEXT.DELETE);
     this.appendElement(button.getElement());
     return button;
   }

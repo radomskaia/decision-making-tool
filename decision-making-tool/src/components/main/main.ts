@@ -6,6 +6,8 @@ import { PasteModal } from "@/components/modal/paste-modal.ts";
 import type { Callback } from "@/type";
 import { Router } from "@/components/router.ts";
 import { FileHandler } from "@/components/file-handler.ts";
+import { BUTTON_TEXT, PAGE_PATH } from "@/constants.ts";
+
 export class Main extends BaseComponent<"main"> {
   private static instance: Main | undefined;
   private constructor() {
@@ -38,19 +40,19 @@ export class Main extends BaseComponent<"main"> {
 
   private createButtons(optionList: OptionList): HTMLButtonElement[] {
     const pasteModal = PasteModal.getInstance(optionList);
-    const fileHandler = new FileHandler();
+    const fileHandler = FileHandler.getInstance();
     return [
-      this.createButton("Add Option", () => optionList.addOption()),
-      this.createButton("Clear List", () => optionList.reset()),
-      this.createButton("Paste List", () => pasteModal.showModal()),
-      this.createButton("Save List to File", () =>
-        fileHandler.saveJSON(optionList, "option-list.json"),
+      this.createButton(BUTTON_TEXT.ADD_OPTION, () => optionList.addOption()),
+      this.createButton(BUTTON_TEXT.CLEAR_LIST, () => optionList.reset()),
+      this.createButton(BUTTON_TEXT.PASTE_LIST, () => pasteModal.showModal()),
+      this.createButton(BUTTON_TEXT.SAVE_LIST, () =>
+        fileHandler.saveJSON(optionList),
       ),
-      this.createButton("Load List from File", () =>
+      this.createButton(BUTTON_TEXT.LOAD_LIST, () =>
         fileHandler.loadJSON(optionList),
       ),
-      this.createButton("Start", () =>
-        Router.getInstance().navigateTo("/decision-picker"),
+      this.createButton(BUTTON_TEXT.START, () =>
+        Router.getInstance().navigateTo(PAGE_PATH.SECOND),
       ),
     ];
   }

@@ -1,13 +1,15 @@
 import type { Callback } from "@/type";
 import { Main } from "@/components/main/main.ts";
 import { NotFound } from "@/components/not-found.ts";
-
+import { PAGE_PATH } from "@/constants.ts";
 export class Router {
   private static instance: Router | undefined;
-  private readonly DEFAULT_ROUTE = "/";
   private routers = new Map<string, Callback>();
   private currentPath = "";
-  private readonly baseUrl: string = globalThis.location.href.split("#")[0];
+  private readonly hashSymbol = "#";
+  private readonly baseUrl: string = globalThis.location.href.split(
+    this.hashSymbol,
+  )[0];
   private constructor() {
     globalThis.addEventListener("hashchange", () => this.routerChange());
     this.init();
@@ -26,20 +28,24 @@ export class Router {
   }
 
   public init(): void {
-    this.add(this.DEFAULT_ROUTE, (): void => {
+    this.add(PAGE_PATH.HOME, (): void => {
       document.body.append(Main.getInstance().getElement());
     });
     const notFound = NotFound.getInstance();
     notFound.addHomeButtonListener(() => {
-      this.navigateTo("/");
+      this.navigateTo(PAGE_PATH.HOME);
       notFound.getElement().remove();
     });
   }
 
   public navigateTo(path: string): void {
     this.currentPath = path;
-    globalThis.history.pushState(null, "", `#${path}`);
-    globalThis.history.replaceState(null, "", `${this.baseUrl}#${path}`);
+    globalThis.history.pushState(null, "", `${this.hashSymbol}${path}`);
+    globalThis.history.replaceState(
+      null,
+      "",
+      `${this.baseUrl}${this.hashSymbol}${path}`,
+    );
     Main.getInstance().getElement().remove();
 
     if (this.routers.has(path)) {
@@ -51,13 +57,11 @@ export class Router {
       }
     } else {
       document.body.append(NotFound.getInstance().getElement());
-      console.error("Not Found", path);
     }
   }
 
   private routerChange(): void {
-    const hash: string =
-      globalThis.location.hash.slice(1) || this.DEFAULT_ROUTE;
+    const hash: string = globalThis.location.hash.slice(1) || PAGE_PATH.HOME;
     if (hash === this.currentPath) {
       return;
     }

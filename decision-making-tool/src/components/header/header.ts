@@ -6,8 +6,7 @@ import { SoundButton } from "@/components/button/sound-button.ts";
 import { AudioElement } from "@/components/audio.ts";
 import { ThemeButton } from "@/components/button/theme-button.ts";
 import { ThemeToggle } from "@/components/theme-toggle.ts";
-
-const APP_NAME = "Decision Making Tool";
+import { APP_NAME } from "@/constants.ts";
 
 export class Header extends BaseComponent<"header"> {
   private readonly settingsButton = {

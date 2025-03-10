@@ -1,5 +1,6 @@
 import type { ButtonSettings } from "@/components/button/button-settings.ts";
 import { SettingsAction } from "@/components/settings-action.ts";
+import { ERROR_MESSAGES } from "@/constants.ts";
 
 export class AudioElement extends SettingsAction {
   private audio: HTMLAudioElement;
@@ -18,9 +19,7 @@ export class AudioElement extends SettingsAction {
   public playAudio(): void {
     this.audio
       .play()
-      .catch((error: Error) =>
-        console.error("Ошибка воспроизведения аудио:", error),
-      );
+      .catch((error: Error) => console.error(ERROR_MESSAGES.PLAYBACK, error));
     this.audio.addEventListener("ended", () => {
       console.log("End");
     });

@@ -1,12 +1,13 @@
 import { BaseComponent } from "@/components/base-component.ts";
+import { BUTTON_TITLE, ID_PREFIX, INITIATION_ID } from "@/constants.ts";
 
 export class idElement extends BaseComponent<"div"> {
-  protected static id = 0;
+  protected static id = INITIATION_ID;
   protected static incrementId(): void {
     idElement.id++;
   }
   public static resetId(): void {
-    idElement.id = 0;
+    idElement.id = INITIATION_ID;
   }
   public static getId(): number {
     return idElement.id;
@@ -17,7 +18,7 @@ export class idElement extends BaseComponent<"div"> {
   private readonly _id: string;
   constructor(value?: string) {
     super();
-    this._id = value || `#${idElement.getId()}`;
+    this._id = value || `${ID_PREFIX}${idElement.getId()}`;
     this.element.textContent = this._id;
   }
 
@@ -25,7 +26,7 @@ export class idElement extends BaseComponent<"div"> {
     idElement.incrementId();
     return this.createDOMElement({
       tagName: "div",
-      attributes: { title: "ID" },
+      attributes: { title: BUTTON_TITLE.ID },
     });
   }
 

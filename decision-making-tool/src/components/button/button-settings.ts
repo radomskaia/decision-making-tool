@@ -2,6 +2,7 @@ import type { ButtonOptions } from "@/type";
 import styles from "@/components/button/button.module.css";
 import type { SettingsAction } from "@/components/settings-action.ts";
 import { IconButton } from "@/components/button/icon-button.ts";
+import { SVG_CONFIG } from "@/constants.ts";
 
 export abstract class ButtonSettings extends IconButton {
   protected abstract pathOff: string;
@@ -16,8 +17,8 @@ export abstract class ButtonSettings extends IconButton {
   public togglePath(isOn: boolean): void {
     const path = isOn ? this.pathOff : this.pathOn;
     this.useSVGIcon?.setAttributeNS(
-      "http://www.w3.org/1999/xlink",
-      "xlink:href",
+      SVG_CONFIG.NAMESPACE_XLINK,
+      SVG_CONFIG.QUALIFIED_NAME,
       path,
     );
   }

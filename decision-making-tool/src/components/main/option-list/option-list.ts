@@ -4,9 +4,13 @@ import type { OptionListValue, OptionItemValue } from "@/type";
 import { InputType } from "@/type";
 import { OptionItem } from "@/components/main/option-list/option-item.ts";
 import { idElement } from "@/components/main/option-list/id-element.ts";
+import { ERROR_MESSAGES, ID_PREFIX, INITIATION_ID } from "@/constants.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
-  private optionListValue: OptionListValue = { lastId: 0, list: [] };
+  private optionListValue: OptionListValue = {
+    lastId: INITIATION_ID,
+    list: [],
+  };
   private inputTypes: InputType[] = [InputType.Title, InputType.Weight];
   constructor(list?: OptionListValue) {
     super();
@@ -25,17 +29,16 @@ export class OptionList extends BaseComponent<"ul"> {
     const optionItem = new OptionItem(optionsValue);
     this.appendElement(optionItem.getElement());
     const lastId = idElement.getId();
-    const id = `#${lastId}`;
+    const id = `${ID_PREFIX}${lastId}`;
+
     optionItem.addListener("button", () => {
-      const list = this.optionListValue.list;
-      const index = this.getOptionIndex(id);
-      list.splice(index, 1);
-      optionItem.getElement().remove();
+      this.deleteOption(id, optionItem);
     });
+
     for (const inputType of this.inputTypes) {
       optionItem.addListener(inputType, (event) => {
         if (!event) {
-          throw new Error("Where is Event?!");
+          throw new Error(ERROR_MESSAGES.NOT_EVENT);
         }
         this.inputHandler(inputType, id, event);
       });
@@ -44,8 +47,8 @@ export class OptionList extends BaseComponent<"ul"> {
     if (optionsValue?.id) {
       return;
     }
-    this.optionListValue.list.push(optionItem.getValue());
-    this.optionListValue.lastId = lastId;
+
+    this.updateList(optionItem.getValue(), lastId);
   }
 
   public getList(): OptionListValue {
@@ -64,9 +67,21 @@ export class OptionList extends BaseComponent<"ul"> {
   }
 
   public reset(): void {
-    this.optionListValue = { lastId: 0, list: [] };
+    this.optionListValue.lastId = INITIATION_ID;
+    this.optionListValue.list = [];
     idElement.resetId();
     this.clearElement();
+  }
+
+  private updateList(item: OptionItemValue, lastId: number): void {
+    this.optionListValue.list.push(item);
+    this.optionListValue.lastId = lastId;
+  }
+
+  private deleteOption(id: string, optionItem: OptionItem): void {
+    const index = this.getOptionIndex(id);
+    this.optionListValue.list.splice(index, 1);
+    optionItem.getElement().remove();
   }
 
   private getOptionIndex(id: string): number {
@@ -74,7 +89,7 @@ export class OptionList extends BaseComponent<"ul"> {
       return item.id === id;
     });
     if (index === -1) {
-      throw new Error("Can't update input value. Didn't find ID in the List");
+      throw new Error(ERROR_MESSAGES.ID_NOT_FOUND);
     }
     return index;
   }

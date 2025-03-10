@@ -1,15 +1,5 @@
 import type { OptionItemValue, OptionListValue } from "@/type";
-
-export const OPTION_KEYS = {
-  ID: "id",
-  TITLE: "title",
-  WEIGHT: "weight",
-} as const;
-
-export const OPTION_LIST_KEYS = {
-  LAST_ID: "lastId",
-  LIST: "list",
-} as const;
+import { ID_PREFIX, OPTION_KEYS, OPTION_LIST_KEYS } from "@/constants.ts";
 
 export class Validator {
   private static instance: Validator | undefined;
@@ -73,10 +63,13 @@ export class Validator {
   }
 
   private isOptionId(value: unknown, lastId: number): boolean {
-    if (!this.isString(value) || value[0] !== "#") {
+    if (
+      !this.isString(value) ||
+      value.slice(0, ID_PREFIX.length) !== ID_PREFIX
+    ) {
       return false;
     }
-    let id = Number(value.slice(1));
+    let id = Number(value.slice(ID_PREFIX.length));
     return !(Number.isNaN(id) || id < 0 || id > lastId);
   }
 

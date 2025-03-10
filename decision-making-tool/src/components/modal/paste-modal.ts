@@ -4,17 +4,14 @@ import styles from "@/components/modal/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import type { Callback, OptionListValue } from "@/type";
 import type { OptionList } from "@/components/main/option-list/option-list.ts";
-const TEXTAREA_PLACEHOLDER = `
-Paste a list of new options in a CSV-like format:
-
-title,weight(number)              -> | title                           |weight|
-title,1                           -> | title                           | 1 |
-title with whitespace,2           -> | title with whitespace           | 2 |
-title , with , commas,3           -> | title , with , commas           | 3 |
-title with &quot;quotes&quot;,4   -> | title with &quot;quotes&quot;   | 4 |
-`;
-const TEXTAREA_ROWS = 15;
-const TEXTAREA_COLS = 80;
+import {
+  BUTTON_TEXT,
+  ERROR_MESSAGES,
+  PLACEHOLDER,
+  PASTE_SEPARATOR,
+  TEXTAREA_COLS,
+  TEXTAREA_ROWS,
+} from "@/constants.ts";
 
 export class PasteModal extends Modal {
   private static instance: PasteModal | undefined;
@@ -27,7 +24,7 @@ export class PasteModal extends Modal {
       PasteModal.instance = new PasteModal(optionList);
     }
     if (!PasteModal.instance) {
-      throw new Error("PasteModal is not initialized");
+      throw new Error(ERROR_MESSAGES.NOT_INITIALIZED);
     }
     return PasteModal.instance;
   }
@@ -42,7 +39,7 @@ export class PasteModal extends Modal {
     this.addCloseListener(() => {
       textareaElement.value = "";
     });
-    const confirmButton = new TextButton("Confirm").getElement();
+    const confirmButton = new TextButton(BUTTON_TEXT.CONFIRM).getElement();
     formElement.addEventListener("submit", (event) => {
       this.submitHandler(event, textareaElement);
     });
@@ -55,7 +52,7 @@ export class PasteModal extends Modal {
       tagName: "textarea",
       classList: [styles.input],
     });
-    textareaElement.placeholder = TEXTAREA_PLACEHOLDER;
+    textareaElement.placeholder = PLACEHOLDER.INSTRUCTION;
 
     textareaElement.rows = TEXTAREA_ROWS;
 
@@ -64,7 +61,7 @@ export class PasteModal extends Modal {
   }
 
   private createCancelButton(): HTMLButtonElement {
-    const cancelButton = new TextButton("Cancel");
+    const cancelButton = new TextButton(BUTTON_TEXT.CANCEL);
     cancelButton.getElement().type = "button";
     cancelButton.addListener(() => {
       this.closeModal();
@@ -90,12 +87,12 @@ export class PasteModal extends Modal {
   }
 
   private createOptionList(value: string): OptionListValue | null {
-    const splitValue = value.split("\n");
+    const splitValue = value.split(PASTE_SEPARATOR.line);
     const optionListValue: OptionListValue = {
       list: [],
     };
     for (const item of splitValue) {
-      const splitItem = item.split(",");
+      const splitItem = item.split(PASTE_SEPARATOR.comma);
       const lastItem = splitItem.pop();
       if (!lastItem) {
         continue;
@@ -104,7 +101,7 @@ export class PasteModal extends Modal {
       if (Number.isNaN(weight) || weight <= 0) {
         continue;
       }
-      const title = splitItem.join(",").trim();
+      const title = splitItem.join(PASTE_SEPARATOR.comma).trim();
       if (!title) {
         continue;
       }
