@@ -2,16 +2,21 @@ import { BaseComponent } from "@/components/base-component.ts";
 import { idElement } from "@/components/main/option-list/id-element.ts";
 import { TitleInput } from "@/components/main/option-list/title-input.ts";
 import { WeightInput } from "@/components/main/option-list/weight-input.ts";
-import type { Callback, InputType, OptionItemValue } from "@/type";
+import type {
+  Callback,
+  CallbackEvent,
+  InputType,
+  OptionItemValue,
+} from "@/type";
 import { TextButton } from "@/components/button/text-button.ts";
-import type { Button } from "@/components/button/button.ts";
+import type { BaseButton } from "@/components/button/base-button.ts";
 import { BUTTON_TEXT } from "@/constants.ts";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;
   private title: TitleInput;
   private weight: WeightInput;
-  private button: Button;
+  private button: BaseButton;
   constructor(value?: OptionItemValue) {
     super();
     this.id = this.addID(value?.id);
@@ -27,7 +32,10 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
     };
   }
 
-  public addListener(type: "button" | InputType, callback: Callback): void {
+  public addListener(
+    type: "button" | InputType,
+    callback: Callback | CallbackEvent,
+  ): void {
     this[type].addListener(callback);
   }
 
@@ -55,7 +63,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
     return weight;
   }
 
-  private addDeleteButton(): Button {
+  private addDeleteButton(): BaseButton {
     const button = new TextButton(BUTTON_TEXT.DELETE);
     this.appendElement(button.getElement());
     return button;

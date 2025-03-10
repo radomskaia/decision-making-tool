@@ -1,10 +1,10 @@
-import type { Callback } from "@/type";
+import type { CallbackRouter, OptionItemValue } from "@/type";
 import { Main } from "@/components/main/main.ts";
 import { NotFound } from "@/components/not-found.ts";
 import { PAGE_PATH } from "@/constants.ts";
 export class Router {
   private static instance: Router | undefined;
-  private routers = new Map<string, Callback>();
+  private routers = new Map<string, CallbackRouter>();
   private currentPath = "";
   private readonly hashSymbol = "#";
   private readonly baseUrl: string = globalThis.location.href.split(
@@ -23,7 +23,7 @@ export class Router {
     return Router.instance;
   }
 
-  public add(route: string, handler: Callback): void {
+  public add(route: string, handler: CallbackRouter): void {
     this.routers.set(route, handler);
   }
 
@@ -38,7 +38,7 @@ export class Router {
     });
   }
 
-  public navigateTo(path: string): void {
+  public navigateTo(path: string, data?: OptionItemValue[]): void {
     this.currentPath = path;
     globalThis.history.pushState(null, "", `${this.hashSymbol}${path}`);
     globalThis.history.replaceState(
@@ -53,7 +53,7 @@ export class Router {
       const handler = this.routers.get(path);
 
       if (handler) {
-        handler();
+        handler(data);
       }
     } else {
       document.body.append(NotFound.getInstance().getElement());

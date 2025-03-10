@@ -17,6 +17,11 @@ export const ERROR_MESSAGES = {
   NOT_INITIALIZED: "Class is not initialized",
   PLAYBACK: "Can't play audio",
   PAGE_NOT_FOUND: "Sorry, page not found",
+  VALIDATION: `Please add at least 2 valid options.
+  
+  
+An option is considered valid if its title is not empty and its weight is greater than 0
+  `,
 } as const;
 export const FILE_CONFIG = {
   TYPE: "application/json",
@@ -34,6 +39,7 @@ export const BUTTON_TEXT = {
   DELETE: "Delete",
   CONFIRM: "Confirm",
   CANCEL: "Cancel",
+  CLOSE: "Close",
 } as const;
 export const BUTTON_TITLE = {
   VOLUME: "Volume",
@@ -73,3 +79,4 @@ export const PASTE_SEPARATOR = {
   line: "\n",
   comma: ",",
 };
+export const MINIMUM_OPTIONS_COUNT = 2;

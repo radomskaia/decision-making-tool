@@ -1,10 +1,15 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/main/option-list/option.module.css";
-import type { OptionListValue, OptionItemValue } from "@/type";
+import type { OptionItemValue, OptionListValue } from "@/type";
 import { InputType } from "@/type";
 import { OptionItem } from "@/components/main/option-list/option-item.ts";
 import { idElement } from "@/components/main/option-list/id-element.ts";
-import { ERROR_MESSAGES, ID_PREFIX, INITIATION_ID } from "@/constants.ts";
+import {
+  ERROR_MESSAGES,
+  ID_PREFIX,
+  INITIATION_ID,
+  MINIMUM_OPTIONS_COUNT,
+} from "@/constants.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {
@@ -71,6 +76,17 @@ export class OptionList extends BaseComponent<"ul"> {
     this.optionListValue.list = [];
     idElement.resetId();
     this.clearElement();
+  }
+
+  public filterOption(): OptionItemValue[] | null {
+    const data = this.getList().list.filter(
+      (item) => item.title.trim() && Number(item.weight) > 0,
+    );
+
+    if (data.length >= MINIMUM_OPTIONS_COUNT) {
+      return data;
+    }
+    return null;
   }
 
   private updateList(item: OptionItemValue, lastId: number): void {

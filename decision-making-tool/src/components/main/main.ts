@@ -7,6 +7,7 @@ import type { Callback } from "@/type";
 import { Router } from "@/components/router.ts";
 import { FileHandler } from "@/components/file-handler.ts";
 import { BUTTON_TEXT, PAGE_PATH } from "@/constants.ts";
+import { ValidModal } from "@/components/modal/valid-modal.ts";
 
 export class Main extends BaseComponent<"main"> {
   private static instance: Main | undefined;
@@ -40,7 +41,9 @@ export class Main extends BaseComponent<"main"> {
 
   private createButtons(optionList: OptionList): HTMLButtonElement[] {
     const pasteModal = PasteModal.getInstance(optionList);
+    const validModal = ValidModal.getInstance();
     const fileHandler = FileHandler.getInstance();
+    const router = Router.getInstance();
     return [
       this.createButton(BUTTON_TEXT.ADD_OPTION, () => optionList.addOption()),
       this.createButton(BUTTON_TEXT.CLEAR_LIST, () => optionList.reset()),
@@ -51,9 +54,14 @@ export class Main extends BaseComponent<"main"> {
       this.createButton(BUTTON_TEXT.LOAD_LIST, () =>
         fileHandler.loadJSON(optionList),
       ),
-      this.createButton(BUTTON_TEXT.START, () =>
-        Router.getInstance().navigateTo(PAGE_PATH.SECOND),
-      ),
+      this.createButton(BUTTON_TEXT.START, () => {
+        const data = optionList.filterOption();
+        if (data) {
+          router.navigateTo(PAGE_PATH.SECOND, data);
+        } else {
+          validModal.showModal();
+        }
+      }),
     ];
   }
 

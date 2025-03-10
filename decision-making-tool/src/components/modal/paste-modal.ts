@@ -1,4 +1,4 @@
-import { Modal } from "@/components/modal/modal.ts";
+import { BaseModal } from "@/components/modal/base-modal.ts";
 import { TextButton } from "@/components/button/text-button.ts";
 import styles from "@/components/modal/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
@@ -13,7 +13,7 @@ import {
   TEXTAREA_ROWS,
 } from "@/constants.ts";
 
-export class PasteModal extends Modal {
+export class PasteModal extends BaseModal {
   private static instance: PasteModal | undefined;
   private constructor(private readonly optionList: OptionList) {
     super();

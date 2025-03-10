@@ -2,7 +2,7 @@ import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/modal/modal.module.css";
 
-export abstract class Modal extends BaseComponent<"dialog"> {
+export abstract class BaseModal extends BaseComponent<"dialog"> {
   private readonly modalWrapper: HTMLDivElement;
 
   protected constructor() {
