@@ -7,7 +7,7 @@ export class IconButton extends Button {
   protected useSVGIcon: SVGUseElement | undefined;
 
   constructor(options: ButtonOptions) {
-    super(options);
+    super();
     this.appendSVGIcon(options);
   }
 

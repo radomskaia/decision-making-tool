@@ -110,7 +110,7 @@ export class OptionList extends BaseComponent<"ul"> {
     }
     const weight = value.weight === "" ? value.weight : Number(value.weight);
 
-    if (typeof weight === "number" && Number.isNaN(weight) && weight <= 0) {
+    if (typeof weight === "number" && Number.isNaN(weight)) {
       return false;
     }
     const title = value.title;

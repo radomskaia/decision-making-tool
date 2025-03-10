@@ -5,6 +5,12 @@ import { createDOMElement } from "@/utils";
 import { BaseComponent } from "@/components/base-component.ts";
 
 export class Button extends BaseComponent<"button", ButtonOptions> {
+  constructor(callback?: Callback) {
+    super();
+    if (callback) {
+      this.addListener(callback);
+    }
+  }
   protected createView(): HTMLButtonElement {
     return createDOMElement({
       tagName: "button",
