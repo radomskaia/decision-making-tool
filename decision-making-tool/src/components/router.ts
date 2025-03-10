@@ -4,20 +4,21 @@ import { NotFound } from "@/components/not-found.ts";
 
 export class Router {
   private static instance: Router | undefined;
+  private readonly DEFAULT_ROUTE = "/";
+  private routers = new Map<string, Callback>();
+  private currentPath = "";
+  private readonly baseUrl: string = globalThis.location.href.split("#")[0];
+  private constructor() {
+    globalThis.addEventListener("hashchange", () => this.routerChange());
+    this.init();
+    this.routerChange();
+  }
+
   public static getInstance(): Router {
     if (!Router.instance) {
       Router.instance = new Router();
     }
     return Router.instance;
-  }
-  private routers = new Map<string, Callback>();
-  private currentPath = "";
-  private readonly baseUrl: string = globalThis.location.href.split("#")[0];
-
-  private constructor() {
-    globalThis.addEventListener("hashchange", () => this.routerChange());
-    this.init();
-    this.routerChange();
   }
 
   public add(route: string, handler: Callback): void {
@@ -25,7 +26,7 @@ export class Router {
   }
 
   public init(): void {
-    this.add("/", (): void => {
+    this.add(this.DEFAULT_ROUTE, (): void => {
       document.body.append(Main.getInstance().getElement());
     });
     const notFound = NotFound.getInstance();
@@ -55,7 +56,8 @@ export class Router {
   }
 
   private routerChange(): void {
-    const hash: string = globalThis.location.hash.slice(1) || "/";
+    const hash: string =
+      globalThis.location.hash.slice(1) || this.DEFAULT_ROUTE;
     if (hash === this.currentPath) {
       return;
     }
