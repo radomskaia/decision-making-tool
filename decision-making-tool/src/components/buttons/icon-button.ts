@@ -33,8 +33,10 @@ export class IconButton extends BaseButton {
     attributes,
   }: CreateSVGIconOptions): SVGSVGElement {
     const svg = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "svg");
-    this.addClassList(svg, classList);
-    this.addAttributes(svg, { ...attributes, role: "img" });
+    if (classList) {
+      this.addClassList(classList, svg);
+    }
+    this.addAttributes({ ...attributes, role: "img" }, svg);
     const use = document.createElementNS(SVG_CONFIG.NAMESPACE_SVG, "use");
     use.setAttributeNS(
       SVG_CONFIG.NAMESPACE_XLINK,

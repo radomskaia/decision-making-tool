@@ -11,7 +11,7 @@ export abstract class ButtonSettings extends IconButton {
 
   protected constructor(options: ButtonOptions) {
     super(options);
-    this.addClassList(this.element, [styles.settings]);
+    this.addClassList([styles.settings]);
   }
 
   public togglePath(isOn: boolean): void {

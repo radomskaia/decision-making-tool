@@ -10,6 +10,7 @@ export class Validator {
   private constructor(
     private itemKeys = OPTION_KEYS,
     private listKeys = OPTION_LIST_KEYS,
+    private idPrefix = ID_PREFIX,
   ) {}
   public static getInstance(): Validator {
     if (!Validator.instance) {
@@ -17,11 +18,41 @@ export class Validator {
     }
     return Validator.instance;
   }
+  public static isBoolean(value: unknown): value is boolean {
+    return typeof value === "boolean";
+  }
+
+  public static isPositiveNumber(value: unknown): value is number {
+    return Validator.isNumber(value) && value >= 0;
+  }
+
+  public static isValidWeight(value: string | number): boolean {
+    const numberValue = typeof value === "string" ? Number(value) : value;
+    return !Number.isNaN(numberValue) && this.isPositiveNumber(numberValue);
+  }
+
+  private static isObject(value: unknown): value is object {
+    return typeof value === "object" && value !== null;
+  }
+
+  private static isString(value: unknown): value is string {
+    return typeof value === "string";
+  }
+
+  private static isNumber(value: unknown): value is number {
+    return typeof value === "number";
+  }
+
+  private static isEmptyOrStringifiedNumber(value: unknown): boolean {
+    value = value === "" ? value : Number(value);
+    return !(Validator.isNumber(value) && Number.isNaN(value));
+  }
+
   public isOptionListValue(value: unknown): value is OptionListValue {
     if (
       !(
         this.isList(value) &&
-        this.isLastId(value.lastId) &&
+        Validator.isPositiveNumber(value.lastId) &&
         Array.isArray(value.list)
       )
     ) {
@@ -36,27 +67,15 @@ export class Validator {
     return true;
   }
 
-  private isOptionItemValue(
-    value: unknown,
-    lastId: number,
-  ): value is OptionItemValue {
-    return (
-      this.isOption(value) &&
-      this.isOptionId(value.id, lastId) &&
-      this.isOptionWeight(value.weight) &&
-      this.isOptionTitle(value.title)
-    );
-  }
-
   private isList(value: unknown): value is OptionListValue {
-    if (!this.isObject(value)) {
+    if (!Validator.isObject(value)) {
       return false;
     }
     return this.listKeys.LAST_ID in value && this.listKeys.LIST in value;
   }
 
   private isOption(value: unknown): value is OptionItemValue {
-    if (!this.isObject(value)) {
+    if (!Validator.isObject(value)) {
       return false;
     }
     return (
@@ -68,37 +87,24 @@ export class Validator {
 
   private isOptionId(value: unknown, lastId: number): boolean {
     if (
-      !this.isString(value) ||
-      value.slice(0, ID_PREFIX.length) !== ID_PREFIX
+      !Validator.isString(value) ||
+      value.slice(0, this.idPrefix.length) !== ID_PREFIX
     ) {
       return false;
     }
-    let id = Number(value.slice(ID_PREFIX.length));
+    let id = Number(value.slice(this.idPrefix.length));
     return !(Number.isNaN(id) || id < 0 || id > lastId);
   }
 
-  private isOptionWeight(value: unknown): boolean {
-    const weight = value === "" ? value : Number(value);
-    return !(this.isNumber(weight) && Number.isNaN(weight));
-  }
-
-  private isOptionTitle(value: unknown): boolean {
-    return this.isString(value);
-  }
-
-  private isLastId(value: unknown): value is number {
-    return this.isNumber(value) && value >= 0;
-  }
-
-  private isObject(value: unknown): value is object {
-    return typeof value === "object" && value !== null;
-  }
-
-  private isString(value: unknown): value is string {
-    return typeof value === "string";
-  }
-
-  private isNumber(value: unknown): value is number {
-    return typeof value === "number";
+  private isOptionItemValue(
+    value: unknown,
+    lastId: number,
+  ): value is OptionItemValue {
+    return (
+      this.isOption(value) &&
+      this.isOptionId(value.id, lastId) &&
+      Validator.isEmptyOrStringifiedNumber(value.weight) &&
+      Validator.isString(value.title)
+    );
   }
 }

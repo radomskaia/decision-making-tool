@@ -71,6 +71,7 @@ export default [
         { assertionStyle: "never" },
       ],
       "@typescript-eslint/member-ordering": "error",
+      "class-methods-use-this": "error",
     },
     linterOptions: {
       noInlineConfig: true,

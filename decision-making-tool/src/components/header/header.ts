@@ -1,9 +1,8 @@
-import { createDOMElement } from "@/utils";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
 import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
-import { AudioElement } from "@/components/settings/audio.ts";
+import { AudioElement } from "@/components/settings/audio-element.ts";
 import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
 import { ThemeToggle } from "@/components/settings/theme-toggle.ts";
 import { APP_NAME } from "@/constants/constants.ts";
@@ -35,7 +34,7 @@ export class Header extends BaseComponent<"header"> {
   }
 
   protected createView(): HTMLElement {
-    const header = createDOMElement({
+    const header = this.createDOMElement({
       tagName: "header",
       classList: [
         styles.header,
@@ -47,7 +46,7 @@ export class Header extends BaseComponent<"header"> {
       ],
     });
 
-    const headerPrimary = createDOMElement({
+    const headerPrimary = this.createDOMElement({
       tagName: "h1",
       textContent: APP_NAME,
       classList: [styles.headerPrimary],
@@ -58,7 +57,7 @@ export class Header extends BaseComponent<"header"> {
   }
 
   private createButtonWrapper(): HTMLDivElement {
-    return createDOMElement({
+    return this.createDOMElement({
       tagName: "div",
       classList: [
         utilitiesStyles.flex,

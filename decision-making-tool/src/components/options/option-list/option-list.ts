@@ -1,4 +1,5 @@
 import type { OptionItemValue, OptionListValue } from "@/types";
+import { StorageKeys } from "@/types";
 import { InputType } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import styles from "@/components/options/option.module.css";
@@ -28,16 +29,16 @@ export class OptionList extends BaseComponent<"ul"> {
       if (document.activeElement instanceof HTMLInputElement) {
         document.activeElement.blur();
       }
-      LocalStorage.getInstance().saveToStorage(
-        "optionListValue",
+      LocalStorage.getInstance().save(
+        StorageKeys.optionListValue,
         this.optionListValue,
       );
     });
   }
   public init(): void {
-    const lsData = LocalStorage.getInstance().loadFromStorage(
-      "optionListValue",
-      (value) => Validator.getInstance().isOptionListValue(value),
+    const lsData = LocalStorage.getInstance().load(
+      StorageKeys.optionListValue,
+      Validator.getInstance().isOptionListValue,
     );
     if (lsData === null) {
       this.addOption();

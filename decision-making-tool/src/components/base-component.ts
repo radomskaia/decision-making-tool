@@ -32,34 +32,37 @@ export abstract class BaseComponent<
     attributes,
   }: ElementOptions<T>): HTMLElementTagNameMap[T] {
     const element = document.createElement(tagName);
-    this.addClassList(element, classList);
-    this.addTextContent(element, textContent);
-    this.addAttributes(element, attributes);
+    if (classList) {
+      this.addClassList(classList, element);
+    }
+    if (attributes) {
+      this.addAttributes(attributes, element);
+    }
+    if (textContent) {
+      this.addTextContent(textContent, element);
+    }
 
     return element;
   }
 
-  protected addClassList(element: Element, classList?: string[]): void {
-    if (classList) {
-      element.classList.add(...classList);
-    }
+  protected addClassList(classList: string[], element?: Element): void {
+    element = element ?? this.element;
+    element.classList.add(...classList);
   }
 
   protected addAttributes(
-    element: Element,
-    attributes?: Record<string, string>,
+    attributes: Record<string, string>,
+    element?: Element,
   ): void {
-    if (attributes) {
-      for (const [key, value] of Object.entries(attributes)) {
-        element.setAttribute(key, value);
-      }
+    element = element ?? this.element;
+    for (const [key, value] of Object.entries(attributes)) {
+      element.setAttribute(key, value);
     }
   }
 
-  protected addTextContent(element: Element, textContent?: string): void {
-    if (textContent) {
-      element.textContent = textContent;
-    }
+  protected addTextContent(textContent: string, element: Element): void {
+    element = element ?? this.element;
+    element.textContent = textContent;
   }
 
   protected abstract createView(options?: O): HTMLElementTagNameMap[T];

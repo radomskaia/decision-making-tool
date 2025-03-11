@@ -2,16 +2,18 @@ import type { ButtonSettings } from "@/components/buttons/settings/button-settin
 import { SettingsAction } from "@/components/settings/settings-action.ts";
 import { ERROR_MESSAGES } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
+import { StorageKeys } from "@/types";
+import { Validator } from "@/services/validator.ts";
 
 export class AudioElement extends SettingsAction {
   protected isOff = false;
   private audio: HTMLAudioElement;
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
-    this.audio = this.creatAudio();
+    this.audio = new Audio("");
     this.init();
     window.addEventListener("beforeunload", () => {
-      LocalStorage.getInstance().saveToStorage("soundSettings", this.isOff);
+      LocalStorage.getInstance().save(StorageKeys.soundSettings, this.isOff);
     });
   }
 
@@ -35,20 +37,15 @@ export class AudioElement extends SettingsAction {
     this.button.togglePath(this.isOff);
   }
 
-  private creatAudio(): HTMLAudioElement {
-    const audio = new Audio("");
-    audio.load();
-    return audio;
-  }
-
   private init(): void {
-    const lsData = LocalStorage.getInstance().loadFromStorage(
-      "soundSettings",
-      (value) => typeof value === "boolean",
+    const lsData = LocalStorage.getInstance().load(
+      StorageKeys.soundSettings,
+      Validator.isBoolean,
     );
     if (lsData !== null) {
       this.isOff = lsData;
       this.changeSettings();
     }
+    this.audio.load();
   }
 }

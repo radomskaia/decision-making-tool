@@ -2,16 +2,16 @@ import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import styles from "@/components/modal/base/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import type { Callback, OptionListValue } from "src/types";
+import type { Callback } from "src/types";
 import type { OptionList } from "@/components/options/option-list/option-list.ts";
 import {
   BUTTON_TEXT,
   ERROR_MESSAGES,
   PLACEHOLDER,
-  PASTE_SEPARATOR,
   TEXTAREA_COLS,
   TEXTAREA_ROWS,
 } from "@/constants/constants.ts";
+import { FileHandler } from "@/services/file-handler.ts";
 
 export class PasteModal extends BaseModal {
   private static instance: PasteModal | undefined;
@@ -79,41 +79,10 @@ export class PasteModal extends BaseModal {
   ): void {
     event.preventDefault();
     const value = textareaElement.value.trim();
-    const optionsList = this.createOptionList(value);
+    const optionsList = FileHandler.getInstance().parseCSV(value);
     if (optionsList) {
       this.closeModal();
       this.optionList.setList(optionsList);
     }
-  }
-
-  private createOptionList(value: string): OptionListValue | null {
-    const splitValue = value.split(PASTE_SEPARATOR.line);
-    const optionListValue: OptionListValue = {
-      list: [],
-    };
-    for (const item of splitValue) {
-      const splitItem = item.split(PASTE_SEPARATOR.comma);
-      const lastItem = splitItem.pop();
-      if (!lastItem) {
-        continue;
-      }
-      const weight = Number(lastItem.trim());
-      if (Number.isNaN(weight) || weight <= 0) {
-        continue;
-      }
-      const title = splitItem.join(PASTE_SEPARATOR.comma).trim();
-      if (!title) {
-        continue;
-      }
-      const option = {
-        title: title,
-        weight: weight.toString(),
-      };
-      optionListValue.list.push(option);
-    }
-    if (optionListValue.list.length === 0) {
-      return null;
-    }
-    return optionListValue;
   }
 }

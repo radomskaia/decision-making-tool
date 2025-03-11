@@ -1,32 +1,34 @@
 import { ERROR_MESSAGES, LS_PREFIX } from "@/constants/constants.ts";
-import type { OptionListValue, StorageKeys, TypeGuard } from "@/types";
+import type { OptionListValue, TypeGuard, StorageKeys } from "@/types";
 
 export class LocalStorage {
   private static instance = new LocalStorage();
+  private readonly prefix: string;
+
+  private constructor() {
+    this.prefix = LS_PREFIX;
+  }
   public static getInstance(): LocalStorage {
     return LocalStorage.instance;
   }
 
-  public saveToStorage(
-    key: StorageKeys,
-    value: OptionListValue | boolean,
-  ): void {
-    const storageKey = LS_PREFIX + key;
+  public save(key: StorageKeys, value: OptionListValue | boolean): void {
+    const storageKey = this.prefix + key;
     globalThis.localStorage.setItem(storageKey, JSON.stringify(value));
   }
 
-  public loadFromStorage<T>(
-    key: StorageKeys,
-    typeGuard: TypeGuard<T>,
-  ): T | null {
-    const storageKey = LS_PREFIX + key;
+  public load<T>(key: StorageKeys, typeGuard: TypeGuard<T>): T | null {
+    const storageKey = this.prefix + key;
     const value = globalThis.localStorage.getItem(storageKey);
     if (!value) {
       return null;
     }
     try {
       const result = JSON.parse(value);
-      return typeGuard(result) ? result : null;
+      if (typeGuard(result)) {
+        return result;
+      }
+      return null;
     } catch {
       throw new Error(ERROR_MESSAGES.INVALID_VALUE);
     }

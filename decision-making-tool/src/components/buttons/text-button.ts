@@ -6,6 +6,6 @@ export class TextButton extends BaseButton {
   constructor(text: string, callback?: Callback) {
     super(callback);
     this.element.textContent = text;
-    this.addClassList(this.element, [styles.actionButton]);
+    this.addClassList([styles.actionButton]);
   }
 }
