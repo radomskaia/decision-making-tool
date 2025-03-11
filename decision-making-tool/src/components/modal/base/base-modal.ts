@@ -11,6 +11,16 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
     this.modalWrapper.append(this.addContent());
   }
 
+  public showModal(): void {
+    document.body.append(this.element);
+    this.element.showModal();
+  }
+
+  public closeModal(): void {
+    this.element.close();
+    this.element.remove();
+  }
+
   protected createView(): HTMLElementTagNameMap["dialog"] {
     const modal = this.createDOMElement({
       tagName: "dialog",
@@ -23,18 +33,6 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
     });
     return modal;
   }
-
-  public showModal(): void {
-    document.body.append(this.element);
-    this.element.showModal();
-  }
-
-  public closeModal(): void {
-    this.element.close();
-    this.element.remove();
-  }
-
-  protected abstract addContent(): HTMLElement;
 
   protected addWrapper(): HTMLDivElement {
     const modalWrapper = this.createDOMElement({
@@ -50,4 +48,6 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
     this.element.append(modalWrapper);
     return modalWrapper;
   }
+
+  protected abstract addContent(): HTMLElement;
 }

@@ -9,6 +9,22 @@ export abstract class BaseComponent<
     this.element = this.createView(options);
   }
 
+  public getElement(): HTMLElementTagNameMap[T] {
+    return this.element;
+  }
+
+  public appendElement(...child: Element[]): void {
+    this.element.append(...child);
+  }
+
+  public clearElement(): void {
+    this.element.replaceChildren();
+  }
+
+  protected toggleClass(className: string, isAdd?: boolean): void {
+    this.element.classList.toggle(className, isAdd);
+  }
+
   protected createDOMElement<T extends keyof HTMLElementTagNameMap>({
     tagName,
     classList,
@@ -47,20 +63,4 @@ export abstract class BaseComponent<
   }
 
   protected abstract createView(options?: O): HTMLElementTagNameMap[T];
-
-  public getElement(): HTMLElementTagNameMap[T] {
-    return this.element;
-  }
-
-  protected toggleClass(className: string, isAdd?: boolean): void {
-    this.element.classList.toggle(className, isAdd);
-  }
-
-  public appendElement(...child: Element[]): void {
-    this.element.append(...child);
-  }
-
-  public clearElement(): void {
-    this.element.replaceChildren();
-  }
 }

@@ -2,9 +2,9 @@ import type { ButtonSettings } from "@/components/buttons/settings/button-settin
 
 export abstract class SettingsAction {
   protected abstract isOff: boolean;
-  public abstract toggle(): void;
-
   protected constructor(protected button: ButtonSettings) {
     this.button = button;
   }
+
+  public abstract toggle(): void;
 }

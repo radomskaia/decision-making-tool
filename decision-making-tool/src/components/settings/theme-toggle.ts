@@ -6,8 +6,8 @@ import {
 } from "@/constants/constants.ts";
 
 export class ThemeToggle extends SettingsAction {
-  private mediaQueryList: MediaQueryList;
   protected isOff: boolean;
+  private mediaQueryList: MediaQueryList;
   constructor(themeButton: ButtonSettings) {
     super(themeButton);
     this.mediaQueryList = globalThis.matchMedia(DARK_THEME_MEDIA_QUERY);

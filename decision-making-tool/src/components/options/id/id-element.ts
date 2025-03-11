@@ -7,8 +7,14 @@ import {
 
 export class idElement extends BaseComponent<"div"> {
   protected static id = INITIATION_ID;
-  protected static incrementId(): void {
-    idElement.id++;
+  private readonly _id: string;
+  constructor(value?: string) {
+    super();
+    this._id = value || `${ID_PREFIX}${idElement.getId()}`;
+    this.element.textContent = this._id;
+  }
+  public get id(): string {
+    return this._id;
   }
   public static resetId(): void {
     idElement.id = INITIATION_ID;
@@ -19,11 +25,9 @@ export class idElement extends BaseComponent<"div"> {
   public static setId(id: number): void {
     idElement.id = id;
   }
-  private readonly _id: string;
-  constructor(value?: string) {
-    super();
-    this._id = value || `${ID_PREFIX}${idElement.getId()}`;
-    this.element.textContent = this._id;
+
+  protected static incrementId(): void {
+    idElement.id++;
   }
 
   protected createView(): HTMLDivElement {
@@ -32,9 +36,5 @@ export class idElement extends BaseComponent<"div"> {
       tagName: "div",
       attributes: { title: BUTTON_TITLE.ID },
     });
-  }
-
-  public get id(): string {
-    return this._id;
   }
 }

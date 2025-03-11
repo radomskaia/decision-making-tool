@@ -70,6 +70,7 @@ export default [
         "error",
         { assertionStyle: "never" },
       ],
+      "@typescript-eslint/member-ordering": "error",
     },
     linterOptions: {
       noInlineConfig: true,

@@ -4,8 +4,8 @@ import { ERROR_MESSAGES } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 
 export class AudioElement extends SettingsAction {
-  private audio: HTMLAudioElement;
   protected isOff = false;
+  private audio: HTMLAudioElement;
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
     this.audio = this.creatAudio();
@@ -13,23 +13,6 @@ export class AudioElement extends SettingsAction {
     window.addEventListener("beforeunload", () => {
       LocalStorage.getInstance().saveToStorage("soundSettings", this.isOff);
     });
-  }
-
-  private creatAudio(): HTMLAudioElement {
-    const audio = new Audio("");
-    audio.load();
-    return audio;
-  }
-
-  private init(): void {
-    const lsData = LocalStorage.getInstance().loadFromStorage(
-      "soundSettings",
-      (value) => typeof value === "boolean",
-    );
-    if (lsData !== null) {
-      this.isOff = lsData;
-      this.changeSettings();
-    }
   }
 
   public changeSettings(): void {
@@ -50,5 +33,22 @@ export class AudioElement extends SettingsAction {
     this.isOff = !this.isOff;
     this.audio.muted = this.isOff;
     this.button.togglePath(this.isOff);
+  }
+
+  private creatAudio(): HTMLAudioElement {
+    const audio = new Audio("");
+    audio.load();
+    return audio;
+  }
+
+  private init(): void {
+    const lsData = LocalStorage.getInstance().loadFromStorage(
+      "soundSettings",
+      (value) => typeof value === "boolean",
+    );
+    if (lsData !== null) {
+      this.isOff = lsData;
+      this.changeSettings();
+    }
   }
 }

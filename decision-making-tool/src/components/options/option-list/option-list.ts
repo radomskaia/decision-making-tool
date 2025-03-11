@@ -34,13 +34,6 @@ export class OptionList extends BaseComponent<"ul"> {
       );
     });
   }
-  protected createView(): HTMLElementTagNameMap["ul"] {
-    return this.createDOMElement({
-      tagName: "ul",
-      classList: [styles.optionsList],
-    });
-  }
-
   public init(): void {
     const lsData = LocalStorage.getInstance().loadFromStorage(
       "optionListValue",
@@ -110,6 +103,13 @@ export class OptionList extends BaseComponent<"ul"> {
       return data;
     }
     return null;
+  }
+
+  protected createView(): HTMLElementTagNameMap["ul"] {
+    return this.createDOMElement({
+      tagName: "ul",
+      classList: [styles.optionsList],
+    });
   }
 
   private updateList(item: OptionItemValue, lastId: number): void {

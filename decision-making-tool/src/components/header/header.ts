@@ -26,6 +26,14 @@ export class Header extends BaseComponent<"header"> {
     this.appendElement(this.buttonWrapper);
   }
 
+  public addSoundButton(buttonName: keyof typeof this.settingsButton): this {
+    const button = new this.settingsButton[buttonName].button();
+    const action = new this.settingsButton[buttonName].action(button);
+    button.addToggleListener(action);
+    this.buttonWrapper.append(button.getElement());
+    return this;
+  }
+
   protected createView(): HTMLElement {
     const header = createDOMElement({
       tagName: "header",
@@ -58,13 +66,5 @@ export class Header extends BaseComponent<"header"> {
         utilitiesStyles.gap30,
       ],
     });
-  }
-
-  public addSoundButton(buttonName: keyof typeof this.settingsButton): this {
-    const button = new this.settingsButton[buttonName].button();
-    const action = new this.settingsButton[buttonName].action(button);
-    button.addToggleListener(action);
-    this.buttonWrapper.append(button.getElement());
-    return this;
   }
 }
