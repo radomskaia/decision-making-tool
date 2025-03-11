@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, LS_PREFIX } from "@/constants/constants.ts";
+import { LS_PREFIX } from "@/constants/constants.ts";
 import type { OptionListValue, TypeGuard, StorageKeys } from "@/types";
 
 export class LocalStorage {
@@ -30,7 +30,7 @@ export class LocalStorage {
       }
       return null;
     } catch {
-      throw new Error(ERROR_MESSAGES.INVALID_VALUE);
+      return null;
     }
   }
 }

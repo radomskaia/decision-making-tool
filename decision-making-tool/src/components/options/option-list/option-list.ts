@@ -38,7 +38,7 @@ export class OptionList extends BaseComponent<"ul"> {
   public init(): void {
     const lsData = LocalStorage.getInstance().load(
       StorageKeys.optionListValue,
-      Validator.getInstance().isOptionListValue,
+      Validator.getInstance().isOptionListValue.bind(Validator.getInstance()),
     );
     if (lsData === null) {
       this.addOption();
