@@ -12,8 +12,6 @@ export class Router {
   )[0];
   private constructor() {
     globalThis.addEventListener("hashchange", () => this.routerChange());
-    this.init();
-    this.routerChange();
   }
 
   public static getInstance(): Router {
@@ -36,6 +34,7 @@ export class Router {
       this.navigateTo(PAGE_PATH.HOME);
       notFound.getElement().remove();
     });
+    this.routerChange();
   }
 
   public navigateTo(path: string, data?: OptionItemValue[]): void {

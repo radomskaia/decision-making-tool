@@ -9,4 +9,4 @@ const header = new Header()
 
 body.append(header);
 
-Router.getInstance();
+Router.getInstance().init();
