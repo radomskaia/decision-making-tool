@@ -1,0 +1,10 @@
+const DIVIDER = 2;
+export const CANVAS_SIZE = 512;
+export const CIRCLE_COEFFICIENT = 2;
+export const FULL_CIRCLE = Math.PI * CIRCLE_COEFFICIENT;
+export const CIRCLE_RADIUS_BIG = 250;
+export const CIRCLE_RADIUS_SMALL = 20;
+export const CIRCLE_CENTER = CANVAS_SIZE / DIVIDER;
+export const START_ANGLE = 0;
+export const PASTEL_MIN = 127;
+export const PASTEL_RANGE = 128;

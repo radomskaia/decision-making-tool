@@ -8,6 +8,8 @@ import { FileHandler } from "@/services/file-handler.ts";
 import { BUTTON_TEXT, PAGE_PATH } from "@/constants/constants.ts";
 import { ValidModal } from "@/components/modal/valid-modal.ts";
 import type { Callback } from "@/types";
+import { StorageKeys } from "@/types";
+import { LocalStorage } from "@/services/local-storage.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -40,6 +42,10 @@ export class Home extends BaseComponent<"main"> {
       callback: (): void => {
         const data = this.optionList.filterOption();
         if (data) {
+          LocalStorage.getInstance().save(
+            StorageKeys.optionListValue,
+            this.optionList.getList(),
+          );
           Router.getInstance().navigateTo(PAGE_PATH.DECISION_PICKER);
         } else {
           ValidModal.getInstance().showModal();

@@ -5,6 +5,7 @@ import {
   HASH_SYMBOL,
   PAGE_PATH,
 } from "@/constants/constants.ts";
+import { DecisionPicker } from "@/pages/decision-picker.ts";
 export class Router {
   private static instance: Router | undefined;
   private routes: Route[] | undefined;
@@ -25,6 +26,18 @@ export class Router {
     return Router.instance;
   }
 
+  private static canNavigateToDecision(route: Route): boolean {
+    if (route.path !== PAGE_PATH.DECISION_PICKER) {
+      return true;
+    }
+    const decision = route.component.getInstance();
+    if (decision instanceof DecisionPicker && decision.getData()) {
+      decision.drawCanvas();
+      return true;
+    }
+    return false;
+  }
+
   public addRoutes(routes: Route[]): void {
     this.routes = routes;
     this.routerChange();
@@ -38,9 +51,15 @@ export class Router {
     if (!this.routes) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
-    const route =
+    let route =
       this.routes.find((route) => route.path === path) ||
       this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND);
+    if (!route) {
+      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
+    }
+    if (!Router.canNavigateToDecision(route)) {
+      route = this.routes.find((route) => route.path === PAGE_PATH.HOME);
+    }
     if (!route) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
