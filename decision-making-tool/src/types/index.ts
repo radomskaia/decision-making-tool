@@ -43,3 +43,18 @@ export enum StorageKeys {
   optionListValue = "optionListValue",
   soundSettings = "soundSettings",
 }
+
+export enum Pages {
+  Home = "home",
+  Decision = "decision",
+  NotFound = "notFound",
+}
+
+export interface Route {
+  path: string;
+  component: {
+    getInstance(): {
+      getElement(): HTMLElement;
+    };
+  };
+}

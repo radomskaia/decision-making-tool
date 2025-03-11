@@ -1,6 +1,6 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
 import { SettingsAction } from "@/components/settings/settings-action.ts";
-import { ERROR_MESSAGES } from "@/constants/constants.ts";
+import { MESSAGES } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
@@ -25,7 +25,7 @@ export class AudioElement extends SettingsAction {
   public playAudio(): void {
     this.audio
       .play()
-      .catch((error: Error) => console.error(ERROR_MESSAGES.PLAYBACK, error));
+      .catch((error: Error) => console.error(MESSAGES.PLAYBACK, error));
     this.audio.addEventListener("ended", () => {
       console.log("End");
     });

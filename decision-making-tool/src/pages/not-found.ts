@@ -1,14 +1,17 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants/constants.ts";
+import { BUTTON_TEXT, MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
+import { Router } from "@/services/router.ts";
 
-export class NotFound extends BaseComponent<"div"> {
+export class NotFound extends BaseComponent<"main"> {
   private static instance: NotFound | undefined;
   private homeButton: TextButton;
   private constructor() {
     super();
-    this.homeButton = new TextButton(BUTTON_TEXT.HOME);
+    this.homeButton = new TextButton(BUTTON_TEXT.HOME, () =>
+      Router.getInstance().navigateTo(PAGE_PATH.HOME),
+    );
     this.appendElement(this.homeButton.getElement());
   }
   public static getInstance(): NotFound {
@@ -18,19 +21,24 @@ export class NotFound extends BaseComponent<"div"> {
     return NotFound.instance;
   }
 
-  public addHomeButtonListener(callback: () => void): void {
-    this.homeButton.addListener(callback);
-  }
-  protected createView(): HTMLElementTagNameMap["div"] {
-    return this.createDOMElement({
-      tagName: "div",
-      textContent: ERROR_MESSAGES.PAGE_NOT_FOUND,
+  protected createView(): HTMLElementTagNameMap["main"] {
+    const main = this.createDOMElement({
+      tagName: "main",
       classList: [
         utilitiesStyles.flex,
         utilitiesStyles.container,
         utilitiesStyles.flexColumn,
         utilitiesStyles.center,
+        utilitiesStyles.gap30,
       ],
     });
+
+    const text = this.createDOMElement({
+      tagName: "p",
+      textContent: MESSAGES.PAGE_NOT_FOUND,
+    });
+
+    main.append(text);
+    return main;
   }
 }

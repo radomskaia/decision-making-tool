@@ -6,7 +6,7 @@ import styles from "@/components/options/option.module.css";
 import { OptionItem } from "@/components/options/option-item/option-item.ts";
 import { idElement } from "@/components/options/id/id-element.ts";
 import {
-  ERROR_MESSAGES,
+  MESSAGES,
   ID_PREFIX,
   INITIATION_ID,
   MIN_POSITIVE_NUMBER,
@@ -63,7 +63,7 @@ export class OptionList extends BaseComponent<"ul"> {
     for (const inputType of this.inputTypes) {
       optionItem.addListener(inputType, (event) => {
         if (!event) {
-          throw new Error(ERROR_MESSAGES.NOT_EVENT);
+          throw new Error(MESSAGES.NOT_EVENT);
         }
         this.inputHandler(inputType, id, event);
       });
@@ -132,7 +132,7 @@ export class OptionList extends BaseComponent<"ul"> {
       return item.id === id;
     });
     if (index === NOT_FOUND_INDEX) {
-      throw new Error(ERROR_MESSAGES.ID_NOT_FOUND);
+      throw new Error(MESSAGES.ID_NOT_FOUND);
     }
     return index;
   }

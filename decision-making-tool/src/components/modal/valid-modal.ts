@@ -1,6 +1,6 @@
 import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { BUTTON_TEXT, ERROR_MESSAGES } from "@/constants/constants.ts";
+import { BUTTON_TEXT, MESSAGES } from "@/constants/constants.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class ValidModal extends BaseModal {
@@ -28,7 +28,7 @@ export class ValidModal extends BaseModal {
     });
     const text = this.createDOMElement({
       tagName: "pre",
-      textContent: ERROR_MESSAGES.VALIDATION,
+      textContent: MESSAGES.VALIDATION,
     });
 
     const cancelButton = new TextButton(BUTTON_TEXT.CLOSE, () => {

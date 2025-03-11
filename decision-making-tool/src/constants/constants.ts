@@ -50,6 +50,7 @@ export const BUTTON_TEXT = {
   CONFIRM: "Confirm",
   CANCEL: "Cancel",
   CLOSE: "Close",
+  BACK: "Back",
 } as const;
 export const BUTTON_TITLE = {
   VOLUME: "Volume",
@@ -63,7 +64,8 @@ export const SVG_CONFIG = {
 } as const;
 export const PAGE_PATH = {
   HOME: "/",
-  SECOND: "/decision-picker",
+  DECISION_PICKER: "/decision-picker",
+  NOT_FOUND: "404",
 } as const;
 
 // Theme settings
@@ -75,11 +77,12 @@ export const TEXTAREA_ROWS = 15;
 export const TEXTAREA_COLS = 80;
 
 // Messages
-export const ERROR_MESSAGES = {
+export const MESSAGES = {
   NOT_EVENT: "No event provided",
   ID_NOT_FOUND: "Can't update input value. Didn't find ID in the List",
   INVALID_FILE: "Invalid file",
   INVALID_LIST: "Invalid option list",
+  ROUTE_NOT_FOUND: "Route not found",
   NOT_INITIALIZED: "Class is not initialized",
   PLAYBACK: "Can't play audio",
   PAGE_NOT_FOUND: "Sorry, page not found",

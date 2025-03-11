@@ -1,7 +1,7 @@
 import type { OptionList } from "@/components/options/option-list/option-list.ts";
 import { Validator } from "@/services/validator.ts";
 import {
-  ERROR_MESSAGES,
+  MESSAGES,
   FILE_CONFIG,
   FIRST_ELEMENT_INDEX,
   PASTE_SEPARATOR,
@@ -34,12 +34,12 @@ export class FileHandler {
     input.addEventListener("change", () => {
       const file = input.files;
       if (!file) {
-        throw new Error(ERROR_MESSAGES.INVALID_FILE);
+        throw new Error(MESSAGES.INVALID_FILE);
       }
       file[FIRST_ELEMENT_INDEX].text().then((text) => {
         const data = JSON.parse(text);
         if (!this.validator.isOptionListValue(data)) {
-          throw new Error(ERROR_MESSAGES.INVALID_LIST);
+          throw new Error(MESSAGES.INVALID_LIST);
         }
         optionList.setList(data);
       });

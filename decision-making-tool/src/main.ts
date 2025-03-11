@@ -1,5 +1,6 @@
 import { Header } from "@/components/header/header.ts";
 import { Router } from "@/services/router.ts";
+import { appRoutes } from "@/pages/routes.ts";
 
 const body = document.body;
 const header = new Header()
@@ -9,4 +10,4 @@ const header = new Header()
 
 body.append(header);
 
-Router.getInstance().init();
+Router.getInstance().addRoutes(appRoutes);

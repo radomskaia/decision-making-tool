@@ -7,7 +7,7 @@ import type { OptionList } from "@/components/options/option-list/option-list.ts
 import {
   BUTTON_TEXT,
   EMPTY_STRING,
-  ERROR_MESSAGES,
+  MESSAGES,
   PLACEHOLDER,
   TEXTAREA_COLS,
   TEXTAREA_ROWS,
@@ -25,7 +25,7 @@ export class PasteModal extends BaseModal {
       PasteModal.instance = new PasteModal(optionList);
     }
     if (!PasteModal.instance) {
-      throw new Error(ERROR_MESSAGES.NOT_INITIALIZED);
+      throw new Error(MESSAGES.NOT_INITIALIZED);
     }
     return PasteModal.instance;
   }

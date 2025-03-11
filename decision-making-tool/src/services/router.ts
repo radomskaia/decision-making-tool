@@ -1,20 +1,21 @@
-import type { CallbackRouter, OptionItemValue } from "src/types";
-import { Home } from "@/pages/home.ts";
-import { NotFound } from "@/pages/not-found.ts";
+import type { Route } from "src/types";
 import {
   EMPTY_STRING,
-  FIRST_ELEMENT_INDEX,
+  MESSAGES,
   HASH_SYMBOL,
   PAGE_PATH,
 } from "@/constants/constants.ts";
 export class Router {
   private static instance: Router | undefined;
-  private routers = new Map<string, CallbackRouter>();
+  private routes: Route[] | undefined;
   private currentPath = EMPTY_STRING;
-  private readonly baseUrl: string =
-    globalThis.location.href.split(HASH_SYMBOL)[FIRST_ELEMENT_INDEX];
+  private isPopState = false;
   private constructor() {
     globalThis.addEventListener("hashchange", () => this.routerChange());
+    globalThis.addEventListener("popstate", () => {
+      console.log("popstate");
+      this.isPopState = true;
+    });
   }
 
   public static getInstance(): Router {
@@ -24,41 +25,46 @@ export class Router {
     return Router.instance;
   }
 
-  public add(route: string, handler: CallbackRouter): void {
-    this.routers.set(route, handler);
-  }
-
-  public init(): void {
-    this.add(PAGE_PATH.HOME, (): void => {
-      document.body.append(Home.getInstance().getElement());
-    });
-    const notFound = NotFound.getInstance();
-    notFound.addHomeButtonListener(() => {
-      this.navigateTo(PAGE_PATH.HOME);
-      notFound.getElement().remove();
-    });
+  public addRoutes(routes: Route[]): void {
+    this.routes = routes;
     this.routerChange();
   }
 
-  public navigateTo(path: string, data?: OptionItemValue[]): void {
+  public navigateTo(path: string): void {
     this.currentPath = path;
-    globalThis.history.pushState(null, EMPTY_STRING, `${HASH_SYMBOL}${path}`);
-    globalThis.history.replaceState(
-      null,
-      EMPTY_STRING,
-      `${this.baseUrl}${HASH_SYMBOL}${path}`,
-    );
-    Home.getInstance().getElement().remove();
+    this.updateHistory(path);
+    this.clearPage();
 
-    if (this.routers.has(path)) {
-      NotFound.getInstance().getElement().remove();
-      const handler = this.routers.get(path);
+    if (!this.routes) {
+      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
+    }
+    const route =
+      this.routes.find((route) => route.path === path) ||
+      this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND);
+    if (!route) {
+      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
+    }
+    document.body.append(route.component.getInstance().getElement());
+  }
 
-      if (handler) {
-        handler(data);
+  private updateHistory(path: string): void {
+    if (this.isPopState) {
+      this.isPopState = false;
+      return;
+    }
+    const history = globalThis.history;
+    history.pushState(null, EMPTY_STRING, `${HASH_SYMBOL}${path}`);
+  }
+
+  private clearPage(): void {
+    if (!this.routes) {
+      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
+    }
+    for (const route of this.routes) {
+      const element = route.component.getInstance().getElement();
+      if (element.parentNode) {
+        element.remove();
       }
-    } else {
-      document.body.append(NotFound.getInstance().getElement());
     }
   }
 

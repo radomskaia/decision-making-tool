@@ -40,7 +40,7 @@ export class Home extends BaseComponent<"main"> {
       callback: (): void => {
         const data = this.optionList.filterOption();
         if (data) {
-          Router.getInstance().navigateTo(PAGE_PATH.SECOND, data);
+          Router.getInstance().navigateTo(PAGE_PATH.DECISION_PICKER);
         } else {
           ValidModal.getInstance().showModal();
         }
