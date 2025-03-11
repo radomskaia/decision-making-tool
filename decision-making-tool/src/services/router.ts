@@ -1,15 +1,18 @@
 import type { CallbackRouter, OptionItemValue } from "src/types";
 import { Home } from "@/pages/home.ts";
 import { NotFound } from "@/pages/not-found.ts";
-import { PAGE_PATH } from "@/constants/constants.ts";
+import {
+  EMPTY_STRING,
+  FIRST_ELEMENT_INDEX,
+  HASH_SYMBOL,
+  PAGE_PATH,
+} from "@/constants/constants.ts";
 export class Router {
   private static instance: Router | undefined;
   private routers = new Map<string, CallbackRouter>();
-  private currentPath = "";
-  private readonly hashSymbol = "#";
-  private readonly baseUrl: string = globalThis.location.href.split(
-    this.hashSymbol,
-  )[0];
+  private currentPath = EMPTY_STRING;
+  private readonly baseUrl: string =
+    globalThis.location.href.split(HASH_SYMBOL)[FIRST_ELEMENT_INDEX];
   private constructor() {
     globalThis.addEventListener("hashchange", () => this.routerChange());
   }
@@ -39,11 +42,11 @@ export class Router {
 
   public navigateTo(path: string, data?: OptionItemValue[]): void {
     this.currentPath = path;
-    globalThis.history.pushState(null, "", `${this.hashSymbol}${path}`);
+    globalThis.history.pushState(null, EMPTY_STRING, `${HASH_SYMBOL}${path}`);
     globalThis.history.replaceState(
       null,
-      "",
-      `${this.baseUrl}${this.hashSymbol}${path}`,
+      EMPTY_STRING,
+      `${this.baseUrl}${HASH_SYMBOL}${path}`,
     );
     Home.getInstance().getElement().remove();
 
@@ -60,7 +63,8 @@ export class Router {
   }
 
   private routerChange(): void {
-    const hash: string = globalThis.location.hash.slice(1) || PAGE_PATH.HOME;
+    const hash: string =
+      globalThis.location.hash.slice(HASH_SYMBOL.length) || PAGE_PATH.HOME;
     if (hash === this.currentPath) {
       return;
     }

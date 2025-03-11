@@ -1,6 +1,9 @@
 import type { OptionItemValue, OptionListValue } from "@/types";
 import {
+  EMPTY_STRING,
+  FIRST_ELEMENT_INDEX,
   ID_PREFIX,
+  MIN_POSITIVE_NUMBER,
   OPTION_KEYS,
   OPTION_LIST_KEYS,
 } from "@/constants/constants.ts";
@@ -23,7 +26,7 @@ export class Validator {
   }
 
   public static isPositiveNumber(value: unknown): value is number {
-    return Validator.isNumber(value) && value >= 0;
+    return Validator.isNumber(value) && value >= MIN_POSITIVE_NUMBER;
   }
 
   public static isValidWeight(value: string | number): boolean {
@@ -44,7 +47,7 @@ export class Validator {
   }
 
   private static isEmptyOrStringifiedNumber(value: unknown): boolean {
-    value = value === "" ? value : Number(value);
+    value = value === EMPTY_STRING ? value : Number(value);
     return !(Validator.isNumber(value) && Number.isNaN(value));
   }
 
@@ -88,12 +91,12 @@ export class Validator {
   private isOptionId(value: unknown, lastId: number): boolean {
     if (
       !Validator.isString(value) ||
-      value.slice(0, this.idPrefix.length) !== ID_PREFIX
+      value.slice(FIRST_ELEMENT_INDEX, this.idPrefix.length) !== ID_PREFIX
     ) {
       return false;
     }
     let id = Number(value.slice(this.idPrefix.length));
-    return !(Number.isNaN(id) || id < 0 || id > lastId);
+    return !(Number.isNaN(id) || id < MIN_POSITIVE_NUMBER || id > lastId);
   }
 
   private isOptionItemValue(

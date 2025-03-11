@@ -9,7 +9,10 @@ import {
   ERROR_MESSAGES,
   ID_PREFIX,
   INITIATION_ID,
+  MIN_POSITIVE_NUMBER,
   MINIMUM_OPTIONS_COUNT,
+  NOT_FOUND_INDEX,
+  REMOVE_ONE_ITEM,
 } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
@@ -97,7 +100,7 @@ export class OptionList extends BaseComponent<"ul"> {
 
   public filterOption(): OptionItemValue[] | null {
     const data = this.getList().list.filter(
-      (item) => item.title.trim() && Number(item.weight) > 0,
+      (item) => item.title.trim() && Number(item.weight) > MIN_POSITIVE_NUMBER,
     );
 
     if (data.length >= MINIMUM_OPTIONS_COUNT) {
@@ -120,7 +123,7 @@ export class OptionList extends BaseComponent<"ul"> {
 
   private deleteOption(id: string, optionItem: OptionItem): void {
     const index = this.getOptionIndex(id);
-    this.optionListValue.list.splice(index, 1);
+    this.optionListValue.list.splice(index, REMOVE_ONE_ITEM);
     optionItem.getElement().remove();
   }
 
@@ -128,7 +131,7 @@ export class OptionList extends BaseComponent<"ul"> {
     const index = this.optionListValue.list.findIndex((item) => {
       return item.id === id;
     });
-    if (index === -1) {
+    if (index === NOT_FOUND_INDEX) {
       throw new Error(ERROR_MESSAGES.ID_NOT_FOUND);
     }
     return index;

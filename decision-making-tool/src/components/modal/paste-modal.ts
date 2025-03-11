@@ -6,6 +6,7 @@ import type { Callback } from "src/types";
 import type { OptionList } from "@/components/options/option-list/option-list.ts";
 import {
   BUTTON_TEXT,
+  EMPTY_STRING,
   ERROR_MESSAGES,
   PLACEHOLDER,
   TEXTAREA_COLS,
@@ -37,7 +38,7 @@ export class PasteModal extends BaseModal {
     const cancelButton = this.createCancelButton();
 
     this.addCloseListener(() => {
-      textareaElement.value = "";
+      textareaElement.value = EMPTY_STRING;
     });
     const confirmButton = new TextButton(BUTTON_TEXT.CONFIRM).getElement();
     formElement.addEventListener("submit", (event) => {

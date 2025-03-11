@@ -3,6 +3,7 @@ import { Validator } from "@/services/validator.ts";
 import {
   ERROR_MESSAGES,
   FILE_CONFIG,
+  FIRST_ELEMENT_INDEX,
   PASTE_SEPARATOR,
 } from "@/constants/constants.ts";
 import type { OptionListValue } from "@/types";
@@ -35,7 +36,7 @@ export class FileHandler {
       if (!file) {
         throw new Error(ERROR_MESSAGES.INVALID_FILE);
       }
-      file[0].text().then((text) => {
+      file[FIRST_ELEMENT_INDEX].text().then((text) => {
         const data = JSON.parse(text);
         if (!this.validator.isOptionListValue(data)) {
           throw new Error(ERROR_MESSAGES.INVALID_LIST);
