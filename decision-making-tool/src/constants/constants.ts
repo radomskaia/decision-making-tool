@@ -14,6 +14,7 @@ export const ERROR_MESSAGES = {
   ID_NOT_FOUND: "Can't update input value. Didn't find ID in the List",
   INVALID_FILE: "Invalid file",
   INVALID_LIST: "Invalid option list",
+  INVALID_VALUE: "Invalid value",
   NOT_INITIALIZED: "Class is not initialized",
   PLAYBACK: "Can't play audio",
   PAGE_NOT_FOUND: "Sorry, page not found",

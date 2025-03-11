@@ -38,3 +38,5 @@ export enum InputType {
   Title = "title",
   Weight = "weight",
 }
+
+export type StorageKeys = "optionListValue" | "soundSettings";

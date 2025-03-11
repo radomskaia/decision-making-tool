@@ -72,7 +72,7 @@ export class Home extends BaseComponent<"main"> {
 
   private addOptionList(): OptionList {
     const optionList = new OptionList();
-    optionList.addOption();
+    optionList.init();
     return optionList;
   }
 }

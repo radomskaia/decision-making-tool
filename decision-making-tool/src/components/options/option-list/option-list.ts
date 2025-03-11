@@ -10,6 +10,8 @@ import {
   INITIATION_ID,
   MINIMUM_OPTIONS_COUNT,
 } from "@/constants/constants.ts";
+import { LocalStorage } from "@/services/local-storage.ts";
+import { Validator } from "@/services/validator.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {
@@ -22,12 +24,33 @@ export class OptionList extends BaseComponent<"ul"> {
     if (list) {
       this.optionListValue = list;
     }
+    window.addEventListener("beforeunload", () => {
+      if (document.activeElement instanceof HTMLInputElement) {
+        document.activeElement.blur();
+      }
+      LocalStorage.getInstance().saveToStorage(
+        "optionListValue",
+        this.optionListValue,
+      );
+    });
   }
   protected createView(): HTMLElementTagNameMap["ul"] {
     return this.createDOMElement({
       tagName: "ul",
       classList: [styles.optionsList],
     });
+  }
+
+  public init(): void {
+    const lsData = LocalStorage.getInstance().loadFromStorage(
+      "optionListValue",
+      (value) => Validator.getInstance().isOptionListValue(value),
+    );
+    if (lsData === null) {
+      this.addOption();
+    } else {
+      this.setList(lsData);
+    }
   }
 
   public addOption(optionsValue?: OptionItemValue): void {
