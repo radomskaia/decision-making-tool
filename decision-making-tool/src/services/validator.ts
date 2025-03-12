@@ -1,7 +1,7 @@
 import type { OptionItemValue, OptionListValue } from "@/types";
 import {
   EMPTY_STRING,
-  FIRST_ELEMENT_INDEX,
+  FIRST_INDEX,
   ID_PREFIX,
   MIN_POSITIVE_NUMBER,
   OPTION_KEYS,
@@ -91,7 +91,7 @@ export class Validator {
   private isOptionId(value: unknown, lastId: number): boolean {
     if (
       !Validator.isString(value) ||
-      value.slice(FIRST_ELEMENT_INDEX, this.idPrefix.length) !== ID_PREFIX
+      value.slice(FIRST_INDEX, this.idPrefix.length) !== ID_PREFIX
     ) {
       return false;
     }

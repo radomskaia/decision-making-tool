@@ -13,7 +13,7 @@ import { LocalStorage } from "@/services/local-storage.ts";
 import type { OptionItemValue } from "@/types";
 import { StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
-import { CIRCLE_RADIUS_BIG } from "@/constants/canvas-constants.ts";
+// import { CIRCLE_RADIUS_BIG } from "@/constants/canvas-constants.ts";
 
 export class DecisionPicker extends BaseComponent<"main"> {
   private static instance: DecisionPicker | undefined;
@@ -32,7 +32,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
     return DecisionPicker.instance;
   }
   public drawCanvas(): this {
-    this.canvas.drawCircle(CIRCLE_RADIUS_BIG);
+    // this.canvas.drawCircle(CIRCLE_RADIUS_BIG);
     const weightSum = this.calculateWeightSum();
     this.canvas.drawSectors(weightSum, [...this.data]);
     return this;
@@ -49,7 +49,6 @@ export class DecisionPicker extends BaseComponent<"main"> {
     if (!data || data.length < MINIMUM_OPTIONS_COUNT) {
       return null;
     }
-    console.log("getData", data);
     this.data = data;
     return data;
   }
