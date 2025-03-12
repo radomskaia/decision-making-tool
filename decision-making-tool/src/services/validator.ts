@@ -4,6 +4,7 @@ import {
   FIRST_INDEX,
   ID_PREFIX,
   MIN_POSITIVE_NUMBER,
+  MINIMUM_OPTIONS_COUNT,
   OPTION_KEYS,
   OPTION_LIST_KEYS,
 } from "@/constants/constants.ts";
@@ -32,6 +33,25 @@ export class Validator {
   public static isValidWeight(value: string | number): boolean {
     const numberValue = typeof value === "string" ? Number(value) : value;
     return !Number.isNaN(numberValue) && this.isPositiveNumber(numberValue);
+  }
+
+  public static isValidOption(item: OptionItemValue): boolean {
+    return (
+      item.title.trim().length > MIN_POSITIVE_NUMBER &&
+      Number(item.weight) > MIN_POSITIVE_NUMBER
+    );
+  }
+
+  public static hasMinimumOptions(data: OptionItemValue[]): boolean {
+    return data.length >= MINIMUM_OPTIONS_COUNT;
+  }
+
+  public static isOptionsCountValid(value: OptionListValue): boolean {
+    const data = value.list.filter((element) =>
+      Validator.isValidOption(element),
+    );
+
+    return Validator.hasMinimumOptions(data);
   }
 
   private static isObject(value: unknown): value is object {

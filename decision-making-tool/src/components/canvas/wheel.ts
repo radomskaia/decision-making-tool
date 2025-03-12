@@ -12,10 +12,7 @@ import type { OptionItemValue, SectorData } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
-import {
-  MIN_POSITIVE_NUMBER,
-  MINIMUM_OPTIONS_COUNT,
-} from "@/constants/constants.ts";
+import { MIN_POSITIVE_NUMBER } from "@/constants/constants.ts";
 import type { Canvas } from "@/components/canvas/canvas.ts";
 
 export class Wheel {
@@ -59,10 +56,13 @@ export class Wheel {
       StorageKeys.optionListValue,
       Validator.getInstance().isOptionListValue.bind(Validator.getInstance()),
     );
-    const data = lsData?.list.filter(
-      (item) => item.title.trim() && Number(item.weight) > MIN_POSITIVE_NUMBER,
+    if (!lsData) {
+      return;
+    }
+    const data = lsData.list.filter((element) =>
+      Validator.isValidOption(element),
     );
-    if (!data || data.length < MINIMUM_OPTIONS_COUNT) {
+    if (!Validator.hasMinimumOptions(data)) {
       return;
     }
     const sortedData = [...data].sort(() => Math.random() - HALF_OFFSET);

@@ -9,8 +9,6 @@ import {
   MESSAGES,
   ID_PREFIX,
   INITIATION_ID,
-  MIN_POSITIVE_NUMBER,
-  MINIMUM_OPTIONS_COUNT,
   NOT_FOUND_INDEX,
   REMOVE_ONE_ITEM,
 } from "@/constants/constants.ts";
@@ -96,17 +94,6 @@ export class OptionList extends BaseComponent<"ul"> {
     this.optionListValue.list = [];
     idElement.resetId();
     this.clearElement();
-  }
-
-  public filterOption(): OptionItemValue[] | null {
-    const data = this.getList().list.filter(
-      (item) => item.title.trim() && Number(item.weight) > MIN_POSITIVE_NUMBER,
-    );
-
-    if (data.length >= MINIMUM_OPTIONS_COUNT) {
-      return data;
-    }
-    return null;
   }
 
   protected createView(): HTMLElementTagNameMap["ul"] {

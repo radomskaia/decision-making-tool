@@ -10,6 +10,7 @@ import { ValidModal } from "@/components/modal/valid-modal.ts";
 import type { Callback } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
+import { Validator } from "@/services/validator.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
@@ -40,12 +41,9 @@ export class Home extends BaseComponent<"main"> {
     {
       text: BUTTON_TEXT.START,
       callback: (): void => {
-        const data = this.optionList.filterOption();
-        if (data) {
-          LocalStorage.getInstance().save(
-            StorageKeys.optionListValue,
-            this.optionList.getList(),
-          );
+        const data = this.optionList.getList();
+        if (Validator.isOptionsCountValid(data)) {
+          LocalStorage.getInstance().save(StorageKeys.optionListValue, data);
           Router.getInstance().navigateTo(PAGE_PATH.DECISION_PICKER);
         } else {
           ValidModal.getInstance().showModal();
