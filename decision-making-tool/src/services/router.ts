@@ -14,7 +14,6 @@ export class Router {
   private constructor() {
     globalThis.addEventListener("hashchange", () => this.routerChange());
     globalThis.addEventListener("popstate", () => {
-      console.log("popstate");
       this.isPopState = true;
     });
   }
@@ -31,11 +30,7 @@ export class Router {
       return true;
     }
     const decision = route.component.getInstance();
-    if (decision instanceof DecisionPicker && decision.getData()) {
-      decision.drawCanvas();
-      return true;
-    }
-    return false;
+    return decision instanceof DecisionPicker && decision.isRenderWheel();
   }
 
   public addRoutes(routes: Route[]): void {

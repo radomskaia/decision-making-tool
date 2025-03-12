@@ -52,3 +52,10 @@ export interface Route {
     };
   };
 }
+
+export interface SectorData {
+  startAngle: number;
+  endAngle: number;
+  color: string;
+  title?: string;
+}
