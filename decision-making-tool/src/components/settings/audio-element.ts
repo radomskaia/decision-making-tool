@@ -1,17 +1,20 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
 import { SettingsAction } from "@/components/settings/settings-action.ts";
-import { MESSAGES } from "@/constants/constants.ts";
+import { AUDIO_PATH, MESSAGES, ZERO } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
-import { StorageKeys } from "@/types";
+import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
 
 export class AudioElement extends SettingsAction {
   private static instance: AudioElement | undefined;
   protected isOff = false;
-  private audio: HTMLAudioElement;
+  private audioElements: Record<AudioName, HTMLAudioElement> = {
+    [AudioName.strike]: new Audio(AUDIO_PATH.STRIKE),
+    [AudioName.end]: new Audio(AUDIO_PATH.END),
+  };
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
-    this.audio = new Audio("./src/shared/end-sound.mp3");
+
     this.init();
     window.addEventListener("beforeunload", () => {
       LocalStorage.getInstance().save(StorageKeys.soundSettings, this.isOff);
@@ -28,18 +31,22 @@ export class AudioElement extends SettingsAction {
     return AudioElement.instance;
   }
 
-  public changeSettings(): void {
-    this.audio.muted = this.isOff;
+  public updateSettings(): void {
+    for (const audio of Object.values(this.audioElements)) {
+      audio.muted = this.isOff;
+    }
     this.button.togglePath(this.isOff);
   }
 
-  public playAudio(): void {
-    this.audio
+  public playAudio(name: AudioName): void {
+    this.audioElements[name]
       .play()
-      .catch((error: Error) => console.error(MESSAGES.PLAYBACK, error));
-    this.audio.addEventListener("ended", () => {
-      this.button.buttonDisabled(false);
-    });
+      .catch((error: Error) => console.error(MESSAGES.PLAYBACK + name, error));
+  }
+
+  public stopAudio(name: AudioName): void {
+    this.audioElements[name].pause();
+    this.audioElements[name].currentTime = ZERO;
   }
 
   public getButton(): ButtonSettings {
@@ -48,8 +55,7 @@ export class AudioElement extends SettingsAction {
 
   public toggle(): void {
     this.isOff = !this.isOff;
-    this.audio.muted = this.isOff;
-    this.button.togglePath(this.isOff);
+    this.updateSettings();
   }
 
   private init(): void {
@@ -59,8 +65,10 @@ export class AudioElement extends SettingsAction {
     );
     if (lsData !== null) {
       this.isOff = lsData;
-      this.changeSettings();
+      this.updateSettings();
     }
-    this.audio.load();
+    for (const audio of Object.values(this.audioElements)) {
+      audio.load();
+    }
   }
 }

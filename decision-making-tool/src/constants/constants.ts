@@ -77,6 +77,12 @@ export const DARK_THEME_ATTRIBUTE = "data-theme";
 export const TEXTAREA_ROWS = 15;
 export const TEXTAREA_COLS = 80;
 
+const SHARED_PATH = "/src/shared/";
+export const AUDIO_PATH = {
+  END: SHARED_PATH + "end-sound.mp3",
+  STRIKE: SHARED_PATH + "flint-strike.mp3",
+} as const;
+
 // Messages
 export const MESSAGES = {
   NOT_EVENT: "No event provided",
@@ -85,7 +91,7 @@ export const MESSAGES = {
   INVALID_LIST: "Invalid option list",
   ROUTE_NOT_FOUND: "Route not found",
   NOT_INITIALIZED: "Class is not initialized",
-  PLAYBACK: "Can't play audio",
+  PLAYBACK: "Can't play audio ",
   PAGE_NOT_FOUND: "Sorry, page not found",
   VALIDATION: `Please add at least 2 valid options.
   

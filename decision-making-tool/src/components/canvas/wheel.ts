@@ -15,6 +15,7 @@ import {
   MAX_PERCENTAGE,
 } from "@/constants/canvas-constants.ts";
 import type { OptionItemValue, SectorData, UpdateSector } from "@/types";
+import { AudioName } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
@@ -31,6 +32,7 @@ export class Wheel {
   private startAnimation: Date | null = null;
   private sectionCount = ZERO;
   private turnsCount = MIN_TURNS_COUNT;
+  private audio = AudioElement.getInstance();
 
   constructor(
     private canvas: Canvas,
@@ -87,8 +89,7 @@ export class Wheel {
     const now = new Date();
     const elapsedTime = now.getTime() - this.startAnimation.getTime();
     if (elapsedTime > this.duration * MILLISECONDS_IN_SECOND) {
-      this.endAnimation();
-      startButton.buttonDisabled(false);
+      this.endAnimation(startButton);
       return;
     }
 
@@ -116,8 +117,8 @@ export class Wheel {
     );
   }
 
-  private endAnimation(): void {
-    AudioElement.getInstance().playAudio();
+  private endAnimation(startButton: BaseButton): void {
+    this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
     const roundCount = Math.floor(this.startAngle / FULL_CIRCLE);
     this.turnsCount = MIN_TURNS_COUNT;
@@ -127,6 +128,8 @@ export class Wheel {
       sector.startAngle -= offset;
       return sector;
     });
+    startButton.buttonDisabled(false);
+    this.audio.getButton().buttonDisabled(false);
   }
 
   private updateCurrentSector: UpdateSector = (startAngle, angle, title) => {
@@ -136,9 +139,11 @@ export class Wheel {
       startAngle >= mainAngle - angle &&
       title !== this.currentTitle
     ) {
+      this.audio.stopAudio(AudioName.strike);
+      this.audio.playAudio(AudioName.strike);
       this.sectionCount--;
       this.currentTitle = title;
-      this.textElement.textContent = title || "Empty";
+      this.textElement.textContent = title;
       if (this.sectionCount === ZERO) {
         this.startAngle += FULL_CIRCLE;
         this.sectionCount = this.sectorData.length;

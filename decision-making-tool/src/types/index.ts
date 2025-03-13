@@ -85,3 +85,8 @@ export type DrawText = (
   y: number,
   angle: number,
 ) => void;
+
+export enum AudioName {
+  strike = "strike",
+  end = "end",
+}
