@@ -55,7 +55,33 @@ export interface Route {
 
 export interface SectorData {
   startAngle: number;
-  endAngle: number;
+  angle: number;
   color: string;
-  title?: string;
+  title: string;
+  isTitle: boolean;
 }
+
+export type UpdateSector = (
+  startAngle: number,
+  angle: number,
+  title: string,
+) => void;
+
+export type DrawSectors = (
+  sectorData: SectorData[],
+  offset?: number,
+  updateSector?: UpdateSector,
+) => void;
+
+export type DrawSector = (
+  startAngle: number,
+  angle: number,
+  color: string,
+) => void;
+
+export type DrawText = (
+  text: string,
+  x: number,
+  y: number,
+  angle: number,
+) => void;

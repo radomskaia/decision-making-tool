@@ -4,10 +4,10 @@ import {
   CENTER,
   CIRCLE_RADIUS_BIG,
   CIRCLE_RADIUS_SMALL,
-  DIVIDER,
+  DOUBLE,
   END_ANGLE,
   ORIGIN_COORDINATE,
-  HALF_OFFSET,
+  HALF,
   START_ANGLE,
   STROKE_COLOR,
   FONT_SIZE,
@@ -19,8 +19,9 @@ import {
   CURSOR_MIDDLE_POINT_Y,
   CURSOR_HORIZONTAL_SPREAD,
   FONT_FAMILY,
+  GLOBAL_ALPHA,
 } from "@/constants/canvas-constants.ts";
-import type { SectorData } from "@/types";
+import type { DrawSector, DrawSectors, DrawText } from "@/types";
 import { FIRST_INDEX, LAST_INDEX } from "@/constants/constants.ts";
 
 export class Canvas extends BaseComponent<"canvas"> {
@@ -28,6 +29,7 @@ export class Canvas extends BaseComponent<"canvas"> {
   constructor() {
     super();
     this.context = this.getContext();
+    this.context.globalAlpha = GLOBAL_ALPHA;
     this.drawCircle(CIRCLE_RADIUS_BIG);
     this.drawClip();
   }
@@ -36,24 +38,31 @@ export class Canvas extends BaseComponent<"canvas"> {
     startAngle: number,
     endAngle: number,
   ): { textX: number; textY: number; textAngle: number } {
-    const middleAngle = (startAngle + endAngle) / DIVIDER;
+    const middleAngle = (startAngle + endAngle) / DOUBLE;
     const textRadius = CIRCLE_RADIUS_BIG * TEXT_OFFSET;
     const textX = CENTER + Math.cos(middleAngle) * textRadius;
     const textY = CENTER + Math.sin(middleAngle) * textRadius;
-    const textAngle = middleAngle + Math.PI / HALF_OFFSET;
+    const textAngle = middleAngle + Math.PI / HALF;
     return { textX, textY, textAngle };
   }
 
-  public drawSectors(sectorData: SectorData[]): void {
+  public drawSectors: DrawSectors = (sectorData, offset, updateSector) => {
     this.context.clearRect(
       ORIGIN_COORDINATE,
       ORIGIN_COORDINATE,
       CANVAS_SIZE,
       CANVAS_SIZE,
     );
-    for (const { startAngle, endAngle, color, title } of sectorData) {
+    for (const sectorItem of sectorData) {
+      let { startAngle, angle, color, title, isTitle } = sectorItem;
+      if (offset && updateSector) {
+        sectorItem.startAngle += offset;
+        updateSector(startAngle, angle, title);
+      }
+      const endAngle = startAngle + angle;
+
       this.drawSector(startAngle, endAngle, color);
-      if (title) {
+      if (isTitle) {
         const { textX, textY, textAngle } = Canvas.calculateTextCoordinates(
           startAngle,
           endAngle,
@@ -63,7 +72,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     }
     this.drawCircle(CIRCLE_RADIUS_SMALL);
     this.drawCursor();
-  }
+  };
   public drawCircle(radius: number): void {
     const { context } = this;
     if (radius === CIRCLE_RADIUS_SMALL) {
@@ -77,6 +86,14 @@ export class Canvas extends BaseComponent<"canvas"> {
     if (radius === CIRCLE_RADIUS_SMALL) {
       context.lineWidth--;
     }
+  }
+
+  public getContext(): CanvasRenderingContext2D {
+    const context = this.element.getContext("2d");
+    if (!context) {
+      throw new Error("Failed to get context");
+    }
+    return context;
   }
 
   protected createView(): HTMLElementTagNameMap["canvas"] {
@@ -113,15 +130,9 @@ export class Canvas extends BaseComponent<"canvas"> {
     const { context } = this;
     context.beginPath();
     context.moveTo(CENTER, CURSOR_TOP_Y);
-    context.lineTo(
-      CENTER - CURSOR_HORIZONTAL_SPREAD / DIVIDER,
-      CURSOR_BOTTOM_Y,
-    );
+    context.lineTo(CENTER - CURSOR_HORIZONTAL_SPREAD / DOUBLE, CURSOR_BOTTOM_Y);
     context.lineTo(CENTER, CURSOR_MIDDLE_POINT_Y);
-    context.lineTo(
-      CENTER + CURSOR_HORIZONTAL_SPREAD / DIVIDER,
-      CURSOR_BOTTOM_Y,
-    );
+    context.lineTo(CENTER + CURSOR_HORIZONTAL_SPREAD / DOUBLE, CURSOR_BOTTOM_Y);
     context.closePath();
     context.fillStyle = CURSOR_COLOR;
     context.strokeStyle = STROKE_COLOR;
@@ -129,19 +140,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.stroke();
   }
 
-  private getContext(): CanvasRenderingContext2D {
-    const context = this.element.getContext("2d");
-    if (!context) {
-      throw new Error("Failed to get context");
-    }
-    return context;
-  }
-
-  private drawSector(
-    startAngle: number,
-    endAngle: number,
-    color: string,
-  ): void {
+  private drawSector: DrawSector = (startAngle, endAngle, color) => {
     const { context } = this;
     context.beginPath();
     context.moveTo(CENTER, CENTER);
@@ -151,7 +150,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.strokeStyle = STROKE_COLOR;
     context.fill();
     context.stroke();
-  }
+  };
 
   private truncateText(text: string): string {
     const { context } = this;
@@ -170,7 +169,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     return truncatedText;
   }
 
-  private drawText(text: string, x: number, y: number, angle: number): void {
+  private drawText: DrawText = (text, x, y, angle) => {
     const { context } = this;
     context.save();
     context.translate(x, y);
@@ -181,5 +180,5 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.fillStyle = STROKE_COLOR;
     context.fillText(text, ORIGIN_COORDINATE, ORIGIN_COORDINATE);
     context.restore();
-  }
+  };
 }

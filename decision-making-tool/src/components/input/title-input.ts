@@ -1,4 +1,4 @@
-import { BaseInput } from "@/components/options/input/base-input.ts";
+import { BaseInput } from "@/components/input/base-input.ts";
 import { PLACEHOLDER } from "@/constants/constants.ts";
 
 export class TitleInput extends BaseInput {

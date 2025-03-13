@@ -5,7 +5,7 @@ export const LS_PREFIX = "radomskaia--decision-making-tool--";
 // Common constants
 export const HASH_SYMBOL = "#";
 export const EMPTY_STRING = "";
-export const MIN_POSITIVE_NUMBER = 0;
+export const ZERO = 0;
 export const FIRST_INDEX = 0;
 export const NOT_FOUND_INDEX = -1;
 export const LAST_INDEX = -1;
@@ -17,7 +17,7 @@ export const PASTE_SEPARATOR = {
 };
 
 // ID
-export const INITIATION_ID = MIN_POSITIVE_NUMBER;
+export const INITIATION_ID = ZERO;
 export const ID_PREFIX = HASH_SYMBOL;
 
 // Keys

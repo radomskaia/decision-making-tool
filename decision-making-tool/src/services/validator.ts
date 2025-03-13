@@ -3,7 +3,7 @@ import {
   EMPTY_STRING,
   FIRST_INDEX,
   ID_PREFIX,
-  MIN_POSITIVE_NUMBER,
+  ZERO,
   MINIMUM_OPTIONS_COUNT,
   OPTION_KEYS,
   OPTION_LIST_KEYS,
@@ -27,7 +27,7 @@ export class Validator {
   }
 
   public static isPositiveNumber(value: unknown): value is number {
-    return Validator.isNumber(value) && value >= MIN_POSITIVE_NUMBER;
+    return Validator.isNumber(value) && value >= ZERO;
   }
 
   public static isValidWeight(value: string | number): boolean {
@@ -36,10 +36,7 @@ export class Validator {
   }
 
   public static isValidOption(item: OptionItemValue): boolean {
-    return (
-      item.title.trim().length > MIN_POSITIVE_NUMBER &&
-      Number(item.weight) > MIN_POSITIVE_NUMBER
-    );
+    return item.title.trim().length > ZERO && Number(item.weight) > ZERO;
   }
 
   public static hasMinimumOptions(data: OptionItemValue[]): boolean {
@@ -116,7 +113,7 @@ export class Validator {
       return false;
     }
     let id = Number(value.slice(this.idPrefix.length));
-    return !(Number.isNaN(id) || id < MIN_POSITIVE_NUMBER || id > lastId);
+    return !(Number.isNaN(id) || id < ZERO || id > lastId);
   }
 
   private isOptionItemValue(

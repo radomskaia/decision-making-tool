@@ -6,8 +6,8 @@ import type {
 } from "@/types";
 import { BaseComponent } from "@/components/base-component.ts";
 import { idElement } from "@/components/options/id/id-element.ts";
-import { TitleInput } from "@/components/options/input/title-input.ts";
-import { WeightInput } from "@/components/options/input/weight-input.ts";
+import { TitleInput } from "@/components/input/title-input.ts";
+import { WeightInput } from "@/components/input/weight-input.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 import { BUTTON_TEXT } from "@/constants/constants.ts";
