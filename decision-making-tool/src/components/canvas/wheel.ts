@@ -20,6 +20,8 @@ import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
 import { ZERO } from "@/constants/constants.ts";
 import type { Canvas } from "@/components/canvas/canvas.ts";
+import { AudioElement } from "@/components/settings/audio-element.ts";
+import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
@@ -78,7 +80,7 @@ export class Wheel {
     return this.sectorData.length > ZERO;
   }
 
-  public animate(): void {
+  public animate(startButton: BaseButton): void {
     if (!this.startAnimation) {
       this.startAnimation = new Date();
     }
@@ -86,6 +88,7 @@ export class Wheel {
     const elapsedTime = now.getTime() - this.startAnimation.getTime();
     if (elapsedTime > this.duration * MILLISECONDS_IN_SECOND) {
       this.endAnimation();
+      startButton.buttonDisabled(false);
       return;
     }
 
@@ -96,7 +99,7 @@ export class Wheel {
       offsetAngle,
       this.updateCurrentSector.bind(this),
     );
-    requestAnimationFrame(() => this.animate());
+    requestAnimationFrame(() => this.animate(startButton));
   }
 
   private getAbsoluteProgressAnimation(elapsedTime: number): number {
@@ -114,6 +117,7 @@ export class Wheel {
   }
 
   private endAnimation(): void {
+    AudioElement.getInstance().playAudio();
     this.startAnimation = null;
     const roundCount = Math.floor(this.startAngle / FULL_CIRCLE);
     this.turnsCount = MIN_TURNS_COUNT;

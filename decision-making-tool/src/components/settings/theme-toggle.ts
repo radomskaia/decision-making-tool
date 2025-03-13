@@ -3,9 +3,11 @@ import { SettingsAction } from "@/components/settings/settings-action.ts";
 import {
   DARK_THEME_ATTRIBUTE,
   DARK_THEME_MEDIA_QUERY,
+  MESSAGES,
 } from "@/constants/constants.ts";
 
 export class ThemeToggle extends SettingsAction {
+  private static instance: ThemeToggle | undefined;
   protected isOff: boolean;
   private mediaQueryList: MediaQueryList;
   constructor(themeButton: ButtonSettings) {
@@ -16,6 +18,16 @@ export class ThemeToggle extends SettingsAction {
     this.mediaQueryList.addEventListener("change", (event) => {
       this.changeTheme(event.matches);
     });
+  }
+
+  public static getInstance(audioButton?: ButtonSettings): ThemeToggle {
+    if (!ThemeToggle.instance) {
+      if (!audioButton) {
+        throw new Error(MESSAGES.NOT_INITIALIZED);
+      }
+      ThemeToggle.instance = new ThemeToggle(audioButton);
+    }
+    return ThemeToggle.instance;
   }
 
   public changeTheme(isDark: boolean): void {

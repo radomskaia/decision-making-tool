@@ -6,15 +6,26 @@ import { StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
 
 export class AudioElement extends SettingsAction {
+  private static instance: AudioElement | undefined;
   protected isOff = false;
   private audio: HTMLAudioElement;
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
-    this.audio = new Audio("");
+    this.audio = new Audio("./src/shared/end-sound.mp3");
     this.init();
     window.addEventListener("beforeunload", () => {
       LocalStorage.getInstance().save(StorageKeys.soundSettings, this.isOff);
     });
+  }
+
+  public static getInstance(audioButton?: ButtonSettings): AudioElement {
+    if (!AudioElement.instance) {
+      if (!audioButton) {
+        throw new Error(MESSAGES.NOT_INITIALIZED);
+      }
+      AudioElement.instance = new AudioElement(audioButton);
+    }
+    return AudioElement.instance;
   }
 
   public changeSettings(): void {
@@ -27,8 +38,12 @@ export class AudioElement extends SettingsAction {
       .play()
       .catch((error: Error) => console.error(MESSAGES.PLAYBACK, error));
     this.audio.addEventListener("ended", () => {
-      console.log("End");
+      this.button.buttonDisabled(false);
     });
+  }
+
+  public getButton(): ButtonSettings {
+    return this.button;
   }
 
   public toggle(): void {

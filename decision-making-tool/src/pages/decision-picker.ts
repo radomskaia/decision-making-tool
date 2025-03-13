@@ -7,6 +7,7 @@ import { Canvas } from "@/components/canvas/canvas.ts";
 import { Wheel } from "@/components/canvas/wheel.ts";
 import { DurationInput } from "@/components/input/duration-input.ts";
 import { DEFAULT_DURATION } from "@/constants/canvas-constants.ts";
+import { AudioElement } from "@/components/settings/audio-element.ts";
 
 export class DecisionPicker extends BaseComponent<"main"> {
   private static instance: DecisionPicker | undefined;
@@ -56,7 +57,9 @@ export class DecisionPicker extends BaseComponent<"main"> {
     );
     const startButton = new TextButton(BUTTON_TEXT.START, () => {
       if (this.wheel) {
-        this.wheel.animate();
+        AudioElement.getInstance().getButton().buttonDisabled(true);
+        startButton.buttonDisabled(true);
+        this.wheel.animate(startButton);
       }
     });
     this.appendElement(backButton.getElement(), startButton.getElement());

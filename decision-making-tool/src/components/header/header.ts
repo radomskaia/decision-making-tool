@@ -27,7 +27,7 @@ export class Header extends BaseComponent<"header"> {
 
   public addSoundButton(buttonName: keyof typeof this.settingsButton): this {
     const button = new this.settingsButton[buttonName].button();
-    const action = new this.settingsButton[buttonName].action(button);
+    const action = this.settingsButton[buttonName].action.getInstance(button);
     button.addToggleListener(action);
     this.buttonWrapper.append(button.getElement());
     return this;
