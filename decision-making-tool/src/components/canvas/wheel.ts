@@ -13,6 +13,8 @@ import {
   DOUBLE,
   NORMALIZED_VALUE,
   MAX_PERCENTAGE,
+  MIN_CURSOR_ANGLE,
+  MAX_CURSOR_ANGLE,
 } from "@/constants/canvas-constants.ts";
 import type { OptionItemValue, SectorData, UpdateSector } from "@/types";
 import { AudioName } from "@/types";
@@ -26,13 +28,19 @@ import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
-  private duration = DEFAULT_DURATION;
+  private duration = DEFAULT_DURATION * MILLISECONDS_IN_SECOND;
   private startAngle = Wheel.degreesToRadians(INITIAL_DEGREE);
   private currentTitle: string | null = null;
-  private startAnimation: Date | null = null;
+  private startAnimation: number | null = null;
   private sectionCount = ZERO;
   private turnsCount = MIN_TURNS_COUNT;
   private audio = AudioElement.getInstance();
+  private cursorAnimationDuration = MILLISECONDS_IN_SECOND;
+  private cursorAnimationStartTimestamp = ZERO;
+  private cursorBounceAngle = Wheel.degreesToRadians(MIN_CURSOR_ANGLE);
+  private lastSectorTimestamp = ZERO;
+  private isRotate = false;
+  private cursorAngle = ZERO;
 
   constructor(
     private canvas: Canvas,
@@ -75,7 +83,7 @@ export class Wheel {
   }
 
   public setDuration(duration: number): void {
-    this.duration = duration;
+    this.duration = duration * MILLISECONDS_IN_SECOND;
   }
 
   public isSectorData(): boolean {
@@ -83,53 +91,73 @@ export class Wheel {
   }
 
   public animate(startButton: BaseButton): void {
+    const now = Date.now();
     if (!this.startAnimation) {
-      this.startAnimation = new Date();
+      this.startAnimation = now;
+      this.lastSectorTimestamp = now;
     }
-    const now = new Date();
-    const elapsedTime = now.getTime() - this.startAnimation.getTime();
-    if (elapsedTime > this.duration * MILLISECONDS_IN_SECOND) {
-      this.endAnimation(startButton);
-      return;
+    const elapsedTime = now - this.startAnimation;
+    if (elapsedTime > this.duration) {
+      this.audio.playAudio(AudioName.end);
+      if (!this.isRotate) {
+        this.endAnimation(startButton);
+        return;
+      }
     }
 
     const offsetAngle = this.getOffsetAngle(elapsedTime);
-
-    this.canvas.drawSectors(
-      this.sectorData,
-      offsetAngle,
-      this.updateCurrentSector.bind(this),
-    );
+    let cursorAngle = this.cursorAngle;
+    if (this.isRotate) {
+      cursorAngle = this.animateCursor();
+    }
+    this.canvas.drawSectors(this.sectorData, {
+      offset: offsetAngle,
+      updateSector: this.updateCurrentSector.bind(this),
+      angle: cursorAngle,
+    });
     requestAnimationFrame(() => this.animate(startButton));
   }
 
   private getAbsoluteProgressAnimation(elapsedTime: number): number {
-    return (
-      NORMALIZED_VALUE - elapsedTime / (this.duration * MILLISECONDS_IN_SECOND)
-    );
+    return NORMALIZED_VALUE - elapsedTime / this.duration;
   }
 
-  private getOffsetAngle(elapsedTime: number): number {
-    const progress = this.getAbsoluteProgressAnimation(elapsedTime);
-    return (
-      ((this.turnsCount * FULL_CIRCLE) / MAX_PERCENTAGE) *
-      Wheel.easeInOutQuad(progress)
-    );
+  private animateCursor(): number {
+    const now = Date.now();
+    const initialAngle = this.cursorAngle;
+    const elapsedTime = now - this.cursorAnimationStartTimestamp;
+    let progress = elapsedTime / this.cursorAnimationDuration;
+    let bounce: number;
+    this.cursorBounceAngle = this.calculateCursorAngle(now);
+
+    if (progress <= HALF) {
+      progress *= DOUBLE;
+      bounce = Math.sin(progress * Math.PI) * -this.cursorBounceAngle;
+    } else {
+      progress *= DOUBLE;
+      bounce =
+        NORMALIZED_VALUE -
+        Math.sin(progress * Math.PI) * this.cursorBounceAngle;
+    }
+
+    // bounce = Math.sin(progress * Math.PI) * -this.cursorBounceAngle;
+    this.cursorAngle = initialAngle - bounce;
+    if (progress >= NORMALIZED_VALUE) {
+      this.isRotate = false;
+      this.cursorAngle = ZERO;
+      return ZERO;
+    }
+    return bounce;
   }
 
-  private endAnimation(startButton: BaseButton): void {
-    this.audio.playAudio(AudioName.end);
-    this.startAnimation = null;
-    const roundCount = Math.floor(this.startAngle / FULL_CIRCLE);
-    this.turnsCount = MIN_TURNS_COUNT;
-    const offset = roundCount * FULL_CIRCLE;
-    this.startAngle = this.startAngle - offset;
-    this.sectorData = this.sectorData.map((sector) => {
-      sector.startAngle -= offset;
-      return sector;
-    });
-    startButton.buttonDisabled(false);
-    this.audio.getButton().buttonDisabled(false);
+  private calculateCursorAngle(now: number): number {
+    const elapsedTime = now - this.lastSectorTimestamp;
+    const maxSpeed = this.cursorAnimationDuration / DOUBLE;
+    const speedFactor = Math.max(ZERO, (maxSpeed - elapsedTime) / maxSpeed);
+
+    return Wheel.degreesToRadians(
+      MIN_CURSOR_ANGLE + speedFactor * (MAX_CURSOR_ANGLE - MIN_CURSOR_ANGLE),
+    );
   }
 
   private updateCurrentSector: UpdateSector = (startAngle, angle, title) => {
@@ -139,6 +167,14 @@ export class Wheel {
       startAngle >= mainAngle - angle &&
       title !== this.currentTitle
     ) {
+      const now = Date.now();
+      if (this.isRotate) {
+        this.cursorAngle -=
+          Math.floor(this.cursorAngle / FULL_CIRCLE) * FULL_CIRCLE;
+      }
+      this.isRotate = true;
+      this.cursorAnimationStartTimestamp = now;
+      this.lastSectorTimestamp = now;
       this.audio.stopAudio(AudioName.strike);
       this.audio.playAudio(AudioName.strike);
       this.sectionCount--;
@@ -150,6 +186,30 @@ export class Wheel {
       }
     }
   };
+
+  private getOffsetAngle(elapsedTime: number): number {
+    const progress = this.getAbsoluteProgressAnimation(elapsedTime);
+    return (
+      ((this.turnsCount * FULL_CIRCLE +
+        Math.floor(Math.random() * FULL_CIRCLE)) /
+        MAX_PERCENTAGE) *
+      Wheel.easeInOutQuad(progress)
+    );
+  }
+
+  private endAnimation(startButton: BaseButton): void {
+    this.startAnimation = null;
+    this.turnsCount = MIN_TURNS_COUNT;
+    const roundCount = Math.floor(this.startAngle / FULL_CIRCLE);
+    const offset = roundCount * FULL_CIRCLE;
+    this.startAngle -= offset;
+    this.sectorData = this.sectorData.map((sector) => {
+      sector.startAngle -= offset;
+      return sector;
+    });
+    startButton.buttonDisabled(false);
+    this.audio.getButton().buttonDisabled(false);
+  }
 
   private loadData(): void {
     const lsData = LocalStorage.getInstance().load(

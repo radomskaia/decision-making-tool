@@ -73,6 +73,8 @@ export const PAGE_PATH = {
 export const DARK_THEME_MEDIA_QUERY = "(prefers-color-scheme: dark)";
 export const DARK_THEME_ATTRIBUTE = "data-theme";
 
+export const END_SOUND_VOLUME = 0.7;
+
 // <textarea> parameters
 export const TEXTAREA_ROWS = 15;
 export const TEXTAREA_COLS = 80;

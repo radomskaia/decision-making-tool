@@ -67,10 +67,15 @@ export type UpdateSector = (
   title: string,
 ) => void;
 
+export interface AnimationData {
+  offset: number;
+  updateSector: UpdateSector;
+  angle: number;
+}
+
 export type DrawSectors = (
   sectorData: SectorData[],
-  offset?: number,
-  updateSector?: UpdateSector,
+  options?: AnimationData,
 ) => void;
 
 export type DrawSector = (

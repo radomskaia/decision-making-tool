@@ -1,6 +1,11 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
 import { SettingsAction } from "@/components/settings/settings-action.ts";
-import { AUDIO_PATH, MESSAGES, ZERO } from "@/constants/constants.ts";
+import {
+  AUDIO_PATH,
+  END_SOUND_VOLUME,
+  MESSAGES,
+  ZERO,
+} from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
@@ -14,8 +19,8 @@ export class AudioElement extends SettingsAction {
   };
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
-
     this.init();
+    this.audioElements[AudioName.end].volume = END_SOUND_VOLUME;
     window.addEventListener("beforeunload", () => {
       LocalStorage.getInstance().save(StorageKeys.soundSettings, this.isOff);
     });
