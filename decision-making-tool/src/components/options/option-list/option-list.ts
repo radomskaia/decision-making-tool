@@ -11,6 +11,7 @@ import {
   INITIATION_ID,
   NOT_FOUND_INDEX,
   REMOVE_ONE_ITEM,
+  ZERO,
 } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
@@ -112,6 +113,9 @@ export class OptionList extends BaseComponent<"ul"> {
     const index = this.getOptionIndex(id);
     this.optionListValue.list.splice(index, REMOVE_ONE_ITEM);
     optionItem.getElement().remove();
+    if (this.optionListValue.list.length === ZERO) {
+      this.reset();
+    }
   }
 
   private getOptionIndex(id: string): number {

@@ -21,6 +21,7 @@ import {
   FONT_FAMILY,
   GLOBAL_ALPHA,
   CENTER_Y,
+  FULL_CIRCLE,
 } from "@/constants/canvas-constants.ts";
 import type { DrawSector, DrawSectors, DrawText } from "@/types";
 import { FIRST_INDEX, LAST_INDEX } from "@/constants/constants.ts";
@@ -59,6 +60,9 @@ export class Canvas extends BaseComponent<"canvas"> {
       if (options) {
         const { offset, updateSector } = options;
         sectorItem.startAngle += offset;
+        if (sectorItem.startAngle > FULL_CIRCLE) {
+          sectorItem.startAngle -= FULL_CIRCLE;
+        }
         updateSector(startAngle, angle, title);
       }
       const endAngle = startAngle + angle;

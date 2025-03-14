@@ -32,7 +32,6 @@ export class Wheel {
   private startAngle = Wheel.degreesToRadians(INITIAL_DEGREE);
   private currentTitle: string | null = null;
   private startAnimation: number | null = null;
-  private sectionCount = ZERO;
   private turnsCount = MIN_TURNS_COUNT;
   private audio = AudioElement.getInstance();
   private cursorAnimationDuration = MILLISECONDS_IN_SECOND;
@@ -97,12 +96,9 @@ export class Wheel {
       this.lastSectorTimestamp = now;
     }
     const elapsedTime = now - this.startAnimation;
-    if (elapsedTime > this.duration) {
-      this.audio.playAudio(AudioName.end);
-      if (!this.isRotate) {
-        this.endAnimation(startButton);
-        return;
-      }
+    if (elapsedTime > this.duration && !this.isRotate) {
+      this.endAnimation(startButton);
+      return;
     }
 
     const offsetAngle = this.getOffsetAngle(elapsedTime);
@@ -140,7 +136,6 @@ export class Wheel {
         Math.sin(progress * Math.PI) * this.cursorBounceAngle;
     }
 
-    // bounce = Math.sin(progress * Math.PI) * -this.cursorBounceAngle;
     this.cursorAngle = initialAngle - bounce;
     if (progress >= NORMALIZED_VALUE) {
       this.isRotate = false;
@@ -177,13 +172,8 @@ export class Wheel {
       this.lastSectorTimestamp = now;
       this.audio.stopAudio(AudioName.strike);
       this.audio.playAudio(AudioName.strike);
-      this.sectionCount--;
       this.currentTitle = title;
       this.textElement.textContent = title;
-      if (this.sectionCount === ZERO) {
-        this.startAngle += FULL_CIRCLE;
-        this.sectionCount = this.sectorData.length;
-      }
     }
   };
 
@@ -198,15 +188,9 @@ export class Wheel {
   }
 
   private endAnimation(startButton: BaseButton): void {
+    this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
     this.turnsCount = MIN_TURNS_COUNT;
-    const roundCount = Math.floor(this.startAngle / FULL_CIRCLE);
-    const offset = roundCount * FULL_CIRCLE;
-    this.startAngle -= offset;
-    this.sectorData = this.sectorData.map((sector) => {
-      sector.startAngle -= offset;
-      return sector;
-    });
     startButton.buttonDisabled(false);
     this.audio.getButton().buttonDisabled(false);
   }
@@ -246,6 +230,5 @@ export class Wheel {
       startAngle += angle;
       this.sectorData.push(sectorData);
     }
-    this.sectionCount = this.sectorData.length;
   }
 }
