@@ -1,14 +1,10 @@
 import {
   DEFAULT_DURATION,
   FULL_CIRCLE,
-  HALF_CIRCLE_DEGREES,
   HALF,
   INITIAL_DEGREE,
   MILLISECONDS_IN_SECOND,
   MIN_ANGLE_FOR_TITLE,
-  OPACITY,
-  PASTEL_MIN,
-  PASTEL_RANGE,
   MIN_TURNS_COUNT,
   DOUBLE,
   NORMALIZED_VALUE,
@@ -16,69 +12,43 @@ import {
   MIN_CURSOR_ANGLE,
   MAX_CURSOR_ANGLE,
 } from "@/constants/canvas-constants.ts";
-import type { OptionItemValue, SectorData, UpdateSector } from "@/types";
+import type { DrawSectors, SectorData, UpdateSector } from "@/types";
 import { AudioName } from "@/types";
-import { StorageKeys } from "@/types";
-import { LocalStorage } from "@/services/local-storage.ts";
-import { Validator } from "@/services/validator.ts";
 import { ZERO } from "@/constants/constants.ts";
-import type { Canvas } from "@/components/canvas/canvas.ts";
 import { AudioElement } from "@/components/settings/audio-element.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
+import {
+  calculateAngle,
+  calculateWeightSum,
+  degreesToRadians,
+  easeInOutQuad,
+  getAbsoluteProgressAnimation,
+  randomColor,
+} from "@/utilities/utilities.ts";
+import { FileHandler } from "@/services/file-handler.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
   private duration = DEFAULT_DURATION * MILLISECONDS_IN_SECOND;
-  private startAngle = Wheel.degreesToRadians(INITIAL_DEGREE);
+  private startAngle = degreesToRadians(INITIAL_DEGREE);
   private currentTitle: string | null = null;
   private startAnimation: number | null = null;
   private turnsCount = MIN_TURNS_COUNT;
   private audio = AudioElement.getInstance();
   private cursorAnimationDuration = MILLISECONDS_IN_SECOND;
   private cursorAnimationStartTimestamp = ZERO;
-  private cursorBounceAngle = Wheel.degreesToRadians(MIN_CURSOR_ANGLE);
-  private lastSectorTimestamp = ZERO;
+  private cursorBounceAngle = degreesToRadians(MIN_CURSOR_ANGLE);
   private isRotate = false;
   private cursorAngle = ZERO;
 
   constructor(
-    private canvas: Canvas,
-    private textElement: HTMLParagraphElement,
+    private readonly drawSectors: DrawSectors,
+    private titleSection: HTMLParagraphElement,
   ) {
-    this.canvas = canvas;
-    this.textElement = textElement;
-    this.loadData();
-  }
-
-  private static calculateAngle(weightSum: number, weight: number): number {
-    return (FULL_CIRCLE / weightSum) * weight;
-  }
-
-  private static degreesToRadians(degrees: number): number {
-    return degrees * (Math.PI / HALF_CIRCLE_DEGREES);
-  }
-
-  private static getPastelValue(): number {
-    return Math.floor(Math.random() * PASTEL_RANGE + PASTEL_MIN);
-  }
-
-  private static randomColor(): string {
-    return `rgba(${Wheel.getPastelValue()}, ${Wheel.getPastelValue()}, ${Wheel.getPastelValue()}, ${OPACITY})`;
-  }
-
-  private static calculateWeightSum(data: OptionItemValue[]): number {
-    let accumulator = ZERO;
-    for (const item of data) {
-      const weight = Number(item.weight);
-      accumulator += weight;
-    }
-    return accumulator;
-  }
-
-  private static easeInOutQuad(x: number): number {
-    return x < HALF
-      ? DOUBLE * x * x
-      : NORMALIZED_VALUE - Math.pow(-DOUBLE * x + DOUBLE, DOUBLE) / DOUBLE;
+    this.drawSectors = drawSectors;
+    this.titleSection = titleSection;
+    this.init();
+    this.drawSectors(this.sectorData);
   }
 
   public setDuration(duration: number): void {
@@ -89,15 +59,14 @@ export class Wheel {
     return this.sectorData.length > ZERO;
   }
 
-  public animate(startButton: BaseButton): void {
+  public animateWheel(startButton: BaseButton): void {
     const now = Date.now();
     if (!this.startAnimation) {
       this.startAnimation = now;
-      this.lastSectorTimestamp = now;
     }
     const elapsedTime = now - this.startAnimation;
     if (elapsedTime > this.duration && !this.isRotate) {
-      this.endAnimation(startButton);
+      this.endWheelAnimation(startButton);
       return;
     }
 
@@ -106,16 +75,12 @@ export class Wheel {
     if (this.isRotate) {
       cursorAngle = this.animateCursor();
     }
-    this.canvas.drawSectors(this.sectorData, {
+    this.drawSectors(this.sectorData, {
       offset: offsetAngle,
       updateSector: this.updateCurrentSector.bind(this),
       angle: cursorAngle,
     });
-    requestAnimationFrame(() => this.animate(startButton));
-  }
-
-  private getAbsoluteProgressAnimation(elapsedTime: number): number {
-    return NORMALIZED_VALUE - elapsedTime / this.duration;
+    requestAnimationFrame(() => this.animateWheel(startButton));
   }
 
   private animateCursor(): number {
@@ -146,11 +111,11 @@ export class Wheel {
   }
 
   private calculateCursorAngle(now: number): number {
-    const elapsedTime = now - this.lastSectorTimestamp;
+    const elapsedTime = now - this.cursorAnimationStartTimestamp;
     const maxSpeed = this.cursorAnimationDuration / DOUBLE;
     const speedFactor = Math.max(ZERO, (maxSpeed - elapsedTime) / maxSpeed);
 
-    return Wheel.degreesToRadians(
+    return degreesToRadians(
       MIN_CURSOR_ANGLE + speedFactor * (MAX_CURSOR_ANGLE - MIN_CURSOR_ANGLE),
     );
   }
@@ -162,32 +127,30 @@ export class Wheel {
       startAngle >= mainAngle - angle &&
       title !== this.currentTitle
     ) {
-      const now = Date.now();
       if (this.isRotate) {
         this.cursorAngle -=
           Math.floor(this.cursorAngle / FULL_CIRCLE) * FULL_CIRCLE;
       }
       this.isRotate = true;
-      this.cursorAnimationStartTimestamp = now;
-      this.lastSectorTimestamp = now;
+      this.cursorAnimationStartTimestamp = Date.now();
       this.audio.stopAudio(AudioName.strike);
       this.audio.playAudio(AudioName.strike);
       this.currentTitle = title;
-      this.textElement.textContent = title;
+      this.titleSection.textContent = title;
     }
   };
 
   private getOffsetAngle(elapsedTime: number): number {
-    const progress = this.getAbsoluteProgressAnimation(elapsedTime);
+    const progress = getAbsoluteProgressAnimation(elapsedTime, this.duration);
     return (
       ((this.turnsCount * FULL_CIRCLE +
         Math.floor(Math.random() * FULL_CIRCLE)) /
         MAX_PERCENTAGE) *
-      Wheel.easeInOutQuad(progress)
+      easeInOutQuad(progress)
     );
   }
 
-  private endAnimation(startButton: BaseButton): void {
+  private endWheelAnimation(startButton: BaseButton): void {
     this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
     this.turnsCount = MIN_TURNS_COUNT;
@@ -195,31 +158,16 @@ export class Wheel {
     this.audio.getButton().buttonDisabled(false);
   }
 
-  private loadData(): void {
-    const lsData = LocalStorage.getInstance().load(
-      StorageKeys.optionListValue,
-      Validator.getInstance().isOptionListValue.bind(Validator.getInstance()),
-    );
-    if (!lsData) {
+  private init(): void {
+    const data = FileHandler.getInstance().loadLSData();
+    if (!data) {
       return;
     }
-    const data = lsData.list.filter((element) =>
-      Validator.isValidOption(element),
-    );
-    if (!Validator.hasMinimumOptions(data)) {
-      return;
-    }
-    const sortedData = [...data].sort(() => Math.random() - HALF);
-    this.prepare(sortedData);
-    this.canvas.drawSectors(this.sectorData);
-  }
-
-  private prepare(data: OptionItemValue[]): void {
-    const weightSum = Wheel.calculateWeightSum(data);
+    const weightSum = calculateWeightSum(data);
     let startAngle = this.startAngle;
     for (const { weight, title } of data) {
-      const angle = Wheel.calculateAngle(weightSum, Number(weight));
-      const color = Wheel.randomColor();
+      const angle = calculateAngle(weightSum, Number(weight));
+      const color = randomColor();
       const sectorData: SectorData = {
         startAngle: startAngle,
         angle: angle,

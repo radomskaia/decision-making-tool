@@ -3,8 +3,8 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import { BUTTON_TEXT, PAGE_PATH } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { Router } from "@/services/router.ts";
-import { Canvas } from "@/components/canvas/canvas.ts";
-import { Wheel } from "@/components/canvas/wheel.ts";
+import { Canvas } from "@/components/wheel/canvas.ts";
+import { Wheel } from "@/components/wheel/wheel.ts";
 import { DurationInput } from "@/components/input/duration-input.ts";
 import { DEFAULT_DURATION } from "@/constants/canvas-constants.ts";
 import { AudioElement } from "@/components/settings/audio-element.ts";
@@ -34,7 +34,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
   }
 
   public isRenderWheel(): boolean {
-    this.wheel = new Wheel(this.canvas, this.text);
+    this.wheel = new Wheel(this.canvas.drawSectors, this.text);
     return this.wheel.isSectorData();
   }
 
@@ -59,7 +59,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
       if (this.wheel) {
         AudioElement.getInstance().getButton().buttonDisabled(true);
         startButton.buttonDisabled(true);
-        this.wheel.animate(startButton);
+        this.wheel.animateWheel(startButton);
       }
     });
     this.appendElement(backButton.getElement(), startButton.getElement());

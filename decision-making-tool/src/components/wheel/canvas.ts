@@ -7,12 +7,10 @@ import {
   DOUBLE,
   END_ANGLE,
   ORIGIN_COORDINATE,
-  HALF,
   START_ANGLE,
   STROKE_COLOR,
   FONT_SIZE,
   MAX_TEXT_WIDTH,
-  TEXT_OFFSET,
   CURSOR_COLOR,
   CURSOR_TOP_Y,
   CURSOR_BOTTOM_Y,
@@ -25,6 +23,7 @@ import {
 } from "@/constants/canvas-constants.ts";
 import type { DrawSector, DrawSectors, DrawText } from "@/types";
 import { FIRST_INDEX, LAST_INDEX } from "@/constants/constants.ts";
+import { calculateTextCoordinates } from "@/utilities/utilities.ts";
 
 export class Canvas extends BaseComponent<"canvas"> {
   private context: CanvasRenderingContext2D;
@@ -32,20 +31,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     super();
     this.context = this.getContext();
     this.context.globalAlpha = GLOBAL_ALPHA;
-    this.drawCircle(CIRCLE_RADIUS_BIG);
     this.drawClip();
-  }
-
-  private static calculateTextCoordinates(
-    startAngle: number,
-    endAngle: number,
-  ): { textX: number; textY: number; textAngle: number } {
-    const middleAngle = (startAngle + endAngle) / DOUBLE;
-    const textRadius = CIRCLE_RADIUS_BIG * TEXT_OFFSET;
-    const textX = CENTER_X + Math.cos(middleAngle) * textRadius;
-    const textY = CENTER_Y + Math.sin(middleAngle) * textRadius;
-    const textAngle = middleAngle + Math.PI / HALF;
-    return { textX, textY, textAngle };
   }
 
   public drawSectors: DrawSectors = (sectorData, options) => {
@@ -69,14 +55,14 @@ export class Canvas extends BaseComponent<"canvas"> {
 
       this.drawSector(startAngle, endAngle, color);
       if (isTitle) {
-        const { textX, textY, textAngle } = Canvas.calculateTextCoordinates(
+        const { textX, textY, textAngle } = calculateTextCoordinates(
           startAngle,
           endAngle,
         );
         this.drawText(this.truncateText(title), textX, textY, textAngle);
       }
     }
-    this.drawCircle(CIRCLE_RADIUS_SMALL);
+    this.drawCentralCircle();
     this.drawCursor(options?.angle);
   };
 
@@ -124,19 +110,22 @@ export class Canvas extends BaseComponent<"canvas"> {
     });
   }
 
-  private drawCircle(radius: number): void {
+  private drawCentralCircle(): void {
     const { context } = this;
-    if (radius === CIRCLE_RADIUS_SMALL) {
-      context.lineWidth++;
-    }
+    context.lineWidth++;
     context.beginPath();
-    context.arc(CENTER_X, CENTER_Y, radius, START_ANGLE, END_ANGLE, true);
+    context.arc(
+      CENTER_X,
+      CENTER_Y,
+      CIRCLE_RADIUS_SMALL,
+      START_ANGLE,
+      END_ANGLE,
+      true,
+    );
     context.closePath();
     context.strokeStyle = STROKE_COLOR;
     context.stroke();
-    if (radius === CIRCLE_RADIUS_SMALL) {
-      context.lineWidth--;
-    }
+    context.lineWidth--;
   }
 
   private drawClip(): void {
@@ -180,18 +169,23 @@ export class Canvas extends BaseComponent<"canvas"> {
 
   private truncateText(text: string): string {
     const { context } = this;
-    let truncatedText = text;
     const ellipsis = "...";
-    let textWidth = context.measureText(truncatedText).width;
-    if (textWidth > MAX_TEXT_WIDTH) {
-      let renderText = truncatedText + ellipsis;
-      while (textWidth > MAX_TEXT_WIDTH) {
-        truncatedText = truncatedText.slice(FIRST_INDEX, LAST_INDEX);
-        renderText = truncatedText + ellipsis;
-        textWidth = context.measureText(renderText).width;
-      }
-      truncatedText += ellipsis;
+    let textWidth = context.measureText(text).width;
+
+    if (!(textWidth > MAX_TEXT_WIDTH)) {
+      return text;
     }
+
+    let truncatedText = text;
+    let renderText = truncatedText + ellipsis;
+
+    while (textWidth > MAX_TEXT_WIDTH) {
+      truncatedText = truncatedText.slice(FIRST_INDEX, LAST_INDEX);
+      renderText = truncatedText + ellipsis;
+      textWidth = context.measureText(renderText).width;
+    }
+    truncatedText += ellipsis;
+
     return truncatedText;
   }
 

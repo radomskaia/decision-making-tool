@@ -6,7 +6,10 @@ import {
   FIRST_INDEX,
   PASTE_SEPARATOR,
 } from "@/constants/constants.ts";
-import type { OptionListValue } from "@/types";
+import type { OptionItemValue, OptionListValue } from "@/types";
+import { StorageKeys } from "@/types";
+import { LocalStorage } from "@/services/local-storage.ts";
+import { HALF } from "@/constants/canvas-constants.ts";
 
 export class FileHandler {
   private static instance: FileHandler | undefined;
@@ -86,5 +89,22 @@ export class FileHandler {
       return null;
     }
     return optionListValue;
+  }
+
+  public loadLSData(): OptionItemValue[] | null {
+    const lsData = LocalStorage.getInstance().load(
+      StorageKeys.optionListValue,
+      this.validator.isOptionListValue.bind(Validator.getInstance()),
+    );
+    if (!lsData) {
+      return null;
+    }
+    const data = lsData.list.filter((element) =>
+      Validator.isValidOption(element),
+    );
+    if (!Validator.hasMinimumOptions(data)) {
+      return null;
+    }
+    return [...data].sort(() => Math.random() - HALF);
   }
 }

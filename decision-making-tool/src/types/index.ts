@@ -1,6 +1,5 @@
 export type Callback = () => void;
 export type CallbackEvent = (option?: Event) => void;
-export type CallbackRouter = (data?: OptionItemValue[]) => void;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
