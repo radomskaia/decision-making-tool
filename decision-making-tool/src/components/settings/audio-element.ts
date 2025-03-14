@@ -44,12 +44,18 @@ export class AudioElement extends SettingsAction {
   }
 
   public playAudio(name: AudioName): void {
+    if (this.isOff) {
+      return;
+    }
     this.audioElements[name]
       .play()
       .catch((error: Error) => console.error(MESSAGES.PLAYBACK + name, error));
   }
 
   public stopAudio(name: AudioName): void {
+    if (this.isOff || this.audioElements[name].currentTime === ZERO) {
+      return;
+    }
     this.audioElements[name].pause();
     this.audioElements[name].currentTime = ZERO;
   }
