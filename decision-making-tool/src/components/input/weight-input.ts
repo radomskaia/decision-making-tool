@@ -6,6 +6,12 @@ export class WeightInput extends BaseInput {
     super(value);
     this.element.placeholder = PLACEHOLDER.WEIGHT;
     this.element.type = "number";
+    this.element.step = "any";
     this.element.min = ZERO.toString();
+    this.element.addEventListener("beforeinput", (event) => {
+      if (event.data === "-") {
+        event.preventDefault();
+      }
+    });
   }
 }

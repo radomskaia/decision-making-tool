@@ -6,5 +6,10 @@ export class DurationInput extends BaseInput {
     super(value);
     this.element.type = "number";
     this.element.min = DEFAULT_DURATION.toString();
+    this.element.addEventListener("beforeinput", (event) => {
+      if (event.data === "-") {
+        event.preventDefault();
+      }
+    });
   }
 }

@@ -40,3 +40,7 @@ body {
     ),
     url("../bg.webp");
 }
+
+input:invalid {
+  background-color: lightpink;
+}
