@@ -5,7 +5,7 @@ import {
   HASH_SYMBOL,
   PAGE_PATH,
 } from "@/constants/constants.ts";
-import { DecisionPicker } from "@/pages/decision-picker.ts";
+import { DecisionPicker } from "@/pages/decision-picker/decision-picker.ts";
 export class Router {
   private static instance: Router | undefined;
   private routes: Route[] | undefined;
@@ -59,6 +59,10 @@ export class Router {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
     document.body.append(route.component.getInstance().getElement());
+  }
+
+  public getCurrentRoute(): string {
+    return this.currentPath;
   }
 
   private updateHistory(path: string): void {

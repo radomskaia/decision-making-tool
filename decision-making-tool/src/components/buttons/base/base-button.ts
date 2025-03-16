@@ -10,7 +10,7 @@ export class BaseButton extends BaseComponent<"button", ButtonOptions> {
       this.addListener(callback);
     }
   }
-  public buttonDisabled(isDisabled: boolean): void {
+  public disabledElement(isDisabled: boolean): void {
     this.element.disabled = isDisabled;
   }
 

@@ -12,20 +12,28 @@ import {
   MIN_CURSOR_ANGLE,
   MAX_CURSOR_ANGLE,
 } from "@/constants/canvas-constants.ts";
-import type { DrawSectors, SectorData, UpdateSector } from "@/types";
+import type {
+  ToggleViewState,
+  DrawSectors,
+  SectorData,
+  UpdateSector,
+  WheelColors,
+} from "@/types";
 import { AudioName } from "@/types";
 import { ZERO } from "@/constants/constants.ts";
-import { AudioElement } from "@/components/settings/audio-element.ts";
-import type { BaseButton } from "@/components/buttons/base/base-button.ts";
+import { AudioService } from "@/components/settings/audio-service.ts";
 import {
   calculateAngle,
   calculateWeightSum,
   degreesToRadians,
   easeInOutQuad,
   getAbsoluteProgressAnimation,
-  randomColor,
+  getColorString,
+  getOppositeShade,
+  getRGB,
 } from "@/utilities/utilities.ts";
 import { FileHandler } from "@/services/file-handler.ts";
+import { ThemeService } from "@/components/settings/theme-service.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
@@ -34,21 +42,28 @@ export class Wheel {
   private currentTitle: string | null = null;
   private startAnimation: number | null = null;
   private turnsCount = MIN_TURNS_COUNT;
-  private audio = AudioElement.getInstance();
+  private audio = AudioService.getInstance();
   private cursorAnimationDuration = MILLISECONDS_IN_SECOND;
   private cursorAnimationStartTimestamp = ZERO;
   private cursorBounceAngle = degreesToRadians(MIN_CURSOR_ANGLE);
   private isRotate = false;
   private cursorAngle = ZERO;
+  private colors: WheelColors;
 
   constructor(
     private readonly drawSectors: DrawSectors,
     private titleSection: HTMLParagraphElement,
   ) {
+    const themeToggle = ThemeService.getInstance();
+    themeToggle.addListener(this.changeWheelColors.bind(this));
+    this.colors = themeToggle.getColors();
     this.drawSectors = drawSectors;
     this.titleSection = titleSection;
     this.init();
-    this.drawSectors(this.sectorData);
+    this.drawSectors(this.sectorData, {
+      cursor: this.colors.cursor,
+      stroke: this.colors.stroke,
+    });
   }
 
   public setDuration(duration: number): void {
@@ -59,14 +74,14 @@ export class Wheel {
     return this.sectorData.length > ZERO;
   }
 
-  public animateWheel(startButton: BaseButton): void {
+  public animateWheel(toggleViewState: ToggleViewState): void {
     const now = Date.now();
     if (!this.startAnimation) {
       this.startAnimation = now;
     }
     const elapsedTime = now - this.startAnimation;
     if (elapsedTime > this.duration && !this.isRotate) {
-      this.endWheelAnimation(startButton);
+      this.endWheelAnimation(toggleViewState);
       return;
     }
 
@@ -75,12 +90,33 @@ export class Wheel {
     if (this.isRotate) {
       cursorAngle = this.animateCursor();
     }
+    this.drawSectors(
+      this.sectorData,
+      { cursor: this.colors.cursor, stroke: this.colors.stroke },
+      {
+        offset: offsetAngle,
+        updateSector: this.updateCurrentSector.bind(this),
+        angle: cursorAngle,
+      },
+    );
+    requestAnimationFrame(() => this.animateWheel(toggleViewState));
+  }
+
+  private changeWheelColors(colors: WheelColors): void {
+    this.colors = colors;
+    for (const sector of this.sectorData) {
+      const newRgbArray: number[] = [];
+      for (const color of sector.rgbArray) {
+        newRgbArray.push(getOppositeShade(color));
+      }
+      sector.rgbArray = newRgbArray;
+      sector.color = getColorString(newRgbArray);
+    }
+
     this.drawSectors(this.sectorData, {
-      offset: offsetAngle,
-      updateSector: this.updateCurrentSector.bind(this),
-      angle: cursorAngle,
+      cursor: this.colors.cursor,
+      stroke: this.colors.stroke,
     });
-    requestAnimationFrame(() => this.animateWheel(startButton));
   }
 
   private animateCursor(): number {
@@ -150,12 +186,12 @@ export class Wheel {
     );
   }
 
-  private endWheelAnimation(startButton: BaseButton): void {
+  private endWheelAnimation(toggleViewState: ToggleViewState): void {
     this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
     this.turnsCount = MIN_TURNS_COUNT;
-    startButton.buttonDisabled(false);
-    this.audio.getButton().buttonDisabled(false);
+    toggleViewState(true);
+    this.audio.getButton().disabledElement(false);
   }
 
   private init(): void {
@@ -167,11 +203,13 @@ export class Wheel {
     let startAngle = this.startAngle;
     for (const { weight, title } of data) {
       const angle = calculateAngle(weightSum, Number(weight));
-      const color = randomColor();
+      const rgbArray = getRGB(this.colors.thinner);
+      const color = getColorString(rgbArray);
       const sectorData: SectorData = {
         startAngle: startAngle,
         angle: angle,
         color: color,
+        rgbArray: rgbArray,
         title: title,
         isTitle: angle > MIN_ANGLE_FOR_TITLE,
       };

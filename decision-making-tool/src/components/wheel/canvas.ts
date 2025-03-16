@@ -8,10 +8,8 @@ import {
   END_ANGLE,
   ORIGIN_COORDINATE,
   START_ANGLE,
-  STROKE_COLOR,
   FONT_SIZE,
   MAX_TEXT_WIDTH,
-  CURSOR_COLOR,
   CURSOR_TOP_Y,
   CURSOR_BOTTOM_Y,
   CURSOR_MIDDLE_POINT_Y,
@@ -21,7 +19,12 @@ import {
   CENTER_Y,
   FULL_CIRCLE,
 } from "@/constants/canvas-constants.ts";
-import type { DrawSector, DrawSectors, DrawText } from "@/types";
+import type {
+  DrawSector,
+  DrawSectors,
+  DrawText,
+  MainWheelColors,
+} from "@/types";
 import { FIRST_INDEX, LAST_INDEX } from "@/constants/constants.ts";
 import { calculateTextCoordinates } from "@/utilities/utilities.ts";
 
@@ -34,7 +37,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     this.drawClip();
   }
 
-  public drawSectors: DrawSectors = (sectorData, options) => {
+  public drawSectors: DrawSectors = (sectorData, wheelColors, options) => {
     this.context.clearRect(
       ORIGIN_COORDINATE,
       ORIGIN_COORDINATE,
@@ -53,17 +56,23 @@ export class Canvas extends BaseComponent<"canvas"> {
       }
       const endAngle = startAngle + angle;
 
-      this.drawSector(startAngle, endAngle, color);
+      this.drawSector(startAngle, endAngle, color, wheelColors.stroke);
       if (isTitle) {
         const { textX, textY, textAngle } = calculateTextCoordinates(
           startAngle,
           endAngle,
         );
-        this.drawText(this.truncateText(title), textX, textY, textAngle);
+        this.drawText(
+          this.truncateText(title),
+          textX,
+          textY,
+          textAngle,
+          wheelColors.stroke,
+        );
       }
     }
-    this.drawCentralCircle();
-    this.drawCursor(options?.angle);
+    this.drawCentralCircle(wheelColors.stroke);
+    this.drawCursor(wheelColors, options?.angle);
   };
 
   public getContext(): CanvasRenderingContext2D {
@@ -74,7 +83,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     return context;
   }
 
-  public drawCursor(angle?: number): void {
+  public drawCursor(colors: MainWheelColors, angle?: number): void {
     const { context } = this;
     context.save();
     if (angle) {
@@ -93,8 +102,8 @@ export class Canvas extends BaseComponent<"canvas"> {
     );
 
     context.closePath();
-    context.fillStyle = CURSOR_COLOR;
-    context.strokeStyle = STROKE_COLOR;
+    context.fillStyle = colors.cursor;
+    context.strokeStyle = colors.stroke;
     context.fill();
     context.stroke();
     context.restore();
@@ -110,7 +119,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     });
   }
 
-  private drawCentralCircle(): void {
+  private drawCentralCircle(strokeColor: string): void {
     const { context } = this;
     context.lineWidth++;
     context.beginPath();
@@ -123,7 +132,7 @@ export class Canvas extends BaseComponent<"canvas"> {
       true,
     );
     context.closePath();
-    context.strokeStyle = STROKE_COLOR;
+    context.strokeStyle = strokeColor;
     context.stroke();
     context.lineWidth--;
   }
@@ -155,14 +164,19 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.translate(-CENTER_X, -CURSOR_MIDDLE_POINT_Y);
   }
 
-  private drawSector: DrawSector = (startAngle, endAngle, color) => {
+  private drawSector: DrawSector = (
+    startAngle,
+    endAngle,
+    color,
+    strokeColor,
+  ) => {
     const { context } = this;
     context.beginPath();
     context.moveTo(CENTER_X, CENTER_Y);
     context.arc(CENTER_X, CENTER_Y, CIRCLE_RADIUS_BIG, startAngle, endAngle);
     context.closePath();
     context.fillStyle = color;
-    context.strokeStyle = STROKE_COLOR;
+    context.strokeStyle = strokeColor;
     context.fill();
     context.stroke();
   };
@@ -189,7 +203,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     return truncatedText;
   }
 
-  private drawText: DrawText = (text, x, y, angle) => {
+  private drawText: DrawText = (text, x, y, angle, strokeColor) => {
     const { context } = this;
     context.save();
     context.translate(x, y);
@@ -197,7 +211,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.font = `${FONT_SIZE}px ${FONT_FAMILY}`;
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.fillStyle = STROKE_COLOR;
+    context.fillStyle = strokeColor;
     context.fillText(text, ORIGIN_COORDINATE, ORIGIN_COORDINATE);
     context.restore();
   };

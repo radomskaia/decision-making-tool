@@ -8,8 +8,7 @@ import {
   HALF_CIRCLE_DEGREES,
   NORMALIZED_VALUE,
   OPACITY,
-  PASTEL_MIN,
-  PASTEL_RANGE,
+  COLOR_MAX,
   TEXT_OFFSET,
 } from "@/constants/canvas-constants.ts";
 import type { OptionItemValue } from "@/types";
@@ -35,12 +34,28 @@ export function degreesToRadians(degrees: number): number {
   return degrees * (Math.PI / HALF_CIRCLE_DEGREES);
 }
 
-export function getPastelValue(): number {
-  return Math.floor(Math.random() * PASTEL_RANGE + PASTEL_MIN);
+export function getColorValue(thinner: number): number {
+  return Math.floor((Math.random() * COLOR_MAX + thinner) / DOUBLE);
 }
 
-export function randomColor(): string {
-  return `rgba(${getPastelValue()}, ${getPastelValue()}, ${getPastelValue()}, ${OPACITY})`;
+export function getOppositeShade(color: number): number {
+  const oldColor = color * DOUBLE;
+  return oldColor > COLOR_MAX
+    ? (oldColor - COLOR_MAX) / DOUBLE
+    : (oldColor + COLOR_MAX) / DOUBLE;
+}
+
+export function getRGB(thinner: number): number[] {
+  const result: number[] = [];
+  const rgb = "RGB";
+  for (let index = ZERO; index < rgb.length; index++) {
+    result.push(getColorValue(thinner));
+  }
+  return result;
+}
+
+export function getColorString(rgbArray: number[]): string {
+  return `rgba(${rgbArray.join(",")}, ${OPACITY})`;
 }
 
 export function calculateWeightSum(data: OptionItemValue[]): number {

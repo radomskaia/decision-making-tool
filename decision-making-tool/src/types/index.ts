@@ -1,5 +1,6 @@
 export type Callback = () => void;
 export type CallbackEvent = (option?: Event) => void;
+export type ToggleViewState = (isEnd: boolean) => void;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
@@ -56,6 +57,7 @@ export interface SectorData {
   startAngle: number;
   angle: number;
   color: string;
+  rgbArray: number[];
   title: string;
   isTitle: boolean;
 }
@@ -74,6 +76,7 @@ export interface AnimationData {
 
 export type DrawSectors = (
   sectorData: SectorData[],
+  colors: MainWheelColors,
   options?: AnimationData,
 ) => void;
 
@@ -81,6 +84,7 @@ export type DrawSector = (
   startAngle: number,
   angle: number,
   color: string,
+  strokeColor: string,
 ) => void;
 
 export type DrawText = (
@@ -88,9 +92,19 @@ export type DrawText = (
   x: number,
   y: number,
   angle: number,
+  strokeColor: string,
 ) => void;
 
 export enum AudioName {
   strike = "strike",
   end = "end",
+}
+
+export interface MainWheelColors {
+  cursor: string;
+  stroke: string;
+}
+
+export interface WheelColors extends MainWheelColors {
+  thinner: number;
 }

@@ -11,5 +11,20 @@ export class DurationInput extends BaseInput {
         event.preventDefault();
       }
     });
+    this.element.id = "duration";
+  }
+
+  public disabledElement(isDisabled: boolean): void {
+    this.element.disabled = isDisabled;
+  }
+
+  public addLabel(label: string): HTMLLabelElement {
+    return this.createDOMElement({
+      tagName: "label",
+      textContent: label,
+      attributes: {
+        for: "duration",
+      },
+    });
   }
 }

@@ -40,6 +40,11 @@
   height: 50px;
 }
 
+.button:disabled {
+  opacity: 0.5;
+  cursor: auto;
+}
+
 .button:disabled .iconButton {
   filter: invert(0.2) brightness(1);
   transform: scale(0.9);
@@ -58,7 +63,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .actionButton:hover {
-    background-color: var(--static-green-alpha);
+    opacity: 0.5;
   }
 
   .iconButton:hover {
@@ -67,6 +72,10 @@
 
   .iconButton:active {
     transform: scale(1.05);
+  }
+
+  button:disabled:hover {
+    cursor: auto;
   }
 
   button:disabled .iconButton:hover {

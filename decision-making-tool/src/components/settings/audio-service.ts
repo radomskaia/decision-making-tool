@@ -10,8 +10,8 @@ import { LocalStorage } from "@/services/local-storage.ts";
 import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
 
-export class AudioElement extends SettingsAction {
-  private static instance: AudioElement | undefined;
+export class AudioService extends SettingsAction {
+  private static instance: AudioService | undefined;
   protected isOff = false;
   private audioElements: Record<AudioName, HTMLAudioElement> = {
     [AudioName.strike]: new Audio(AUDIO_PATH.STRIKE),
@@ -26,14 +26,14 @@ export class AudioElement extends SettingsAction {
     });
   }
 
-  public static getInstance(audioButton?: ButtonSettings): AudioElement {
-    if (!AudioElement.instance) {
+  public static getInstance(audioButton?: ButtonSettings): AudioService {
+    if (!AudioService.instance) {
       if (!audioButton) {
         throw new Error(MESSAGES.NOT_INITIALIZED);
       }
-      AudioElement.instance = new AudioElement(audioButton);
+      AudioService.instance = new AudioService(audioButton);
     }
-    return AudioElement.instance;
+    return AudioService.instance;
   }
 
   public updateSettings(): void {

@@ -7,17 +7,22 @@ import { Canvas } from "@/components/wheel/canvas.ts";
 import { Wheel } from "@/components/wheel/wheel.ts";
 import { DurationInput } from "@/components/input/duration-input.ts";
 import { DEFAULT_DURATION } from "@/constants/canvas-constants.ts";
-import { AudioElement } from "@/components/settings/audio-element.ts";
+import { AudioService } from "@/components/settings/audio-service.ts";
+import type { BaseButton } from "@/components/buttons/base/base-button.ts";
+import type { ToggleViewState } from "@/types";
+import styles from "@/pages/decision-picker/decision-picker.module.css";
 
 export class DecisionPicker extends BaseComponent<"main"> {
   private static instance: DecisionPicker | undefined;
   private readonly canvas: Canvas;
   private wheel: Wheel | undefined;
   private readonly text: HTMLParagraphElement;
+  private controllerElements: (BaseButton | DurationInput)[] = [];
+  private form: HTMLFormElement;
   private constructor() {
     super();
     this.addButtons();
-    this.addInput();
+    this.form = this.addInputForm();
     this.canvas = new Canvas();
     this.text = this.createDOMElement({
       tagName: "p",
@@ -56,18 +61,33 @@ export class DecisionPicker extends BaseComponent<"main"> {
       Router.getInstance().navigateTo(PAGE_PATH.HOME),
     );
     const startButton = new TextButton(BUTTON_TEXT.START, () => {
-      if (this.wheel) {
-        AudioElement.getInstance().getButton().buttonDisabled(true);
-        startButton.buttonDisabled(true);
-        this.wheel.animateWheel(startButton);
+      if (this.wheel && this.form.reportValidity()) {
+        AudioService.getInstance().getButton().disabledElement(true);
+        this.toggleViewState(false);
+        this.wheel.animateWheel(this.toggleViewState);
       }
     });
+    this.controllerElements.push(backButton, startButton);
     this.appendElement(backButton.getElement(), startButton.getElement());
   }
 
-  private addInput(): void {
+  private toggleViewState: ToggleViewState = (isEnd) => {
+    for (const element of this.controllerElements) {
+      element.disabledElement(!isEnd);
+    }
+
+    this.text.classList.toggle(styles.highlight, isEnd);
+  };
+
+  private addInputForm(): HTMLFormElement {
+    const form = this.createDOMElement({
+      tagName: "form",
+    });
     const input = new DurationInput(DEFAULT_DURATION.toString());
+    this.controllerElements.push(input);
     input.addListener(() => this.wheel?.setDuration(Number(input.value)));
-    this.appendElement(input.getElement());
+    form.append(input.addLabel("Duration"), input.getElement());
+    this.appendElement(form);
+    return form;
   }
 }
