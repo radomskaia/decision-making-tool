@@ -7,10 +7,12 @@
   --primary-alpha: rgb(28 39 77 / 50%);
   --primary-alpha2: rgb(28 39 77 / 10%);
   --dark: #1c274d;
-  --static-green: #ccc19f;
-  --static-green-alpha: rgba(204, 193, 159, 0.5);
+  --secondary: #ccc19f;
+  --secondary-alpha: rgba(204, 193, 159, 0.5);
+  --red: #f9a2ba;
   --static-white: #fbfbfd;
   --content-background: #ecf3f8;
+  --content-background-alpha: rgba(236, 243, 248, 0.8);
   --content-background-alpha50: 236, 243, 248, 0.8;
   --content-table: #ecf3f8;
   --overlay: rgb(24 28 41 / 80%);
@@ -29,12 +31,14 @@
     --cell: #262f4a;
     --primary-alpha: rgb(204 193 159 / 50%);
     --primary-alpha2: rgb(160 168 208 / 10%);
-    --static-green: #1c274d;
-    --static-green-alpha: rgba(28, 39, 77, 0.7);
+    --secondary: #1c274d;
+    --secondary-alpha: rgba(28, 39, 77, 0.85);
     --static-white: #2b2d42;
     --content-background: #282c47;
+    --content-background-alpha: rgba(40, 44, 71, 0.8);
     --content-background-alpha50: 30, 35, 55, 0.95;
     --content-table: #b6c2ca;
     --overlay: rgba(245, 248, 255, 0.2);
+    --red: #6b1431;
   }
 }

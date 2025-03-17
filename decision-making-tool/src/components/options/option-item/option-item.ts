@@ -8,9 +8,10 @@ import { BaseComponent } from "@/components/base-component.ts";
 import { idElement } from "@/components/options/id/id-element.ts";
 import { TitleInput } from "@/components/input/title-input.ts";
 import { WeightInput } from "@/components/input/weight-input.ts";
-import { TextButton } from "@/components/buttons/text-button.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
-import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
+import { IconButton } from "@/components/buttons/icon-button.ts";
+import styles from "@/components/options/option.module.css";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;
@@ -32,6 +33,10 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
     };
   }
 
+  public focusInput(): void {
+    this.title.getElement().focus();
+  }
+
   public addListener(
     type: "button" | InputType,
     callback: Callback | CallbackEvent,
@@ -42,6 +47,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   protected createView(): HTMLElementTagNameMap["li"] {
     return this.createDOMElement({
       tagName: "li",
+      classList: [styles.optionItem],
     });
   }
 
@@ -53,18 +59,27 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
 
   private addTitleInput(value?: string): TitleInput {
     const title = new TitleInput(value);
-    this.appendElement(title.getElement());
+    const titleElement = title.getElement();
+    titleElement.classList.add(styles.title);
+    this.appendElement(titleElement);
     return title;
   }
 
   private addWeightInput(value?: string): WeightInput {
     const weight = new WeightInput(value);
-    this.appendElement(weight.getElement());
+    const weightElement = weight.getElement();
+    weightElement.classList.add(styles.weight);
+    this.appendElement(weightElement);
     return weight;
   }
 
   private addDeleteButton(): BaseButton {
-    const button = new TextButton(BUTTON_TEXT.DELETE);
+    const button = new IconButton({
+      title: BUTTON_TEXT.DELETE,
+      path: ICON_PATH.DELETE,
+    });
+    button.getElement().classList.add(styles.button);
+    button.addClassSVG(styles.icon);
     this.appendElement(button.getElement());
     return button;
   }

@@ -1,46 +1,58 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { OptionList } from "@/components/options/option-list/option-list.ts";
-import { TextButton } from "@/components/buttons/text-button.ts";
 import { PasteModal } from "@/components/modal/paste-modal.ts";
 import { Router } from "@/services/router.ts";
 import { FileHandler } from "@/services/file-handler.ts";
-import { PAGE_PATH } from "@/constants/constants.ts";
+import { PAGE_PATH, ZERO } from "@/constants/constants.ts";
 import { ValidModal } from "@/components/modal/valid-modal.ts";
 import type { Callback } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
-import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
+import { IconButton } from "@/components/buttons/icon-button.ts";
+import styles from "@/pages/home/home.module.css";
+import { checkBottom, debounce } from "@/utilities/utilities.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;
   private readonly buttonsConfig: {
-    text: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
+    title: (typeof BUTTON_TEXT)[keyof typeof BUTTON_TEXT];
+    path: (typeof ICON_PATH)[keyof typeof ICON_PATH];
     callback: Callback;
   }[] = [
     {
-      text: BUTTON_TEXT.ADD_OPTION,
-      callback: () => this.optionList.addOption(),
+      title: BUTTON_TEXT.ADD_OPTION,
+      path: ICON_PATH.ADD,
+      callback: (): void => {
+        this.optionList.addOption();
+        window.scrollTo(ZERO, document.body.scrollHeight);
+      },
     },
     {
-      text: BUTTON_TEXT.CLEAR_LIST,
+      title: BUTTON_TEXT.CLEAR_LIST,
+      path: ICON_PATH.CLEAR,
       callback: () => this.optionList.reset(),
     },
     {
-      text: BUTTON_TEXT.PASTE_LIST,
+      title: BUTTON_TEXT.PASTE_LIST,
+      path: ICON_PATH.PASTE,
       callback: () => PasteModal.getInstance(this.optionList).showModal(),
     },
     {
-      text: BUTTON_TEXT.SAVE_LIST,
+      title: BUTTON_TEXT.SAVE_LIST,
+      path: ICON_PATH.SAVE,
       callback: () => FileHandler.getInstance().saveJSON(this.optionList),
     },
     {
-      text: BUTTON_TEXT.LOAD_LIST,
+      title: BUTTON_TEXT.LOAD_LIST,
+      path: ICON_PATH.LOAD,
       callback: () => FileHandler.getInstance().loadJSON(this.optionList),
     },
     {
-      text: BUTTON_TEXT.START,
+      title: BUTTON_TEXT.START,
+      path: ICON_PATH.PLAY,
       callback: (): void => {
         const data = this.optionList.getList();
         if (Validator.isOptionsCountValid(data)) {
@@ -53,12 +65,14 @@ export class Home extends BaseComponent<"main"> {
     },
   ];
   private readonly optionList: OptionList;
+  private buttonWrapper: HTMLDivElement;
   private constructor() {
     super();
     this.optionList = new OptionList();
     this.optionList.init();
     this.appendElement(this.optionList.getElement());
-    this.addButtons();
+    this.buttonWrapper = this.createButtonWrapper();
+    this.addScrollListener();
   }
   public static getInstance(): Home {
     if (!Home.instance) {
@@ -79,10 +93,37 @@ export class Home extends BaseComponent<"main"> {
     });
   }
 
-  private addButtons(): void {
-    for (const { text, callback } of this.buttonsConfig) {
-      const button = new TextButton(text, callback);
-      this.appendElement(button.getElement());
+  private addButtons(buttonWrapper: HTMLDivElement): void {
+    for (const { title, path, callback } of this.buttonsConfig) {
+      const button = new IconButton(
+        { title: title, path: `${path}` },
+        callback,
+      );
+      buttonWrapper.append(button.getElement());
     }
+  }
+
+  private createButtonWrapper(): HTMLDivElement {
+    const buttonWrapper = this.createDOMElement({
+      tagName: "div",
+      classList: [
+        styles.buttonWrapper,
+        utilitiesStyles.flex,
+        utilitiesStyles.alignCenter,
+        utilitiesStyles.justifyBetween,
+      ],
+    });
+    this.addButtons(buttonWrapper);
+    this.appendElement(buttonWrapper);
+    return buttonWrapper;
+  }
+
+  private addScrollListener(): void {
+    window.addEventListener(
+      "scroll",
+      debounce((): void => {
+        this.buttonWrapper.classList.toggle(styles.highlight, checkBottom());
+      }),
+    );
   }
 }

@@ -2,10 +2,12 @@ import type { Route } from "src/types";
 import {
   EMPTY_STRING,
   MESSAGES,
+  ONE,
   PAGE_PATH,
   SYMBOLS,
 } from "@/constants/constants.ts";
 import { DecisionPicker } from "@/pages/decision-picker/decision-picker.ts";
+import { Home } from "@/pages/home/home.ts";
 export class Router {
   private static instance: Router | undefined;
   private routes: Route[] = [];
@@ -49,9 +51,11 @@ export class Router {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
     document.body.append(route.component.getInstance().getElement());
-    const decision = route.component.getInstance();
-    if (decision instanceof DecisionPicker) {
-      decision.focusInput();
+    const instance = route.component.getInstance();
+    if (instance instanceof DecisionPicker) {
+      instance.focusInput();
+    } else if (instance instanceof Home) {
+      window.scrollTo(ONE, ONE);
     }
   }
 

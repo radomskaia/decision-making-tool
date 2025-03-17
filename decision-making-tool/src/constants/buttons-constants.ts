@@ -40,6 +40,7 @@ export const ICON_PATH = {
   PASTE: "#paste",
   CLEAR: "#clear",
   PLAY: "#play",
+  ADD: "#add",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",

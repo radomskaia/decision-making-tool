@@ -36,8 +36,6 @@ p {
   font-weight: 700;
   text-align: center;
   color: inherit;
-
-  /* background-color: var(--static-green); */
   background-color: transparent;
   transform: translate(-50%, -50%);
   padding-inline: 5px;

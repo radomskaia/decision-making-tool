@@ -50,3 +50,5 @@ export const MESSAGES = {
 An option is considered valid if its title is not empty and its weight is greater than 0
   `,
 } as const;
+
+export const DELAY_TIME = 300;

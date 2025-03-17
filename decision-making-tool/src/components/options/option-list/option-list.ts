@@ -51,6 +51,7 @@ export class OptionList extends BaseComponent<"ul"> {
   public addOption(optionsValue?: OptionItemValue): void {
     const optionItem = new OptionItem(optionsValue);
     this.appendElement(optionItem.getElement());
+    optionItem.focusInput();
     const id = optionItem.getValue().id;
     if (!id) {
       throw new Error(MESSAGES.ID_NOT_FOUND);

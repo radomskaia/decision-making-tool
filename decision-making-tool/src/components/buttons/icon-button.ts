@@ -6,11 +6,16 @@ import { ATTRIBUTES, SVG_CONFIG } from "@/constants/buttons-constants.ts";
 
 export class IconButton extends BaseButton {
   protected useSVGIcon: SVGUseElement | undefined;
+  private svfElement: SVGSVGElement | undefined;
 
   constructor(options: ButtonOptions, callback?: Callback) {
     super(callback);
     this.element.title = options.title;
     this.appendSVGIcon(options);
+  }
+
+  public addClassSVG(className: string): void {
+    this.svfElement?.classList.add(className);
   }
 
   private appendSVGIcon(options: ButtonOptions): void {
@@ -46,6 +51,7 @@ export class IconButton extends BaseButton {
     );
     this.useSVGIcon = use;
     svg.append(use);
+    this.svfElement = svg;
     return svg;
   }
 }

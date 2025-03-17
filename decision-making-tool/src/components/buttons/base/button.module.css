@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: inherit;
+  background-color: transparent;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
@@ -18,7 +18,7 @@
   font-size: 2rem;
   text-transform: uppercase;
   color: var(--dark);
-  background-color: var(--static-green);
+  background-color: var(--secondary);
   transform: translateY(0);
 }
 
@@ -64,11 +64,11 @@
 
 @media (hover: hover) and (pointer: fine) {
   .actionButton:hover {
-    opacity: 0.5;
+    filter: brightness(1.1);
   }
 
   .iconButton:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
 
   .iconButton:active {

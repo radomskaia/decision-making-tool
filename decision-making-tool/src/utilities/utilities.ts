@@ -1,6 +1,13 @@
 import { CIRCLE, COLOR, TEXT } from "@/constants/wheel-constants.ts";
-import type { OptionItemValue } from "@/types";
-import { DOUBLE, HALF, ONE, SYMBOLS, ZERO } from "@/constants/constants.ts";
+import type { Callback, OptionItemValue } from "@/types";
+import {
+  DELAY_TIME,
+  DOUBLE,
+  HALF,
+  ONE,
+  SYMBOLS,
+  ZERO,
+} from "@/constants/constants.ts";
 
 export function calculateTextCoordinates(
   startAngle: number,
@@ -66,4 +73,17 @@ export function getAbsoluteProgressAnimation(
   duration: number,
 ): number {
   return ONE - elapsedTime / duration;
+}
+
+export function debounce(callback: Callback, delay: number = DELAY_TIME) {
+  let timeoutID: ReturnType<typeof setTimeout>;
+  return function (): void {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => callback(), delay);
+  };
+}
+
+export function checkBottom(): boolean {
+  const scrollBottom = document.body.scrollHeight - window.innerHeight;
+  return scrollBottom >= window.scrollY;
 }
