@@ -39,7 +39,7 @@ export class Canvas extends BaseComponent<"canvas", number> {
         if (sectorItem.startAngle > CIRCLE.FULL_RADIAN) {
           sectorItem.startAngle -= CIRCLE.FULL_RADIAN;
         }
-        updateSector(startAngle, angle, title);
+        updateSector(startAngle, angle, title, color);
       }
       const endAngle = startAngle + angle;
 

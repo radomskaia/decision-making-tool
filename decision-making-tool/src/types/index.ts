@@ -1,6 +1,6 @@
 export type Callback = () => void;
 export type CallbackEvent = (option?: Event) => void;
-export type ToggleViewState = (isEnd: boolean) => void;
+export type ToggleViewState = (isEnd: boolean, color: string) => void;
 
 export type TypeGuard<T> = (value: unknown) => value is T;
 
@@ -66,6 +66,7 @@ export type UpdateSector = (
   startAngle: number,
   angle: number,
   title: string,
+  color: string,
 ) => void;
 
 export interface AnimationData {

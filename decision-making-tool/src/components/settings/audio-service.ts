@@ -2,6 +2,7 @@ import type { ButtonSettings } from "@/components/buttons/settings/button-settin
 import { SettingsAction } from "@/components/settings/settings-action.ts";
 import { MESSAGES, ZERO } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
+import type { Callback } from "@/types";
 import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
 import { AUDIO_PATH, END_SOUND_VOLUME } from "@/constants/audio-constants.ts";
@@ -37,6 +38,12 @@ export class AudioService extends SettingsAction {
       audio.muted = this.isOff;
     }
     this.button.togglePath(this.isOff);
+  }
+
+  public onEnded(name: AudioName, callback: Callback): void {
+    this.audioElements[name].addEventListener("ended", callback, {
+      once: true,
+    });
   }
 
   public playAudio(name: AudioName): void {

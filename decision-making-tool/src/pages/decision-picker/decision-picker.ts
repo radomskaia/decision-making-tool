@@ -1,6 +1,6 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
+import { EMPTY_STRING, MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { Router } from "@/services/router.ts";
 import { Canvas } from "@/components/wheel/canvas.ts";
@@ -41,8 +41,17 @@ export class DecisionPicker extends BaseComponent<"main"> {
   }
 
   public isRenderWheel(): boolean {
-    this.wheel = new Wheel(this.canvas.drawSectors, this.text);
-    return this.wheel.isSectorData();
+    this.wheel = new Wheel(
+      this.canvas.drawSectors,
+      this.text,
+      this.toggleViewState,
+    );
+    const isSectorData = this.wheel.isSectorData();
+    if (isSectorData) {
+      this.text.textContent = MESSAGES.INIT_WHEEL_TEXT;
+      this.text.style.backgroundColor = EMPTY_STRING;
+    }
+    return isSectorData;
   }
 
   protected createView(): HTMLElementTagNameMap["main"] {
@@ -65,20 +74,20 @@ export class DecisionPicker extends BaseComponent<"main"> {
     const startButton = new TextButton(BUTTON_TEXT.START, () => {
       if (this.wheel && this.form.reportValidity()) {
         AudioService.getInstance().getButton().disabledElement(true);
-        this.toggleViewState(false);
-        this.wheel.animateWheel(this.toggleViewState);
+        this.toggleViewState(false, EMPTY_STRING);
+        this.wheel.animateWheel();
       }
     });
     this.controllerElements.push(backButton, startButton);
     this.appendElement(backButton.getElement(), startButton.getElement());
   }
 
-  private toggleViewState: ToggleViewState = (isEnd) => {
+  private toggleViewState: ToggleViewState = (isEnd, color) => {
     for (const element of this.controllerElements) {
       element.disabledElement(!isEnd);
     }
-
     this.text.classList.toggle(styles.highlight, isEnd);
+    this.text.style.backgroundColor = color;
   };
 
   private addInputForm(): HTMLFormElement {

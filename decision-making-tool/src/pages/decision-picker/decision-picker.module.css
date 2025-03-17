@@ -1,5 +1,13 @@
-.highlight {
+p {
+  border: 1px solid transparent;
   border-radius: 5px;
-  padding: 5px;
-  background-color: lightgreen;
+  font-weight: 700;
+  background-color: transparent;
+  transition: all 0.3s;
+  padding-block: 5px;
+  padding-inline: 10px;
+}
+
+.highlight {
+  border: 1px solid var(--primary);
 }

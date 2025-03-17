@@ -15,7 +15,13 @@ import type {
   WheelColors,
 } from "@/types";
 import { AudioName } from "@/types";
-import { DOUBLE, HALF, ZERO } from "@/constants/constants.ts";
+import {
+  DOUBLE,
+  EMPTY_STRING,
+  HALF,
+  PAGE_PATH,
+  ZERO,
+} from "@/constants/constants.ts";
 import { AudioService } from "@/components/settings/audio-service.ts";
 import {
   calculateAngle,
@@ -29,12 +35,14 @@ import {
 } from "@/utilities/utilities.ts";
 import { FileHandler } from "@/services/file-handler.ts";
 import { ThemeService } from "@/components/settings/theme-service.ts";
+import { Router } from "@/services/router.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
   private duration = DEFAULT_SETTINGS.DURATION * MILLISECONDS_IN_SECOND;
   private startAngle = degreesToRadians(CIRCLE.INITIAL_DEGREE);
   private currentTitle: string | null = null;
+  private currentTitleColor: string = EMPTY_STRING;
   private startAnimation: number | null = null;
   private turnsCount = DEFAULT_SETTINGS.TURNS_COUNT;
   private audio = AudioService.getInstance();
@@ -48,6 +56,7 @@ export class Wheel {
   constructor(
     private readonly drawSectors: DrawSectors,
     private titleSection: HTMLParagraphElement,
+    private toggleViewState: ToggleViewState,
   ) {
     const themeToggle = ThemeService.getInstance();
     themeToggle.addListener(this.changeWheelColors.bind(this));
@@ -59,6 +68,7 @@ export class Wheel {
       cursor: this.colors.cursor,
       stroke: this.colors.stroke,
     });
+    this.toggleViewState = toggleViewState;
   }
 
   public setDuration(duration: number): void {
@@ -69,14 +79,17 @@ export class Wheel {
     return this.sectorData.length > ZERO;
   }
 
-  public animateWheel(toggleViewState: ToggleViewState): void {
+  public animateWheel(): void {
+    if (Router.getInstance().getCurrentRoute() !== PAGE_PATH.DECISION_PICKER) {
+      return;
+    }
     const now = Date.now();
     if (!this.startAnimation) {
       this.startAnimation = now;
     }
     const elapsedTime = now - this.startAnimation;
     if (elapsedTime > this.duration && !this.isRotate) {
-      this.endWheelAnimation(toggleViewState);
+      this.endWheelAnimation();
       return;
     }
 
@@ -94,7 +107,7 @@ export class Wheel {
         angle: cursorAngle,
       },
     );
-    requestAnimationFrame(() => this.animateWheel(toggleViewState));
+    requestAnimationFrame(() => this.animateWheel());
   }
 
   private changeWheelColors(colors: WheelColors): void {
@@ -105,7 +118,12 @@ export class Wheel {
         newRgbArray.push(getOppositeShade(color));
       }
       sector.rgbArray = newRgbArray;
-      sector.color = getColorString(newRgbArray);
+      const newColor = getColorString(newRgbArray);
+      if (this.currentTitleColor === sector.color) {
+        this.currentTitleColor = newColor;
+        this.toggleViewState(true, newColor);
+      }
+      sector.color = newColor;
     }
 
     this.drawSectors(this.sectorData, {
@@ -151,7 +169,12 @@ export class Wheel {
     );
   }
 
-  private updateCurrentSector: UpdateSector = (startAngle, angle, title) => {
+  private updateCurrentSector: UpdateSector = (
+    startAngle,
+    angle,
+    title,
+    color,
+  ) => {
     const mainAngle = this.startAngle + CIRCLE.FULL_RADIAN;
     if (
       startAngle <= mainAngle &&
@@ -168,6 +191,7 @@ export class Wheel {
       this.audio.stopAudio(AudioName.strike);
       this.audio.playAudio(AudioName.strike);
       this.currentTitle = title;
+      this.currentTitleColor = color;
       this.titleSection.textContent = title;
     }
   };
@@ -182,12 +206,14 @@ export class Wheel {
     );
   }
 
-  private endWheelAnimation(toggleViewState: ToggleViewState): void {
+  private endWheelAnimation(): void {
     this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
     this.turnsCount = DEFAULT_SETTINGS.TURNS_COUNT;
-    toggleViewState(true);
-    this.audio.getButton().disabledElement(false);
+    this.toggleViewState(true, this.currentTitleColor);
+    this.audio.onEnded(AudioName.end, () => {
+      this.audio.getButton().disabledElement(false);
+    });
   }
 
   private init(): void {
