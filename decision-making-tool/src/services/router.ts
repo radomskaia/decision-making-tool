@@ -8,7 +8,7 @@ import {
 import { DecisionPicker } from "@/pages/decision-picker/decision-picker.ts";
 export class Router {
   private static instance: Router | undefined;
-  private routes: Route[] | undefined;
+  private routes: Route[] = [];
   private currentPath = EMPTY_STRING;
   private isPopState = false;
   private constructor() {
@@ -43,26 +43,32 @@ export class Router {
     this.updateHistory(path);
     this.clearPage();
 
-    if (!this.routes) {
-      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
-    }
-    let route =
-      this.routes.find((route) => route.path === path) ||
-      this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND);
-    if (!route) {
-      throw new Error(MESSAGES.ROUTE_NOT_FOUND);
-    }
-    if (!Router.canNavigateToDecision(route)) {
-      route = this.routes.find((route) => route.path === PAGE_PATH.HOME);
-    }
+    let route = this.findValidRoute(path);
+
     if (!route) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
     document.body.append(route.component.getInstance().getElement());
+    const decision = route.component.getInstance();
+    if (decision instanceof DecisionPicker) {
+      decision.focusInput();
+    }
   }
 
   public getCurrentRoute(): string {
     return this.currentPath;
+  }
+
+  private findValidRoute(path: string): Route | undefined {
+    let route =
+      this.routes.find((route) => route.path === path) ||
+      this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND);
+
+    if (route && !Router.canNavigateToDecision(route)) {
+      route = this.routes?.find((route) => route.path === PAGE_PATH.HOME);
+    }
+
+    return route;
   }
 
   private updateHistory(path: string): void {
