@@ -42,5 +42,17 @@ body {
 }
 
 input:invalid {
-  background-color: lightpink;
+  background-color: #f9a2ba;
+}
+
+[data-theme] {
+  input:invalid {
+    background-color: #6b1431;
+  }
+}
+
+input {
+  border-radius: var(--border-radius);
+  padding-block: 5px;
+  padding-inline: 15px;
 }

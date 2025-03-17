@@ -1,14 +1,15 @@
 import styles from "./base/button.module.css";
 
-import type { ButtonOptions, CreateSVGIconOptions } from "src/types";
+import type { ButtonOptions, Callback, CreateSVGIconOptions } from "src/types";
 import { BaseButton } from "@/components/buttons/base/base-button.ts";
 import { ATTRIBUTES, SVG_CONFIG } from "@/constants/buttons-constants.ts";
 
 export class IconButton extends BaseButton {
   protected useSVGIcon: SVGUseElement | undefined;
 
-  constructor(options: ButtonOptions) {
-    super();
+  constructor(options: ButtonOptions, callback?: Callback) {
+    super(callback);
+    this.element.title = options.title;
     this.appendSVGIcon(options);
   }
 

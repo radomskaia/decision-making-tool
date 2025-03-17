@@ -1,7 +1,6 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { EMPTY_STRING, MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
-import { TextButton } from "@/components/buttons/text-button.ts";
 import { Router } from "@/services/router.ts";
 import { Canvas } from "@/components/wheel/canvas.ts";
 import { Wheel } from "@/components/wheel/wheel.ts";
@@ -12,7 +11,8 @@ import type { ToggleViewState } from "@/types";
 import styles from "@/pages/decision-picker/decision-picker.module.css";
 import { DEFAULT_SETTINGS } from "@/constants/wheel-constants.ts";
 import { DURATION_ID } from "@/constants/input-constants.ts";
-import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
+import { IconButton } from "@/components/buttons/icon-button.ts";
 
 export class DecisionPicker extends BaseComponent<"main"> {
   private static instance: DecisionPicker | undefined;
@@ -20,18 +20,23 @@ export class DecisionPicker extends BaseComponent<"main"> {
   private wheel: Wheel | undefined;
   private readonly text: HTMLParagraphElement;
   private controllerElements: (BaseButton | DurationInput)[] = [];
-  private form: HTMLFormElement;
+  private form: HTMLFormElement | null = null;
+  private controlsWrapper: HTMLDivElement;
+  private input: HTMLInputElement | null = null;
   private constructor() {
     super();
-    this.addButtons();
-    this.form = this.addInputForm();
+
     this.canvas = new Canvas();
     this.text = this.createDOMElement({
       tagName: "p",
       textContent: MESSAGES.INIT_WHEEL_TEXT,
     });
-
-    this.appendElement(this.canvas.getElement(), this.text);
+    this.controlsWrapper = this.createControllsWrapper();
+    this.appendElement(
+      this.controlsWrapper,
+      this.text,
+      this.canvas.getElement(),
+    );
   }
   public static getInstance(): DecisionPicker {
     if (!DecisionPicker.instance) {
@@ -54,6 +59,10 @@ export class DecisionPicker extends BaseComponent<"main"> {
     return isSectorData;
   }
 
+  public focusInput(): void {
+    this.input?.focus();
+  }
+
   protected createView(): HTMLElementTagNameMap["main"] {
     return this.createDOMElement({
       tagName: "main",
@@ -68,18 +77,39 @@ export class DecisionPicker extends BaseComponent<"main"> {
   }
 
   private addButtons(): void {
-    const backButton = new TextButton(BUTTON_TEXT.BACK, () =>
-      Router.getInstance().navigateTo(PAGE_PATH.HOME),
+    const backButton = new IconButton(
+      { title: BUTTON_TEXT.BACK, path: ICON_PATH.BACK },
+      () => Router.getInstance().navigateTo(PAGE_PATH.HOME),
     );
-    const startButton = new TextButton(BUTTON_TEXT.START, () => {
-      if (this.wheel && this.form.reportValidity()) {
-        AudioService.getInstance().getButton().disabledElement(true);
-        this.toggleViewState(false, EMPTY_STRING);
-        this.wheel.animateWheel();
-      }
-    });
+    const startButton = new IconButton(
+      { title: BUTTON_TEXT.START, path: ICON_PATH.PLAY },
+      () => {
+        if (this.wheel && this.form?.reportValidity()) {
+          AudioService.getInstance().getButton().disabledElement(true);
+          this.toggleViewState(false, EMPTY_STRING);
+          this.wheel.animateWheel();
+        }
+      },
+    );
     this.controllerElements.push(backButton, startButton);
-    this.appendElement(backButton.getElement(), startButton.getElement());
+    this.controlsWrapper.append(
+      backButton.getElement(),
+      startButton.getElement(),
+    );
+  }
+
+  private createControllsWrapper(): HTMLDivElement {
+    this.controlsWrapper = this.createDOMElement({
+      tagName: "div",
+      classList: [
+        utilitiesStyles.flex,
+        utilitiesStyles.center,
+        utilitiesStyles.gap30,
+      ],
+    });
+    this.addButtons();
+    this.form = this.addInputForm();
+    return this.controlsWrapper;
   }
 
   private toggleViewState: ToggleViewState = (isEnd, color) => {
@@ -93,12 +123,16 @@ export class DecisionPicker extends BaseComponent<"main"> {
   private addInputForm(): HTMLFormElement {
     const form = this.createDOMElement({
       tagName: "form",
+      classList: [utilitiesStyles.positionRelative, styles.form],
     });
     const input = new DurationInput(DEFAULT_SETTINGS.DURATION.toString());
     this.controllerElements.push(input);
     input.addListener(() => this.wheel?.setDuration(Number(input.value)));
-    form.append(input.addLabel(DURATION_ID), input.getElement());
-    this.appendElement(form);
+    const inputElement = input.getElement();
+    inputElement.classList.add(styles.input);
+    form.append(input.addLabel(DURATION_ID, [styles.label]), inputElement);
+    this.controlsWrapper.append(form);
+    this.input = inputElement;
     return form;
   }
 }

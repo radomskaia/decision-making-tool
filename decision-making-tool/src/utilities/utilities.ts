@@ -1,11 +1,6 @@
-import {
-  CIRCLE,
-  COLOR,
-  NORMALIZED_VALUE,
-  TEXT,
-} from "@/constants/wheel-constants.ts";
+import { CIRCLE, COLOR, TEXT } from "@/constants/wheel-constants.ts";
 import type { OptionItemValue } from "@/types";
-import { DOUBLE, HALF, SYMBOLS, ZERO } from "@/constants/constants.ts";
+import { DOUBLE, HALF, ONE, SYMBOLS, ZERO } from "@/constants/constants.ts";
 
 export function calculateTextCoordinates(
   startAngle: number,
@@ -63,12 +58,12 @@ export function calculateWeightSum(data: OptionItemValue[]): number {
 export function easeInOutQuad(x: number): number {
   return x < HALF
     ? DOUBLE * x * x
-    : NORMALIZED_VALUE - Math.pow(-DOUBLE * x + DOUBLE, DOUBLE) / DOUBLE;
+    : ONE - Math.pow(-DOUBLE * x + DOUBLE, DOUBLE) / DOUBLE;
 }
 
 export function getAbsoluteProgressAnimation(
   elapsedTime: number,
   duration: number,
 ): number {
-  return NORMALIZED_VALUE - elapsedTime / duration;
+  return ONE - elapsedTime / duration;
 }

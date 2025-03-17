@@ -16,6 +16,7 @@ import {
   FIRST_INDEX,
   LAST_INDEX,
   MESSAGES,
+  ONE,
   ZERO,
 } from "@/constants/constants.ts";
 import { calculateTextCoordinates } from "@/utilities/utilities.ts";
@@ -58,7 +59,8 @@ export class Canvas extends BaseComponent<"canvas", number> {
         );
       }
     }
-    this.drawCentralCircle(wheelColors.stroke);
+    this.drawCircle(wheelColors.stroke, CIRCLE.RADIUS.SMALL + ONE);
+    this.drawCircle(wheelColors.stroke, CIRCLE.RADIUS.BIG);
     this.drawCursor(wheelColors, options?.angle);
   };
 
@@ -105,20 +107,24 @@ export class Canvas extends BaseComponent<"canvas", number> {
     return canvas;
   }
 
-  private drawCentralCircle(strokeColor: string): void {
+  private drawCircle(strokeColor: string, radius: number): void {
     const { context } = this;
     context.lineWidth++;
     context.beginPath();
     context.arc(
       CIRCLE.CENTER.X,
       CIRCLE.CENTER.Y,
-      CIRCLE.RADIUS.SMALL,
+      radius,
       CIRCLE.START_ANGLE,
       CIRCLE.FULL_RADIAN,
       true,
     );
     context.closePath();
     context.strokeStyle = strokeColor;
+    if (radius === CIRCLE.RADIUS.SMALL + ONE) {
+      context.fillStyle = strokeColor;
+      context.fill();
+    }
     context.stroke();
     context.lineWidth--;
   }

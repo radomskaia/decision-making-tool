@@ -4,21 +4,23 @@ export const LS_PREFIX = "radomskaia--decision-making-tool--";
 
 // Common constants
 export const HALF = 0.5;
+export const ZERO = 0;
+export const ONE = 1;
 export const DOUBLE = 2;
 export const EMPTY_STRING = "";
-export const ZERO = 0;
 export const FIRST_INDEX = 0;
 export const NOT_FOUND_INDEX = -1;
 export const LAST_INDEX = -1;
 export const REMOVE_ONE_ITEM = 1;
+
 export const SYMBOLS = {
   line: "\n",
   comma: ",",
   dash: "-",
   hash: "#",
 };
-
 //File settings
+
 export const FILE_CONFIG = {
   TYPE: "application/json",
   EXTENSION: ".json",
@@ -30,7 +32,6 @@ export const PAGE_PATH = {
   DECISION_PICKER: "/decision-picker",
   NOT_FOUND: "404",
 } as const;
-
 // Messages
 export const MESSAGES = {
   NOT_EVENT: "No event provided",

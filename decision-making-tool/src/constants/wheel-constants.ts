@@ -4,7 +4,6 @@ export const CANVAS_SIZE = 512;
 const CIRCLE_PADDING = 25;
 const CENTER = CANVAS_SIZE / DOUBLE;
 export const MILLISECONDS_IN_SECOND = 1000;
-export const NORMALIZED_VALUE = 1;
 export const MAX_PERCENTAGE = 100;
 
 export const COLOR = {

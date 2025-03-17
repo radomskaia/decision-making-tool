@@ -32,6 +32,14 @@ export const ICON_PATH = {
     ON: "#theme-light",
     OFF: "#theme-dark",
   },
+  ALARM: "#alarm",
+  DELETE: "#delete",
+  SAVE: "#save",
+  LOAD: "#load",
+  BACK: "#back",
+  PASTE: "#paste",
+  CLEAR: "#clear",
+  PLAY: "#play",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",

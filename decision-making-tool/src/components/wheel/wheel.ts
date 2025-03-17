@@ -1,7 +1,6 @@
 import {
   CIRCLE,
   MILLISECONDS_IN_SECOND,
-  NORMALIZED_VALUE,
   MAX_PERCENTAGE,
   CURSOR,
   TEXT,
@@ -19,6 +18,7 @@ import {
   DOUBLE,
   EMPTY_STRING,
   HALF,
+  ONE,
   PAGE_PATH,
   ZERO,
 } from "@/constants/constants.ts";
@@ -56,7 +56,7 @@ export class Wheel {
   constructor(
     private readonly drawSectors: DrawSectors,
     private titleSection: HTMLParagraphElement,
-    private toggleViewState: ToggleViewState,
+    private readonly toggleViewState: ToggleViewState,
   ) {
     const themeToggle = ThemeService.getInstance();
     themeToggle.addListener(this.changeWheelColors.bind(this));
@@ -145,13 +145,11 @@ export class Wheel {
       bounce = Math.sin(progress * Math.PI) * -this.cursorBounceAngle;
     } else {
       progress *= DOUBLE;
-      bounce =
-        NORMALIZED_VALUE -
-        Math.sin(progress * Math.PI) * this.cursorBounceAngle;
+      bounce = ONE - Math.sin(progress * Math.PI) * this.cursorBounceAngle;
     }
 
     this.cursorAngle = initialAngle - bounce;
-    if (progress >= NORMALIZED_VALUE) {
+    if (progress >= ONE) {
       this.isRotate = false;
       this.cursorAngle = ZERO;
       return ZERO;
@@ -179,7 +177,7 @@ export class Wheel {
     if (
       startAngle <= mainAngle &&
       startAngle >= mainAngle - angle &&
-      title !== this.currentTitle
+      (title !== this.currentTitle || color !== this.currentTitleColor)
     ) {
       if (this.isRotate) {
         this.cursorAngle -=
