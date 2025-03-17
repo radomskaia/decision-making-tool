@@ -13,7 +13,7 @@ import {
 } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
-import { ID_PREFIX, INITIATION_ID } from "@/constants/options-constants.ts";
+import { INITIATION_ID } from "@/constants/options-constants.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {
@@ -51,8 +51,10 @@ export class OptionList extends BaseComponent<"ul"> {
   public addOption(optionsValue?: OptionItemValue): void {
     const optionItem = new OptionItem(optionsValue);
     this.appendElement(optionItem.getElement());
-    const lastId = idElement.getId();
-    const id = `${ID_PREFIX}${lastId}`;
+    const id = optionItem.getValue().id;
+    if (!id) {
+      throw new Error(MESSAGES.ID_NOT_FOUND);
+    }
 
     optionItem.addListener("button", () => {
       this.deleteOption(id, optionItem);
@@ -71,7 +73,7 @@ export class OptionList extends BaseComponent<"ul"> {
       return;
     }
 
-    this.updateList(optionItem.getValue(), lastId);
+    this.updateList(optionItem.getValue(), idElement.getId());
   }
 
   public getList(): OptionListValue {
@@ -82,6 +84,7 @@ export class OptionList extends BaseComponent<"ul"> {
     if (value.lastId) {
       this.reset();
       this.optionListValue = value;
+      idElement.setId(value.lastId);
     }
 
     for (const option of value.list) {
@@ -130,6 +133,7 @@ export class OptionList extends BaseComponent<"ul"> {
   private inputHandler(type: InputType, id: string, event: Event): void {
     const list = this.optionListValue.list;
     const index = this.getOptionIndex(id);
+
     if (event.target instanceof HTMLInputElement) {
       list[index][type] = event.target.value;
     }

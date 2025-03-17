@@ -7,6 +7,9 @@ export class idElement extends BaseComponent<"div"> {
   private readonly _id: string;
   constructor(value?: string) {
     super();
+    if (!value) {
+      idElement.incrementId();
+    }
     this._id = value || `${ID_PREFIX}${idElement.getId()}`;
     this.element.textContent = this._id;
   }
@@ -28,7 +31,6 @@ export class idElement extends BaseComponent<"div"> {
   }
 
   protected createView(): HTMLDivElement {
-    idElement.incrementId();
     return this.createDOMElement({
       tagName: "div",
       attributes: { title: BUTTON_TITLE.ID },
