@@ -81,6 +81,7 @@ export class Wheel {
 
   public animateWheel(): void {
     if (Router.getInstance().getCurrentRoute() !== PAGE_PATH.DECISION_PICKER) {
+      this.toggleViewState(true, this.currentTitleColor);
       return;
     }
     const now = Date.now();
