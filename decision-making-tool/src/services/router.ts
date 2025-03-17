@@ -46,7 +46,7 @@ export class Router {
     if (!route) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
-    globalThis.location.hash = path;
+    globalThis.location.hash = route.path;
     document.body.append(route.component.getInstance().getElement());
     const instance = route.component.getInstance();
     if (instance instanceof DecisionPicker) {
