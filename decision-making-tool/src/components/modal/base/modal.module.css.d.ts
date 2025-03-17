@@ -6,5 +6,6 @@ declare const styles: {
   form: string;
   input: string;
   wrapper: string;
+  validText: string;
 };
 export default styles;

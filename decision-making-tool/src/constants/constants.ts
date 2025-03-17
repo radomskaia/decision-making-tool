@@ -44,11 +44,7 @@ export const MESSAGES = {
   PLAYBACK: "Can't play audio ",
   PAGE_NOT_FOUND: "Sorry, page not found",
   INIT_WHEEL_TEXT: "Please, press the button to start the wheel",
-  VALIDATION: `Please add at least 2 valid options.
-  
-  
-An option is considered valid if its title is not empty and its weight is greater than 0
-  `,
+  VALIDATION: `Please add at least 2 valid options.\n\nAn option is considered valid if its title is not empty and its weight is greater than 0`,
 } as const;
 
 export const DELAY_TIME = 300;

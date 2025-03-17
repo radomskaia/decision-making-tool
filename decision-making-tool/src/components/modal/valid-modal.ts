@@ -3,6 +3,7 @@ import { TextButton } from "@/components/buttons/text-button.ts";
 import { MESSAGES } from "@/constants/constants.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
+import styles from "@/components/modal/base/modal.module.css";
 
 export class ValidModal extends BaseModal {
   private static instance: ValidModal | undefined;
@@ -28,7 +29,8 @@ export class ValidModal extends BaseModal {
       ],
     });
     const text = this.createDOMElement({
-      tagName: "pre",
+      tagName: "p",
+      classList: [styles.validText],
       textContent: MESSAGES.VALIDATION,
     });
 

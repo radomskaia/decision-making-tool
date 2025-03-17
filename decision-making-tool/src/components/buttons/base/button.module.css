@@ -9,7 +9,7 @@
 }
 
 .actionButton {
-  border: none;
+  border: 1px solid var(--primary);
   border-radius: var(--border-radius);
   padding: 10px 20px;
   box-shadow: none;
