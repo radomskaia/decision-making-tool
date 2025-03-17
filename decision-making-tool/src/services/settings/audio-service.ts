@@ -1,18 +1,20 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
-import { SettingsAction } from "@/components/settings/settings-action.ts";
+import { SettingsAction } from "@/services/settings/settings-action.ts";
 import { MESSAGES, ZERO } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import type { Callback } from "@/types";
 import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
-import { AUDIO_PATH, END_SOUND_VOLUME } from "@/constants/audio-constants.ts";
+import { END_SOUND_VOLUME } from "@/constants/audio-constants.ts";
+import audioStrike from "@/shared/flint-strike.mp3";
+import audioEnd from "@/shared/end-sound.mp3";
 
 export class AudioService extends SettingsAction {
   private static instance: AudioService | undefined;
   protected isOff = false;
   private audioElements: Record<AudioName, HTMLAudioElement> = {
-    [AudioName.strike]: new Audio(AUDIO_PATH.STRIKE),
-    [AudioName.end]: new Audio(AUDIO_PATH.END),
+    [AudioName.strike]: new Audio(audioStrike),
+    [AudioName.end]: new Audio(audioEnd),
   };
   constructor(audioButton: ButtonSettings) {
     super(audioButton);

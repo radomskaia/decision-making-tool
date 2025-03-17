@@ -22,7 +22,7 @@ import {
   PAGE_PATH,
   ZERO,
 } from "@/constants/constants.ts";
-import { AudioService } from "@/components/settings/audio-service.ts";
+import { AudioService } from "@/services/settings/audio-service.ts";
 import {
   calculateAngle,
   calculateWeightSum,
@@ -34,7 +34,7 @@ import {
   getRGB,
 } from "@/utilities/utilities.ts";
 import { FileHandler } from "@/services/file-handler.ts";
-import { ThemeService } from "@/components/settings/theme-service.ts";
+import { ThemeService } from "@/services/settings/theme-service.ts";
 import { Router } from "@/services/router.ts";
 
 export class Wheel {

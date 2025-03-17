@@ -1,5 +1,5 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
-import { SettingsAction } from "@/components/settings/settings-action.ts";
+import { SettingsAction } from "@/services/settings/settings-action.ts";
 import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
 import type { WheelColors } from "@/types";
 import { Router } from "@/services/router.ts";

@@ -5,7 +5,7 @@ import { Router } from "@/services/router.ts";
 import { Canvas } from "@/components/wheel/canvas.ts";
 import { Wheel } from "@/components/wheel/wheel.ts";
 import { DurationInput } from "@/components/input/duration-input.ts";
-import { AudioService } from "@/components/settings/audio-service.ts";
+import { AudioService } from "@/services/settings/audio-service.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 import type { ToggleViewState } from "@/types";
 import styles from "@/pages/decision-picker/decision-picker.module.css";

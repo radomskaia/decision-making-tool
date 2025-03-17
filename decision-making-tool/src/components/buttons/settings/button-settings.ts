@@ -1,6 +1,6 @@
 import type { ButtonOptions } from "@/types";
 import styles from "@/components/buttons/base/button.module.css";
-import type { SettingsAction } from "@/components/settings/settings-action.ts";
+import type { SettingsAction } from "@/services/settings/settings-action.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import { SVG_CONFIG } from "@/constants/buttons-constants.ts";
 

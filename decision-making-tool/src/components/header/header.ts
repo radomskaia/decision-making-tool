@@ -2,9 +2,9 @@ import utilitiesStyles from "@/styles/utilities.module.css";
 import styles from "@/components/header/header.module.css";
 import { BaseComponent } from "@/components/base-component.ts";
 import { SoundButton } from "@/components/buttons/settings/sound-button.ts";
-import { AudioService } from "@/components/settings/audio-service.ts";
+import { AudioService } from "@/services/settings/audio-service.ts";
 import { ThemeButton } from "@/components/buttons/settings/theme-button.ts";
-import { ThemeService } from "@/components/settings/theme-service.ts";
+import { ThemeService } from "@/services/settings/theme-service.ts";
 import { APP_NAME } from "@/constants/constants.ts";
 
 export class Header extends BaseComponent<"header"> {
