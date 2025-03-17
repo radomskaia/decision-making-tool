@@ -119,7 +119,7 @@ export class Wheel {
       }
       sector.rgbArray = newRgbArray;
       const newColor = getColorString(newRgbArray);
-      if (this.currentTitleColor === sector.color) {
+      if (!this.startAnimation && this.currentTitleColor === sector.color) {
         this.currentTitleColor = newColor;
         this.toggleViewState(true, newColor);
       }
