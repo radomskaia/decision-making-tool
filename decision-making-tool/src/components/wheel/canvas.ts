@@ -15,6 +15,7 @@ import {
   DOUBLE,
   FIRST_INDEX,
   LAST_INDEX,
+  MESSAGES,
   ZERO,
 } from "@/constants/constants.ts";
 import { calculateTextCoordinates } from "@/utilities/utilities.ts";
@@ -63,7 +64,7 @@ export class Canvas extends BaseComponent<"canvas"> {
   public getContext(): CanvasRenderingContext2D {
     const context = this.element.getContext("2d");
     if (!context) {
-      throw new Error("Failed to get context");
+      throw new Error(MESSAGES.CONTEXT_NOT_FOUND);
     }
     return context;
   }

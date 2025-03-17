@@ -5,7 +5,7 @@ import {
   TEXT,
 } from "@/constants/wheel-constants.ts";
 import type { OptionItemValue } from "@/types";
-import { DOUBLE, HALF, ZERO } from "@/constants/constants.ts";
+import { DOUBLE, HALF, SYMBOLS, ZERO } from "@/constants/constants.ts";
 
 export function calculateTextCoordinates(
   startAngle: number,
@@ -40,7 +40,7 @@ export function getOppositeShade(color: number): number {
 
 export function getRGB(thinner: number): number[] {
   const result: number[] = [];
-  const rgb = "RGB";
+  const rgb = COLOR.TYPE;
   for (let index = ZERO; index < rgb.length; index++) {
     result.push(getColorValue(thinner));
   }
@@ -48,7 +48,7 @@ export function getRGB(thinner: number): number[] {
 }
 
 export function getColorString(rgbArray: number[]): string {
-  return `rgba(${rgbArray.join(",")}, ${COLOR.OPACITY})`;
+  return `rgb(${rgbArray.join(SYMBOLS.comma)},${COLOR.OPACITY})`;
 }
 
 export function calculateWeightSum(data: OptionItemValue[]): number {

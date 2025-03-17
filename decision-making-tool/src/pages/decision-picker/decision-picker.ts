@@ -1,6 +1,6 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import { PAGE_PATH } from "@/constants/constants.ts";
+import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { Router } from "@/services/router.ts";
 import { Canvas } from "@/components/wheel/canvas.ts";
@@ -28,7 +28,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
     this.canvas = new Canvas();
     this.text = this.createDOMElement({
       tagName: "p",
-      textContent: "Hello",
+      textContent: MESSAGES.INIT_WHEEL_TEXT,
     });
 
     this.appendElement(this.canvas.getElement(), this.text);

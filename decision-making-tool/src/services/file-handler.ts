@@ -10,6 +10,7 @@ import {
 import type { OptionItemValue, OptionListValue } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
+import { INPUT_TYPES } from "@/constants/input-constants.ts";
 
 export class FileHandler {
   private static instance: FileHandler | undefined;
@@ -31,7 +32,7 @@ export class FileHandler {
 
   public loadJSON(optionList: OptionList): void {
     const input = document.createElement("input");
-    input.type = "file";
+    input.type = INPUT_TYPES.FILE;
     input.accept = this.config.EXTENSION;
 
     input.addEventListener("change", () => {
