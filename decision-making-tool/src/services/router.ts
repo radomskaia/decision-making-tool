@@ -80,8 +80,7 @@ export class Router {
       this.isPopState = false;
       return;
     }
-    const history = globalThis.history;
-    history.pushState(null, EMPTY_STRING, `${SYMBOLS.hash}${path}`);
+    globalThis.location.hash = path;
   }
 
   private clearPage(): void {
