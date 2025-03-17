@@ -9,7 +9,7 @@ export const MAX_PERCENTAGE = 100;
 
 export const COLOR = {
   RGB_MAX: 255,
-  OPACITY: 0.6,
+  OPACITY: 0.8,
   TYPE: "rgb",
 };
 

@@ -20,11 +20,12 @@ import {
 } from "@/constants/constants.ts";
 import { calculateTextCoordinates } from "@/utilities/utilities.ts";
 
-export class Canvas extends BaseComponent<"canvas"> {
+export class Canvas extends BaseComponent<"canvas", number> {
   private context: CanvasRenderingContext2D;
-  constructor() {
-    super();
+  constructor(ratio = window.devicePixelRatio) {
+    super(ratio);
     this.context = this.getContext();
+    this.context.scale(ratio, ratio);
     this.drawClip();
   }
 
@@ -53,7 +54,7 @@ export class Canvas extends BaseComponent<"canvas"> {
           textX,
           textY,
           textAngle,
-          wheelColors.stroke,
+          wheelColors,
         );
       }
     }
@@ -89,14 +90,19 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.restore();
   }
 
-  protected createView(): HTMLElementTagNameMap["canvas"] {
-    return this.createDOMElement({
+  protected createView(ratio: number): HTMLElementTagNameMap["canvas"] {
+    const size = CANVAS_SIZE * ratio;
+    const canvas = this.createDOMElement({
       tagName: "canvas",
       attributes: {
-        width: CANVAS_SIZE.toString(),
-        height: CANVAS_SIZE.toString(),
+        width: size.toString(),
+        height: size.toString(),
       },
     });
+    if (size > CANVAS_SIZE) {
+      canvas.style.width = CANVAS_SIZE.toString() + "px";
+    }
+    return canvas;
   }
 
   private drawCentralCircle(strokeColor: string): void {
@@ -183,7 +189,7 @@ export class Canvas extends BaseComponent<"canvas"> {
     return truncatedText;
   }
 
-  private drawText: DrawText = (text, x, y, angle, strokeColor) => {
+  private drawText: DrawText = (text, x, y, angle, colors) => {
     const { context } = this;
     context.save();
     context.translate(x, y);
@@ -191,7 +197,9 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.font = `${TEXT.FONT.SIZE} ${TEXT.FONT.FAMILY}`;
     context.textAlign = TEXT.ALIGN;
     context.textBaseline = TEXT.BASELINE;
-    context.fillStyle = strokeColor;
+    context.fillStyle = colors.stroke;
+    context.strokeStyle = colors.cursor;
+    context.strokeText(text, ZERO, ZERO);
     context.fillText(text, ZERO, ZERO);
     context.restore();
   };

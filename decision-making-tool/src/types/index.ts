@@ -92,7 +92,7 @@ export type DrawText = (
   x: number,
   y: number,
   angle: number,
-  strokeColor: string,
+  colors: MainWheelColors,
 ) => void;
 
 export enum AudioName {
