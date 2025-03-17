@@ -56,7 +56,6 @@ export class Home extends BaseComponent<"main"> {
       callback: (): void => {
         const data = this.optionList.getList();
         if (Validator.isOptionsCountValid(data)) {
-          LocalStorage.getInstance().save(StorageKeys.optionListValue, data);
           Router.getInstance().navigateTo(PAGE_PATH.DECISION_PICKER);
         } else {
           ValidModal.getInstance().showModal();
@@ -74,11 +73,19 @@ export class Home extends BaseComponent<"main"> {
     this.buttonWrapper = this.createButtonWrapper();
     this.addScrollListener();
   }
+
   public static getInstance(): Home {
     if (!Home.instance) {
       Home.instance = new Home();
     }
     return Home.instance;
+  }
+
+  public saveToLocalStorage(): void {
+    LocalStorage.getInstance().save(
+      StorageKeys.optionListValue,
+      this.optionList.getList(),
+    );
   }
   protected createView(): HTMLElement {
     return this.createDOMElement({

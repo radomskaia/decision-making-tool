@@ -210,9 +210,7 @@ export class Wheel {
     this.startAnimation = null;
     this.turnsCount = DEFAULT_SETTINGS.TURNS_COUNT;
     this.toggleViewState(true, this.currentTitleColor);
-    this.audio.onEnded(AudioName.end, () => {
-      this.audio.getButton().disabledElement(false);
-    });
+    this.audio.getButton().disabledElement(false);
   }
 
   private init(): void {

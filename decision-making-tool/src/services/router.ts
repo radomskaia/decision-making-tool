@@ -12,11 +12,10 @@ export class Router {
   private static instance: Router | undefined;
   private routes: Route[] = [];
   private currentPath = EMPTY_STRING;
-  private isPopState = false;
   private constructor() {
-    globalThis.addEventListener("hashchange", () => this.routerChange());
-    globalThis.addEventListener("popstate", () => {
-      this.isPopState = true;
+    globalThis.addEventListener("hashchange", () => {
+      console.log("hashchange");
+      this.routerChange();
     });
   }
 
@@ -42,14 +41,12 @@ export class Router {
 
   public navigateTo(path: string): void {
     this.currentPath = path;
-    this.updateHistory(path);
     this.clearPage();
-
     let route = this.findValidRoute(path);
-
     if (!route) {
       throw new Error(MESSAGES.ROUTE_NOT_FOUND);
     }
+    globalThis.location.hash = path;
     document.body.append(route.component.getInstance().getElement());
     const instance = route.component.getInstance();
     if (instance instanceof DecisionPicker) {
@@ -67,20 +64,19 @@ export class Router {
     let route =
       this.routes.find((route) => route.path === path) ||
       this.routes.find((route) => route.path === PAGE_PATH.NOT_FOUND);
-
+    if (path === PAGE_PATH.DECISION_PICKER) {
+      const homeComponent = this.routes
+        .find((route) => route.path === PAGE_PATH.HOME)
+        ?.component.getInstance();
+      if (homeComponent instanceof Home) {
+        homeComponent.saveToLocalStorage();
+      }
+    }
     if (route && !Router.canNavigateToDecision(route)) {
       route = this.routes?.find((route) => route.path === PAGE_PATH.HOME);
     }
 
     return route;
-  }
-
-  private updateHistory(path: string): void {
-    if (this.isPopState) {
-      this.isPopState = false;
-      return;
-    }
-    globalThis.location.hash = path;
   }
 
   private clearPage(): void {
