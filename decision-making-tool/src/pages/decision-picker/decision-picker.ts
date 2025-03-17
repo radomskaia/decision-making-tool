@@ -1,16 +1,18 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import { BUTTON_TEXT, PAGE_PATH } from "@/constants/constants.ts";
+import { PAGE_PATH } from "@/constants/constants.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import { Router } from "@/services/router.ts";
 import { Canvas } from "@/components/wheel/canvas.ts";
 import { Wheel } from "@/components/wheel/wheel.ts";
 import { DurationInput } from "@/components/input/duration-input.ts";
-import { DEFAULT_DURATION } from "@/constants/canvas-constants.ts";
 import { AudioService } from "@/components/settings/audio-service.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 import type { ToggleViewState } from "@/types";
 import styles from "@/pages/decision-picker/decision-picker.module.css";
+import { DEFAULT_SETTINGS } from "@/constants/wheel-constants.ts";
+import { DURATION_ID } from "@/constants/input-constants.ts";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class DecisionPicker extends BaseComponent<"main"> {
   private static instance: DecisionPicker | undefined;
@@ -83,10 +85,10 @@ export class DecisionPicker extends BaseComponent<"main"> {
     const form = this.createDOMElement({
       tagName: "form",
     });
-    const input = new DurationInput(DEFAULT_DURATION.toString());
+    const input = new DurationInput(DEFAULT_SETTINGS.DURATION.toString());
     this.controllerElements.push(input);
     input.addListener(() => this.wheel?.setDuration(Number(input.value)));
-    form.append(input.addLabel("Duration"), input.getElement());
+    form.append(input.addLabel(DURATION_ID), input.getElement());
     this.appendElement(form);
     return form;
   }

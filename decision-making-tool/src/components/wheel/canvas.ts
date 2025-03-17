@@ -1,31 +1,22 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import {
   CANVAS_SIZE,
-  CENTER_X,
-  CIRCLE_RADIUS_BIG,
-  CIRCLE_RADIUS_SMALL,
-  DOUBLE,
-  END_ANGLE,
-  ORIGIN_COORDINATE,
-  START_ANGLE,
-  FONT_SIZE,
-  MAX_TEXT_WIDTH,
-  CURSOR_TOP_Y,
-  CURSOR_BOTTOM_Y,
-  CURSOR_MIDDLE_POINT_Y,
-  CURSOR_HORIZONTAL_SPREAD,
-  FONT_FAMILY,
-  GLOBAL_ALPHA,
-  CENTER_Y,
-  FULL_CIRCLE,
-} from "@/constants/canvas-constants.ts";
+  CIRCLE,
+  CURSOR,
+  TEXT,
+} from "@/constants/wheel-constants.ts";
 import type {
   DrawSector,
   DrawSectors,
   DrawText,
   MainWheelColors,
 } from "@/types";
-import { FIRST_INDEX, LAST_INDEX } from "@/constants/constants.ts";
+import {
+  DOUBLE,
+  FIRST_INDEX,
+  LAST_INDEX,
+  ZERO,
+} from "@/constants/constants.ts";
 import { calculateTextCoordinates } from "@/utilities/utilities.ts";
 
 export class Canvas extends BaseComponent<"canvas"> {
@@ -33,24 +24,18 @@ export class Canvas extends BaseComponent<"canvas"> {
   constructor() {
     super();
     this.context = this.getContext();
-    this.context.globalAlpha = GLOBAL_ALPHA;
     this.drawClip();
   }
 
   public drawSectors: DrawSectors = (sectorData, wheelColors, options) => {
-    this.context.clearRect(
-      ORIGIN_COORDINATE,
-      ORIGIN_COORDINATE,
-      CANVAS_SIZE,
-      CANVAS_SIZE,
-    );
+    this.context.clearRect(ZERO, ZERO, CANVAS_SIZE, CANVAS_SIZE);
     for (const sectorItem of sectorData) {
       let { startAngle, angle, color, title, isTitle } = sectorItem;
       if (options) {
         const { offset, updateSector } = options;
         sectorItem.startAngle += offset;
-        if (sectorItem.startAngle > FULL_CIRCLE) {
-          sectorItem.startAngle -= FULL_CIRCLE;
+        if (sectorItem.startAngle > CIRCLE.FULL_RADIAN) {
+          sectorItem.startAngle -= CIRCLE.FULL_RADIAN;
         }
         updateSector(startAngle, angle, title);
       }
@@ -90,16 +75,10 @@ export class Canvas extends BaseComponent<"canvas"> {
       this.rotateCursor(angle);
     }
     context.beginPath();
-    context.moveTo(CENTER_X, CURSOR_TOP_Y);
-    context.lineTo(
-      CENTER_X - CURSOR_HORIZONTAL_SPREAD / DOUBLE,
-      CURSOR_BOTTOM_Y,
-    );
-    context.lineTo(CENTER_X, CURSOR_MIDDLE_POINT_Y);
-    context.lineTo(
-      CENTER_X + CURSOR_HORIZONTAL_SPREAD / DOUBLE,
-      CURSOR_BOTTOM_Y,
-    );
+    context.moveTo(CIRCLE.CENTER.X, CURSOR.Y.TOP);
+    context.lineTo(CIRCLE.CENTER.X - CURSOR.WIDTH / DOUBLE, CURSOR.Y.BOTTOM);
+    context.lineTo(CIRCLE.CENTER.X, CURSOR.Y.MIDDLE);
+    context.lineTo(CIRCLE.CENTER.X + CURSOR.WIDTH / DOUBLE, CURSOR.Y.BOTTOM);
 
     context.closePath();
     context.fillStyle = colors.cursor;
@@ -124,11 +103,11 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.lineWidth++;
     context.beginPath();
     context.arc(
-      CENTER_X,
-      CENTER_Y,
-      CIRCLE_RADIUS_SMALL,
-      START_ANGLE,
-      END_ANGLE,
+      CIRCLE.CENTER.X,
+      CIRCLE.CENTER.Y,
+      CIRCLE.RADIUS.SMALL,
+      CIRCLE.START_ANGLE,
+      CIRCLE.FULL_RADIAN,
       true,
     );
     context.closePath();
@@ -140,18 +119,13 @@ export class Canvas extends BaseComponent<"canvas"> {
   private drawClip(): void {
     const { context } = this;
     context.beginPath();
-    context.rect(
-      ORIGIN_COORDINATE,
-      ORIGIN_COORDINATE,
-      CANVAS_SIZE,
-      CANVAS_SIZE,
-    );
+    context.rect(ZERO, ZERO, CANVAS_SIZE, CANVAS_SIZE);
     context.arc(
-      CENTER_X,
-      CENTER_Y,
-      CIRCLE_RADIUS_SMALL,
-      START_ANGLE,
-      END_ANGLE,
+      CIRCLE.CENTER.X,
+      CIRCLE.CENTER.Y,
+      CIRCLE.RADIUS.SMALL,
+      CIRCLE.START_ANGLE,
+      CIRCLE.FULL_RADIAN,
       true,
     );
     context.clip();
@@ -159,9 +133,9 @@ export class Canvas extends BaseComponent<"canvas"> {
 
   private rotateCursor(angle: number): void {
     const { context } = this;
-    context.translate(CENTER_X, CURSOR_MIDDLE_POINT_Y);
+    context.translate(CIRCLE.CENTER.X, CURSOR.Y.MIDDLE);
     context.rotate(angle);
-    context.translate(-CENTER_X, -CURSOR_MIDDLE_POINT_Y);
+    context.translate(-CIRCLE.CENTER.X, -CURSOR.Y.MIDDLE);
   }
 
   private drawSector: DrawSector = (
@@ -172,8 +146,14 @@ export class Canvas extends BaseComponent<"canvas"> {
   ) => {
     const { context } = this;
     context.beginPath();
-    context.moveTo(CENTER_X, CENTER_Y);
-    context.arc(CENTER_X, CENTER_Y, CIRCLE_RADIUS_BIG, startAngle, endAngle);
+    context.moveTo(CIRCLE.CENTER.X, CIRCLE.CENTER.Y);
+    context.arc(
+      CIRCLE.CENTER.X,
+      CIRCLE.CENTER.Y,
+      CIRCLE.RADIUS.BIG,
+      startAngle,
+      endAngle,
+    );
     context.closePath();
     context.fillStyle = color;
     context.strokeStyle = strokeColor;
@@ -183,22 +163,21 @@ export class Canvas extends BaseComponent<"canvas"> {
 
   private truncateText(text: string): string {
     const { context } = this;
-    const ellipsis = "...";
     let textWidth = context.measureText(text).width;
 
-    if (!(textWidth > MAX_TEXT_WIDTH)) {
+    if (!(textWidth > TEXT.MAX_WIDTH)) {
       return text;
     }
 
     let truncatedText = text;
-    let renderText = truncatedText + ellipsis;
+    let renderText = truncatedText + TEXT.ELLIPSIS;
 
-    while (textWidth > MAX_TEXT_WIDTH) {
+    while (textWidth > TEXT.MAX_WIDTH) {
       truncatedText = truncatedText.slice(FIRST_INDEX, LAST_INDEX);
-      renderText = truncatedText + ellipsis;
+      renderText = truncatedText + TEXT.ELLIPSIS;
       textWidth = context.measureText(renderText).width;
     }
-    truncatedText += ellipsis;
+    truncatedText += TEXT.ELLIPSIS;
 
     return truncatedText;
   }
@@ -208,11 +187,11 @@ export class Canvas extends BaseComponent<"canvas"> {
     context.save();
     context.translate(x, y);
     context.rotate(angle);
-    context.font = `${FONT_SIZE}px ${FONT_FAMILY}`;
-    context.textAlign = "center";
-    context.textBaseline = "middle";
+    context.font = `${TEXT.FONT.SIZE} ${TEXT.FONT.FAMILY}`;
+    context.textAlign = TEXT.ALIGN;
+    context.textBaseline = TEXT.BASELINE;
     context.fillStyle = strokeColor;
-    context.fillText(text, ORIGIN_COORDINATE, ORIGIN_COORDINATE);
+    context.fillText(text, ZERO, ZERO);
     context.restore();
   };
 }

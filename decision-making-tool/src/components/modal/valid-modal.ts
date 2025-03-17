@@ -1,7 +1,8 @@
 import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { BUTTON_TEXT, MESSAGES } from "@/constants/constants.ts";
+import { MESSAGES } from "@/constants/constants.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class ValidModal extends BaseModal {
   private static instance: ValidModal | undefined;

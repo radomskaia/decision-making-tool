@@ -1,14 +1,13 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
 import { SettingsAction } from "@/components/settings/settings-action.ts";
-import {
-  WHEEL_COLORS,
-  DARK_THEME_ATTRIBUTE,
-  DARK_THEME_MEDIA_QUERY,
-  MESSAGES,
-  PAGE_PATH,
-} from "@/constants/constants.ts";
+import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
 import type { WheelColors } from "@/types";
 import { Router } from "@/services/router.ts";
+import {
+  DARK_THEME_ATTRIBUTE,
+  DARK_THEME_MEDIA_QUERY,
+  WHEEL_COLORS,
+} from "@/constants/theme-constants.ts";
 
 export class ThemeService extends SettingsAction {
   private static instance: ThemeService | undefined;

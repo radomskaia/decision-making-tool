@@ -2,7 +2,7 @@ import styles from "./base/button.module.css";
 
 import type { ButtonOptions, CreateSVGIconOptions } from "src/types";
 import { BaseButton } from "@/components/buttons/base/base-button.ts";
-import { SVG_CONFIG } from "@/constants/constants.ts";
+import { ATTRIBUTES, SVG_CONFIG } from "@/constants/buttons-constants.ts";
 
 export class IconButton extends BaseButton {
   protected useSVGIcon: SVGUseElement | undefined;
@@ -20,7 +20,7 @@ export class IconButton extends BaseButton {
         classList: [styles.iconButton],
         attributes: {
           title: title,
-          "aria-label": title,
+          [ATTRIBUTES.ariaLabel]: title,
         },
       });
       this.appendElement(img);

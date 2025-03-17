@@ -1,8 +1,9 @@
 import { BaseComponent } from "@/components/base-component.ts";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import { TextButton } from "@/components/buttons/text-button.ts";
-import { BUTTON_TEXT, MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
+import { MESSAGES, PAGE_PATH } from "@/constants/constants.ts";
 import { Router } from "@/services/router.ts";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class NotFound extends BaseComponent<"main"> {
   private static instance: NotFound | undefined;

@@ -4,15 +4,14 @@ import styles from "@/components/modal/base/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
 import type { Callback } from "src/types";
 import type { OptionList } from "@/components/options/option-list/option-list.ts";
+import { EMPTY_STRING, MESSAGES } from "@/constants/constants.ts";
+import { FileHandler } from "@/services/file-handler.ts";
 import {
-  BUTTON_TEXT,
-  EMPTY_STRING,
-  MESSAGES,
   PLACEHOLDER,
   TEXTAREA_COLS,
   TEXTAREA_ROWS,
-} from "@/constants/constants.ts";
-import { FileHandler } from "@/services/file-handler.ts";
+} from "@/constants/input-constants.ts";
+import { BUTTON_TEXT, BUTTON_TYPES } from "@/constants/buttons-constants.ts";
 
 export class PasteModal extends BaseModal {
   private static instance: PasteModal | undefined;
@@ -63,7 +62,7 @@ export class PasteModal extends BaseModal {
 
   private createCancelButton(): HTMLButtonElement {
     const cancelButton = new TextButton(BUTTON_TEXT.CANCEL);
-    cancelButton.getElement().type = "button";
+    cancelButton.getElement().type = BUTTON_TYPES.BUTTON;
     cancelButton.addListener(() => {
       this.closeModal();
     });

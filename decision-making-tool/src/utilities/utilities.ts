@@ -1,48 +1,41 @@
 import {
-  CENTER_X,
-  CENTER_Y,
-  CIRCLE_RADIUS_BIG,
-  DOUBLE,
-  FULL_CIRCLE,
-  HALF,
-  HALF_CIRCLE_DEGREES,
+  CIRCLE,
+  COLOR,
   NORMALIZED_VALUE,
-  OPACITY,
-  COLOR_MAX,
-  TEXT_OFFSET,
-} from "@/constants/canvas-constants.ts";
+  TEXT,
+} from "@/constants/wheel-constants.ts";
 import type { OptionItemValue } from "@/types";
-import { ZERO } from "@/constants/constants.ts";
+import { DOUBLE, HALF, ZERO } from "@/constants/constants.ts";
 
 export function calculateTextCoordinates(
   startAngle: number,
   endAngle: number,
 ): { textX: number; textY: number; textAngle: number } {
   const middleAngle = (startAngle + endAngle) / DOUBLE;
-  const textRadius = CIRCLE_RADIUS_BIG * TEXT_OFFSET;
-  const textX = CENTER_X + Math.cos(middleAngle) * textRadius;
-  const textY = CENTER_Y + Math.sin(middleAngle) * textRadius;
+  const textRadius = CIRCLE.RADIUS.BIG * TEXT.OFFSET;
+  const textX = CIRCLE.CENTER.X + Math.cos(middleAngle) * textRadius;
+  const textY = CIRCLE.CENTER.Y + Math.sin(middleAngle) * textRadius;
   const textAngle = middleAngle + Math.PI / HALF;
   return { textX, textY, textAngle };
 }
 
 export function calculateAngle(weightSum: number, weight: number): number {
-  return (FULL_CIRCLE / weightSum) * weight;
+  return (CIRCLE.FULL_RADIAN / weightSum) * weight;
 }
 
 export function degreesToRadians(degrees: number): number {
-  return degrees * (Math.PI / HALF_CIRCLE_DEGREES);
+  return degrees * (Math.PI / CIRCLE.HALF_DEGREE);
 }
 
 export function getColorValue(thinner: number): number {
-  return Math.floor((Math.random() * COLOR_MAX + thinner) / DOUBLE);
+  return Math.floor((Math.random() * COLOR.RGB_MAX + thinner) / DOUBLE);
 }
 
 export function getOppositeShade(color: number): number {
   const oldColor = color * DOUBLE;
-  return oldColor > COLOR_MAX
-    ? (oldColor - COLOR_MAX) / DOUBLE
-    : (oldColor + COLOR_MAX) / DOUBLE;
+  return oldColor > COLOR.RGB_MAX
+    ? (oldColor - COLOR.RGB_MAX) / DOUBLE
+    : (oldColor + COLOR.RGB_MAX) / DOUBLE;
 }
 
 export function getRGB(thinner: number): number[] {
@@ -55,7 +48,7 @@ export function getRGB(thinner: number): number[] {
 }
 
 export function getColorString(rgbArray: number[]): string {
-  return `rgba(${rgbArray.join(",")}, ${OPACITY})`;
+  return `rgba(${rgbArray.join(",")}, ${COLOR.OPACITY})`;
 }
 
 export function calculateWeightSum(data: OptionItemValue[]): number {

@@ -1,13 +1,11 @@
 import type { OptionItemValue, OptionListValue } from "@/types";
+import { EMPTY_STRING, FIRST_INDEX, ZERO } from "@/constants/constants.ts";
 import {
-  EMPTY_STRING,
-  FIRST_INDEX,
   ID_PREFIX,
-  ZERO,
-  MINIMUM_OPTIONS_COUNT,
+  OptionsConstants,
   OPTION_KEYS,
   OPTION_LIST_KEYS,
-} from "@/constants/constants.ts";
+} from "@/constants/options-constants.ts";
 
 export class Validator {
   private static instance: Validator | undefined;
@@ -40,7 +38,7 @@ export class Validator {
   }
 
   public static hasMinimumOptions(data: OptionItemValue[]): boolean {
-    return data.length >= MINIMUM_OPTIONS_COUNT;
+    return data.length >= OptionsConstants;
   }
 
   public static isOptionsCountValid(value: OptionListValue): boolean {

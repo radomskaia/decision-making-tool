@@ -4,22 +4,22 @@ import {
   MESSAGES,
   FILE_CONFIG,
   FIRST_INDEX,
-  PASTE_SEPARATOR,
+  SYMBOLS,
+  HALF,
 } from "@/constants/constants.ts";
 import type { OptionItemValue, OptionListValue } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
-import { HALF } from "@/constants/canvas-constants.ts";
 
 export class FileHandler {
   private static instance: FileHandler | undefined;
   private readonly validator: Validator;
-  private readonly separator: typeof PASTE_SEPARATOR;
+  private readonly separator: typeof SYMBOLS;
   private config: typeof FILE_CONFIG;
 
   private constructor() {
     this.validator = Validator.getInstance();
-    this.separator = PASTE_SEPARATOR;
+    this.separator = SYMBOLS;
     this.config = FILE_CONFIG;
   }
   public static getInstance(): FileHandler {

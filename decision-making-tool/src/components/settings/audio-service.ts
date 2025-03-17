@@ -1,14 +1,10 @@
 import type { ButtonSettings } from "@/components/buttons/settings/button-settings.ts";
 import { SettingsAction } from "@/components/settings/settings-action.ts";
-import {
-  AUDIO_PATH,
-  END_SOUND_VOLUME,
-  MESSAGES,
-  ZERO,
-} from "@/constants/constants.ts";
+import { MESSAGES, ZERO } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { AudioName, StorageKeys } from "@/types";
 import { Validator } from "@/services/validator.ts";
+import { AUDIO_PATH, END_SOUND_VOLUME } from "@/constants/audio-constants.ts";
 
 export class AudioService extends SettingsAction {
   private static instance: AudioService | undefined;

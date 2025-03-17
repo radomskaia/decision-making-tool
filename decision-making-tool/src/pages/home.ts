@@ -5,12 +5,13 @@ import { TextButton } from "@/components/buttons/text-button.ts";
 import { PasteModal } from "@/components/modal/paste-modal.ts";
 import { Router } from "@/services/router.ts";
 import { FileHandler } from "@/services/file-handler.ts";
-import { BUTTON_TEXT, PAGE_PATH } from "@/constants/constants.ts";
+import { PAGE_PATH } from "@/constants/constants.ts";
 import { ValidModal } from "@/components/modal/valid-modal.ts";
 import type { Callback } from "@/types";
 import { StorageKeys } from "@/types";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class Home extends BaseComponent<"main"> {
   private static instance: Home | undefined;

@@ -1,17 +1,12 @@
 import {
-  DEFAULT_DURATION,
-  FULL_CIRCLE,
-  HALF,
-  INITIAL_DEGREE,
+  CIRCLE,
   MILLISECONDS_IN_SECOND,
-  MIN_ANGLE_FOR_TITLE,
-  MIN_TURNS_COUNT,
-  DOUBLE,
   NORMALIZED_VALUE,
   MAX_PERCENTAGE,
-  MIN_CURSOR_ANGLE,
-  MAX_CURSOR_ANGLE,
-} from "@/constants/canvas-constants.ts";
+  CURSOR,
+  TEXT,
+  DEFAULT_SETTINGS,
+} from "@/constants/wheel-constants.ts";
 import type {
   ToggleViewState,
   DrawSectors,
@@ -20,7 +15,7 @@ import type {
   WheelColors,
 } from "@/types";
 import { AudioName } from "@/types";
-import { ZERO } from "@/constants/constants.ts";
+import { DOUBLE, HALF, ZERO } from "@/constants/constants.ts";
 import { AudioService } from "@/components/settings/audio-service.ts";
 import {
   calculateAngle,
@@ -37,15 +32,15 @@ import { ThemeService } from "@/components/settings/theme-service.ts";
 
 export class Wheel {
   private sectorData: SectorData[] = [];
-  private duration = DEFAULT_DURATION * MILLISECONDS_IN_SECOND;
-  private startAngle = degreesToRadians(INITIAL_DEGREE);
+  private duration = DEFAULT_SETTINGS.DURATION * MILLISECONDS_IN_SECOND;
+  private startAngle = degreesToRadians(CIRCLE.INITIAL_DEGREE);
   private currentTitle: string | null = null;
   private startAnimation: number | null = null;
-  private turnsCount = MIN_TURNS_COUNT;
+  private turnsCount = DEFAULT_SETTINGS.TURNS_COUNT;
   private audio = AudioService.getInstance();
   private cursorAnimationDuration = MILLISECONDS_IN_SECOND;
   private cursorAnimationStartTimestamp = ZERO;
-  private cursorBounceAngle = degreesToRadians(MIN_CURSOR_ANGLE);
+  private cursorBounceAngle = degreesToRadians(CURSOR.ANGLE.MIN);
   private isRotate = false;
   private cursorAngle = ZERO;
   private colors: WheelColors;
@@ -152,12 +147,12 @@ export class Wheel {
     const speedFactor = Math.max(ZERO, (maxSpeed - elapsedTime) / maxSpeed);
 
     return degreesToRadians(
-      MIN_CURSOR_ANGLE + speedFactor * (MAX_CURSOR_ANGLE - MIN_CURSOR_ANGLE),
+      CURSOR.ANGLE.MIN + speedFactor * (CURSOR.ANGLE.MAX - CURSOR.ANGLE.MIN),
     );
   }
 
   private updateCurrentSector: UpdateSector = (startAngle, angle, title) => {
-    const mainAngle = this.startAngle + FULL_CIRCLE;
+    const mainAngle = this.startAngle + CIRCLE.FULL_RADIAN;
     if (
       startAngle <= mainAngle &&
       startAngle >= mainAngle - angle &&
@@ -165,7 +160,8 @@ export class Wheel {
     ) {
       if (this.isRotate) {
         this.cursorAngle -=
-          Math.floor(this.cursorAngle / FULL_CIRCLE) * FULL_CIRCLE;
+          Math.floor(this.cursorAngle / CIRCLE.FULL_RADIAN) *
+          CIRCLE.FULL_RADIAN;
       }
       this.isRotate = true;
       this.cursorAnimationStartTimestamp = Date.now();
@@ -179,8 +175,8 @@ export class Wheel {
   private getOffsetAngle(elapsedTime: number): number {
     const progress = getAbsoluteProgressAnimation(elapsedTime, this.duration);
     return (
-      ((this.turnsCount * FULL_CIRCLE +
-        Math.floor(Math.random() * FULL_CIRCLE)) /
+      ((this.turnsCount * CIRCLE.FULL_RADIAN +
+        Math.floor(Math.random() * CIRCLE.FULL_RADIAN)) /
         MAX_PERCENTAGE) *
       easeInOutQuad(progress)
     );
@@ -189,7 +185,7 @@ export class Wheel {
   private endWheelAnimation(toggleViewState: ToggleViewState): void {
     this.audio.playAudio(AudioName.end);
     this.startAnimation = null;
-    this.turnsCount = MIN_TURNS_COUNT;
+    this.turnsCount = DEFAULT_SETTINGS.TURNS_COUNT;
     toggleViewState(true);
     this.audio.getButton().disabledElement(false);
   }
@@ -211,7 +207,7 @@ export class Wheel {
         color: color,
         rgbArray: rgbArray,
         title: title,
-        isTitle: angle > MIN_ANGLE_FOR_TITLE,
+        isTitle: angle > TEXT.MIN_ANGLE,
       };
       startAngle += angle;
       this.sectorData.push(sectorData);

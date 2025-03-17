@@ -7,14 +7,13 @@ import { OptionItem } from "@/components/options/option-item/option-item.ts";
 import { idElement } from "@/components/options/id/id-element.ts";
 import {
   MESSAGES,
-  ID_PREFIX,
-  INITIATION_ID,
   NOT_FOUND_INDEX,
   REMOVE_ONE_ITEM,
   ZERO,
 } from "@/constants/constants.ts";
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
+import { ID_PREFIX, INITIATION_ID } from "@/constants/options-constants.ts";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {

@@ -1,17 +1,21 @@
 import { BaseInput } from "@/components/input/base-input.ts";
-import { DEFAULT_DURATION } from "@/constants/canvas-constants.ts";
+import { DEFAULT_SETTINGS } from "@/constants/wheel-constants.ts";
+import { SYMBOLS } from "@/constants/constants.ts";
+import { DURATION_ID, INPUT_TYPES } from "@/constants/input-constants.ts";
 
 export class DurationInput extends BaseInput {
+  private duration: number = DEFAULT_SETTINGS.DURATION;
+  private id: string = DURATION_ID;
   constructor(value?: string) {
     super(value);
-    this.element.type = "number";
-    this.element.min = DEFAULT_DURATION.toString();
+    this.element.type = INPUT_TYPES.NUMBER;
+    this.element.min = this.duration.toString();
     this.element.addEventListener("beforeinput", (event) => {
-      if (event.data === "-") {
+      if (event.data === SYMBOLS.dash) {
         event.preventDefault();
       }
     });
-    this.element.id = "duration";
+    this.element.id = this.id;
   }
 
   public disabledElement(isDisabled: boolean): void {
@@ -23,7 +27,7 @@ export class DurationInput extends BaseInput {
       tagName: "label",
       textContent: label,
       attributes: {
-        for: "duration",
+        for: this.id,
       },
     });
   }

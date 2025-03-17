@@ -10,7 +10,7 @@ import { TitleInput } from "@/components/input/title-input.ts";
 import { WeightInput } from "@/components/input/weight-input.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import type { BaseButton } from "@/components/buttons/base/base-button.ts";
-import { BUTTON_TEXT } from "@/constants/constants.ts";
+import { BUTTON_TEXT } from "@/constants/buttons-constants.ts";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;

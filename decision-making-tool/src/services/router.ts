@@ -2,8 +2,8 @@ import type { Route } from "src/types";
 import {
   EMPTY_STRING,
   MESSAGES,
-  HASH_SYMBOL,
   PAGE_PATH,
+  SYMBOLS,
 } from "@/constants/constants.ts";
 import { DecisionPicker } from "@/pages/decision-picker/decision-picker.ts";
 export class Router {
@@ -71,7 +71,7 @@ export class Router {
       return;
     }
     const history = globalThis.history;
-    history.pushState(null, EMPTY_STRING, `${HASH_SYMBOL}${path}`);
+    history.pushState(null, EMPTY_STRING, `${SYMBOLS.hash}${path}`);
   }
 
   private clearPage(): void {
@@ -88,7 +88,7 @@ export class Router {
 
   private routerChange(): void {
     const hash: string =
-      globalThis.location.hash.slice(HASH_SYMBOL.length) || PAGE_PATH.HOME;
+      globalThis.location.hash.slice(SYMBOLS.hash.length) || PAGE_PATH.HOME;
     if (hash === this.currentPath) {
       return;
     }

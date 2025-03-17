@@ -2,7 +2,7 @@ import type { ButtonOptions } from "@/types";
 import styles from "@/components/buttons/base/button.module.css";
 import type { SettingsAction } from "@/components/settings/settings-action.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
-import { SVG_CONFIG } from "@/constants/constants.ts";
+import { SVG_CONFIG } from "@/constants/buttons-constants.ts";
 
 export abstract class ButtonSettings extends IconButton {
   protected abstract pathOff: string;
