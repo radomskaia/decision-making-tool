@@ -14,7 +14,6 @@ export class Router {
   private currentPath = EMPTY_STRING;
   private constructor() {
     globalThis.addEventListener("hashchange", () => {
-      console.log("hashchange");
       this.routerChange();
     });
   }

@@ -32,6 +32,7 @@ import {
   getColorString,
   getOppositeShade,
   getRGB,
+  normalizeAngle,
 } from "@/utilities/utilities.ts";
 import { FileHandler } from "@/services/file-handler.ts";
 import { ThemeService } from "@/services/settings/theme-service.ts";
@@ -174,10 +175,8 @@ export class Wheel {
     title,
     color,
   ) => {
-    const mainAngle = this.startAngle + CIRCLE.FULL_RADIAN;
     if (
-      startAngle <= mainAngle &&
-      startAngle >= mainAngle - angle &&
+      this.isAngleInCursorRange(startAngle, angle) &&
       (title !== this.currentTitle || color !== this.currentTitleColor)
     ) {
       if (this.isRotate) {
@@ -194,6 +193,17 @@ export class Wheel {
       this.titleSection.textContent = title;
     }
   };
+
+  private isAngleInCursorRange(startAngle: number, angle: number): boolean {
+    const cursorAngle = normalizeAngle(this.startAngle);
+    const endAngle = normalizeAngle(startAngle + angle);
+    startAngle = normalizeAngle(startAngle);
+
+    if (startAngle < endAngle) {
+      return cursorAngle >= startAngle && cursorAngle <= endAngle;
+    }
+    return cursorAngle >= startAngle || cursorAngle <= endAngle;
+  }
 
   private getOffsetAngle(elapsedTime: number): number {
     const progress = getAbsoluteProgressAnimation(elapsedTime, this.duration);
@@ -224,6 +234,7 @@ export class Wheel {
       const angle = calculateAngle(weightSum, Number(weight));
       const rgbArray = getRGB(this.colors.thinner);
       const color = getColorString(rgbArray);
+
       const sectorData: SectorData = {
         startAngle: startAngle,
         angle: angle,

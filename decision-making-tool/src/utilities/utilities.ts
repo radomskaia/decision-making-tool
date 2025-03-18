@@ -59,6 +59,7 @@ export function calculateWeightSum(data: OptionItemValue[]): number {
     const weight = Number(item.weight);
     accumulator += weight;
   }
+
   return accumulator;
 }
 
@@ -86,4 +87,8 @@ export function debounce(callback: Callback, delay: number = DELAY_TIME) {
 export function checkBottom(): boolean {
   const scrollBottom = document.body.scrollHeight - window.innerHeight;
   return scrollBottom >= window.scrollY;
+}
+
+export function normalizeAngle(angle: number): number {
+  return (angle + CIRCLE.FULL_RADIAN) % CIRCLE.FULL_RADIAN;
 }
