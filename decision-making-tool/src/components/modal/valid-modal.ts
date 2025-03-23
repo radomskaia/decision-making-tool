@@ -35,7 +35,7 @@ export class ValidModal extends BaseModal {
     });
 
     const cancelButton = new TextButton(BUTTON_TEXT.CLOSE, () => {
-      this.closeModal();
+      this.element.close();
     }).getElement();
 
     div.append(text, cancelButton);

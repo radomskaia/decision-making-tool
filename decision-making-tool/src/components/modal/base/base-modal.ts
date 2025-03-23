@@ -9,16 +9,14 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
     super();
     this.modalWrapper = this.addWrapper();
     this.modalWrapper.append(this.addContent());
+    this.element.addEventListener("close", () => {
+      this.element.remove();
+    });
   }
 
   public showModal(): void {
     document.body.append(this.element);
     this.element.showModal();
-  }
-
-  public closeModal(): void {
-    this.element.close();
-    this.element.remove();
   }
 
   protected createView(): HTMLElementTagNameMap["dialog"] {
@@ -27,8 +25,8 @@ export abstract class BaseModal extends BaseComponent<"dialog"> {
       classList: [styles.modal],
     });
     modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        this.closeModal();
+      if (event.target === event.currentTarget) {
+        this.element.close();
       }
     });
     return modal;

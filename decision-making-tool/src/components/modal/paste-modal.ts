@@ -64,7 +64,7 @@ export class PasteModal extends BaseModal {
     const cancelButton = new TextButton(BUTTON_TEXT.CANCEL);
     cancelButton.getElement().type = BUTTON_TYPES.BUTTON;
     cancelButton.addListener(() => {
-      this.closeModal();
+      this.element.close();
     });
     return cancelButton.getElement();
   }
@@ -81,7 +81,7 @@ export class PasteModal extends BaseModal {
     const value = textareaElement.value.trim();
     const optionsList = FileHandler.getInstance().parseCSV(value);
     if (optionsList) {
-      this.closeModal();
+      this.element.close();
       this.optionList.setList(optionsList);
     }
   }
