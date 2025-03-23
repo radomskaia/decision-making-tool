@@ -23,24 +23,25 @@ export const SVG_CONFIG = {
   NAMESPACE_XLINK: "http://www.w3.org/1999/xlink",
   QUALIFIED_NAME: "xlink:href",
 } as const;
+const SPRITE_PATH = "./sprite.svg#";
 export const ICON_PATH = {
   SOUND: {
-    ON: "#sound-on",
-    OFF: "#sound-off",
+    ON: SPRITE_PATH + "sound-on",
+    OFF: SPRITE_PATH + "sound-off",
   },
   THEME: {
-    ON: "#theme-light",
-    OFF: "#theme-dark",
+    ON: SPRITE_PATH + "theme-light",
+    OFF: SPRITE_PATH + "theme-dark",
   },
-  ALARM: "#alarm",
-  DELETE: "#delete",
-  SAVE: "#save",
-  LOAD: "#load",
-  BACK: "#back",
-  PASTE: "#paste",
-  CLEAR: "#clear",
-  PLAY: "#play",
-  ADD: "#add",
+  ALARM: SPRITE_PATH + "alarm",
+  DELETE: SPRITE_PATH + "delete",
+  SAVE: SPRITE_PATH + "save",
+  LOAD: SPRITE_PATH + "load",
+  BACK: SPRITE_PATH + "back",
+  PASTE: SPRITE_PATH + "paste",
+  CLEAR: SPRITE_PATH + "clear",
+  PLAY: SPRITE_PATH + "play",
+  ADD: SPRITE_PATH + "add",
 } as const;
 export const ATTRIBUTES = {
   ariaLabel: "aria-label",
