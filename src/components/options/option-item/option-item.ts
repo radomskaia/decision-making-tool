@@ -12,6 +12,7 @@ import type { BaseButton } from "@/components/buttons/base/base-button.ts";
 import { BUTTON_TEXT, ICON_PATH } from "@/constants/buttons-constants.ts";
 import { IconButton } from "@/components/buttons/icon-button.ts";
 import styles from "@/components/options/option.module.css";
+import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private readonly id: string;
@@ -47,7 +48,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   protected createView(): HTMLElementTagNameMap["li"] {
     return this.createDOMElement({
       tagName: "li",
-      classList: [styles.optionItem],
+      classList: [styles.optionItem, utilitiesStyles.flex, utilitiesStyles.gap10, utilitiesStyles.center, utilitiesStyles.widthFull],
     });
   }
 
@@ -60,7 +61,7 @@ export class OptionItem extends BaseComponent<"li", OptionItemValue> {
   private addTitleInput(value?: string): TitleInput {
     const title = new TitleInput(value);
     const titleElement = title.getElement();
-    titleElement.classList.add(styles.title);
+    titleElement.classList.add(styles.title, utilitiesStyles.widthFull);
     this.appendElement(titleElement);
     return title;
   }

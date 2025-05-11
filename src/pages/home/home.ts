@@ -118,6 +118,7 @@ export class Home extends BaseComponent<"main"> {
         utilitiesStyles.flex,
         utilitiesStyles.alignCenter,
         utilitiesStyles.justifyBetween,
+        utilitiesStyles.flexWrap
       ],
     });
     this.addButtons(buttonWrapper);

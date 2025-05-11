@@ -14,6 +14,7 @@ import {
 import { LocalStorage } from "@/services/local-storage.ts";
 import { Validator } from "@/services/validator.ts";
 import { INITIATION_ID } from "@/constants/options-constants.ts";
+import utilitiesStyles from "@/styles/utilities.module.css";
 
 export class OptionList extends BaseComponent<"ul"> {
   private optionListValue: OptionListValue = {
@@ -103,7 +104,7 @@ export class OptionList extends BaseComponent<"ul"> {
   protected createView(): HTMLElementTagNameMap["ul"] {
     return this.createDOMElement({
       tagName: "ul",
-      classList: [styles.optionsList],
+      classList: [styles.optionsList, utilitiesStyles.flex, utilitiesStyles.gap10, utilitiesStyles.flexColumn, utilitiesStyles.widthFull],
     });
   }
 

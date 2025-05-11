@@ -1,7 +1,7 @@
 import { DOUBLE } from "@/constants/constants.ts";
 
-export const CANVAS_SIZE = 512;
 const CIRCLE_PADDING = 25;
+export let CANVAS_SIZE = window.innerWidth < 528 ? window.innerWidth - CIRCLE_PADDING : 512;
 const CENTER = CANVAS_SIZE / DOUBLE;
 export const MILLISECONDS_IN_SECOND = 1000;
 export const MAX_PERCENTAGE = 100;
@@ -40,7 +40,7 @@ export const TEXT = {
   },
   ALIGN: "center",
   BASELINE: "middle",
-  MAX_WIDTH: 100,
+  MAX_WIDTH: CIRCLE.RADIUS.BIG / 2,
   MIN_ANGLE: 0.18,
   ELLIPSIS: "...",
 } as const;

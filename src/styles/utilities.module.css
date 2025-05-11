@@ -2,6 +2,10 @@
   margin: 0 auto;
   max-width: 1200px;
   padding-inline: 30px;
+
+  @media screen  and (max-width: 33em){
+    padding-inline: 15px;
+  }
 }
 
 .flex {
@@ -31,19 +35,18 @@
 
 .flexWrap {
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .gap30 {
-  gap: 30px;
+  gap: 3rem;
 }
 
 .gap20 {
-  gap: 20px;
+  gap: 2rem;
 }
 
 .gap10 {
-  gap: 10px;
+  gap: 1rem;
 }
 
 .displayNone {

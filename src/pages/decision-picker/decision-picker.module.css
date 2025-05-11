@@ -6,6 +6,10 @@ p {
   transition: all 0.3s;
   padding-block: 5px;
   padding-inline: 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .label {

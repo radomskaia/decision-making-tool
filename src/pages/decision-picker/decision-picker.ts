@@ -31,7 +31,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
       tagName: "p",
       textContent: MESSAGES.INIT_WHEEL_TEXT,
     });
-    this.controlsWrapper = this.createControllsWrapper();
+    this.controlsWrapper = this.createControlsWrapper();
     this.appendElement(
       this.controlsWrapper,
       this.text,
@@ -98,7 +98,7 @@ export class DecisionPicker extends BaseComponent<"main"> {
     );
   }
 
-  private createControllsWrapper(): HTMLDivElement {
+  private createControlsWrapper(): HTMLDivElement {
     this.controlsWrapper = this.createDOMElement({
       tagName: "div",
       classList: [
