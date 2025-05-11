@@ -1,0 +1,39 @@
+.optionsList {
+  margin-bottom: 100px;
+  max-width: 1000px;
+}
+
+.optionItem > *:first-child {
+  width: 5rem;
+  text-align: end;
+}
+
+.title,
+.weight {
+  font-size: inherit;
+  color: var(--primary);
+  background-color: var(--primary-alpha2);
+  -moz-appearance: textfield;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weight {
+  width: 10%;
+  min-width: 7rem;
+  text-align: center;
+  padding-inline: 5px;
+}
+
+.weight::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.icon {
+  width: 35px;
+  height: 35px;
+}
