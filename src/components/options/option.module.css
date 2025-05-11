@@ -13,7 +13,7 @@
   font-size: inherit;
   color: var(--primary);
   background-color: var(--primary-alpha2);
-
+  -moz-appearance: textfield;
 }
 
 .title {

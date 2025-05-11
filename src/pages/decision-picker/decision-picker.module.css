@@ -43,6 +43,7 @@ p {
   background-color: transparent;
   transform: translate(-50%, -50%);
   padding-inline: 5px;
+  -moz-appearance: textfield;
 }
 
 .form {
