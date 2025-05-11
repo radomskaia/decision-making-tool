@@ -1,6 +1,6 @@
 import styles from "./base/button.module.css";
 
-import type { ButtonOptions, Callback, CreateSVGIconOptions } from "src/types";
+import type { ButtonOptions, Callback, CreateSVGIconOptions } from "@/types";
 import { BaseButton } from "@/components/buttons/base/base-button.ts";
 import { ATTRIBUTES, SVG_CONFIG } from "@/constants/buttons-constants.ts";
 

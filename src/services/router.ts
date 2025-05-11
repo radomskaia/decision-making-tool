@@ -1,4 +1,4 @@
-import type { Route } from "src/types";
+import type { Route } from "@/types";
 import {
   EMPTY_STRING,
   MESSAGES,

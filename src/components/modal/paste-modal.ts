@@ -2,7 +2,7 @@ import { BaseModal } from "@/components/modal/base/base-modal.ts";
 import { TextButton } from "@/components/buttons/text-button.ts";
 import styles from "@/components/modal/base/modal.module.css";
 import utilitiesStyles from "@/styles/utilities.module.css";
-import type { Callback } from "src/types";
+import type { Callback } from "@/types";
 import type { OptionList } from "@/components/options/option-list/option-list.ts";
 import { EMPTY_STRING, MESSAGES } from "@/constants/constants.ts";
 import { FileHandler } from "@/services/file-handler.ts";
