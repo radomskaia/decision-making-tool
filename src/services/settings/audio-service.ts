@@ -16,6 +16,7 @@ export class AudioService extends SettingsAction {
     [AudioName.strike]: new Audio(audioStrike),
     [AudioName.end]: new Audio(audioEnd),
   };
+
   constructor(audioButton: ButtonSettings) {
     super(audioButton);
     this.init();
@@ -52,9 +53,16 @@ export class AudioService extends SettingsAction {
     if (this.isOff) {
       return;
     }
+
+    if (name === AudioName.strike) {
+      const audio = new Audio(audioStrike);
+      audio.play().catch((err) => console.error(MESSAGES.PLAYBACK + name, err));
+      return;
+    }
+
     this.audioElements[name]
       .play()
-      .catch((error: Error) => console.error(MESSAGES.PLAYBACK + name, error));
+      .catch((err) => console.error(MESSAGES.PLAYBACK + name, err));
   }
 
   public stopAudio(name: AudioName): void {
