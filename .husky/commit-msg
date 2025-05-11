@@ -1,2 +1,1 @@
-cd decision-making-tool
 npx --no-install commitlint --edit "$1"

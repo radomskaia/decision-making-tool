@@ -8,15 +8,15 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "format": "prettier --write decision-making-tool",
-    "deploy": "npm run build && npx gh-pages -d dist -e decision-making-tool",
-    "ci:format": "prettier --check decision-making-tool",
+    "format": "prettier --write",
+    "deploy": "npm run build && npx gh-pages -d dist",
+    "ci:format": "prettier --check",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint decision-making-tool",
-    "lint:fix": "eslint --ext ts --fix decision-making-tool",
+    "lint": "eslint",
+    "lint:fix": "eslint --ext ts --fix",
     "stylelint": "stylelint \"**/*.css\"",
     "stylelint:fix": "stylelint \"**/*.css\" --fix",
-    "prepare": "cd  && husky decision-making-tool/.husky"
+    "prepare": "cd  && husky"
   },
   "lint-staged": {
     "*": [
